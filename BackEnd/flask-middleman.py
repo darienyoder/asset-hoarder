@@ -1,0 +1,1 @@
+#The Purpose of this file is to define the available actions that the API (this) can perform on the SQL Database
