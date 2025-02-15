@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+    <head>
+        <meta charset="utf-8">
+        <title></title>
+        <link rel="stylesheet" href="style.css">
+        <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+        <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+        <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    </head>
+    <body>
+
+        <div id="search-page">
+            <!-- <div id="search-bg"></div> -->
+            <div id="search-interface">
+                <input placeholder="Search the Hoard" autofocus>
+                <div id="content-filters">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
+            </div>
+            <div id="explore-button" onclick="document.getElementById('browse-page').scrollIntoView({ behavior: 'smooth'});">
+                Explore
+            </div>
+        </div>
+
+        <div id="browse-page">
+            <div id="browse-content">
+                <script type="text/babel">
+
+                    function Entry()
+                    {
+                        if (Math.floor(Math.random() * 2))
+                            return (
+                                <div className="entry image-entry">
+                                    <div className="image-preview">
+                                        <div className="entry-title">Cat</div>
+                                        <div className="download-button"></div>
+                                    </div>
+                                </div>
+                            );
+                        else
+                            return (
+                                <div className="entry audio-entry">
+                                    <div className="audio-play-button"></div>
+
+                                    <div className="entry-title">Music</div>
+                                </div>
+                            );
+                    }
+
+                    var entry_list = [];
+                    for (var i = 0; i < 100; i++) {
+                        entry_list.push(<Entry />)
+                    }
+
+                    const container = document.getElementById('browse-content');
+                    const root = ReactDOM.createRoot(container);
+                    root.render(entry_list);
+                </script>
+            </div>
+        </div>
+
+    </body>
+</html>

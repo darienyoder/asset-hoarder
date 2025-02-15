@@ -1,0 +1,183 @@
+html, body {
+    margin: 0px;
+    font-family: sans-serif;
+}
+
+#search-page {
+    position: relative;
+    height: 95vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: lightblue;
+}
+
+#search-bg {
+    position: absolute;
+    z-index: -1;
+    height: 100%;
+    width: 100%;
+    background-image: url(https://i.pinimg.com/originals/c0/6b/3e/c06b3eed75a132cfed876bd305f03321.png);
+    background-position: center;
+    background-size: 300%;
+    filter: blur(0px) brightness(60%);
+}
+
+#explore-button {
+    --width: 120px;
+    position: absolute;
+    width: var(--width);
+    font-size: 35px;
+    left: calc(50% - var(--width) / 2 - 20px);
+    top: calc(100% - 25px - 10px);
+    padding: 10px;
+    padding-left: 20px;
+    padding-right: 20px;
+    border-radius: 10px;
+    background-color: white;
+    text-align: center;
+
+    cursor: pointer;
+}
+
+#browse-page {
+
+}
+
+#search-page > div {
+
+}
+
+#content-filters {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 20px;
+}
+
+#search-interface {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+#search-interface input {
+    width: 75vw;
+    font-size: 40px;
+    padding: 10px;
+    text-align: center;
+    border-radius: 60px;
+    border: solid 2px black;
+}
+
+#search-interface input:focus {
+    /* outline: none; */
+}
+
+#content-filters * {
+    height: 100px;
+    width: 100px;
+    aspect-ration: 1/1;
+    background-color: red;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+#content-filters *:hover {
+    background-color: pink;
+}
+
+#browse-content {
+    display: grid;
+    grid-template-columns: auto auto auto auto auto;
+    gap: 10px;
+    margin-left: 100px;
+    margin-right: 100px;
+    margin-top: 50px;
+    margin-bottom: 50px;
+}
+
+.entry {
+    position: relative;
+    background-color: darkgreen;
+    aspect-ratio: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.entry-title {
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    background-color: #333;
+    color: white;
+    text-align: center;
+    opacity: 80%;
+}
+
+.image-entry > .image-preview {
+
+    width: 100%;
+    position: absolute;
+    z-index: 0;
+    transform: scale(1.0);
+
+    flex: 1;
+    height: 100%;
+    background-image: url(https://wallpapers.com/images/featured/cat-pictures-zc3gu0636kmldm04.jpg);
+    background-position: center;
+    background-size: cover;
+    transition: width 0.4s, height 0.4s, transform 0.4s, z-index 0.4s;
+}
+
+.image-entry:hover > .image-preview {
+    z-index: 10;
+    width: calc(100% * 16/9);
+    transform: scale(1.1);
+}
+
+.audio-entry {
+    background-color: gray;
+    border-radius: 50% 50% 0% 0%;
+}
+
+.audio-play-button {
+    width: 70%;
+    aspect-ratio: 1;
+    background-color: #bbb;
+    border-radius: 100%;
+
+    background-image: url(https://icon-library.com/images/play-button-icon-vector/play-button-icon-vector-4.jpg);
+    background-size: cover;
+    background-position: center;
+
+    cursor: pointer;
+
+    transition: transform 0.2s;
+}
+
+.audio-play-button:hover {
+    transform: scale(1.1);
+}
+
+.download-button {
+    background-color: #ddd;
+    border-radius: 100%;
+    position: absolute;
+    aspect-ratio: 1;
+    height: 30%;
+    right: 10px;
+    bottom: 10px;
+    opacity: 0%;
+    transition: opacity 0.4s;
+    cursor: pointer;
+    background-image: url(https://cdn4.iconfinder.com/data/icons/arrows-245/24/download_1-1024.png);
+    background-position: center;
+    background-size: cover;
+}
+
+.entry:hover .download-button {
+    opacity: 90%;
+}
