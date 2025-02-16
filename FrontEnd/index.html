@@ -88,24 +88,26 @@
                     ]
 
                     var current_audio = -1;
+                    var setting_time = false;
+                    var hover_time_counter = 0;
 
-                    function toggle_audio(new_audio, new_ID)
+                    function toggle_audio(new_audio)
                     {
                         if (new_audio == current_audio)
                         {
-                            current_audio.pause();
-                            document.getElementById("play-button-" + current_audio.id.replace("audio-player-", "")).style = "";
+                            document.getElementById("audio-player-" + current_audio).pause();
+                            // document.getElementById("play-button-" + new_audio).style = "";
                             current_audio = -1;
                         }
                         else
                         {
                             if (current_audio != -1)
                             {
-                                current_audio.pause();
-                                document.getElementById("play-button-" + current_audio.id.replace("audio-player-", "")).style = "";
+                                document.getElementById("audio-player-" + current_audio).pause();
+                                // document.getElementById("play-button-" + current_audio).style = "";
                             }
-                            new_audio.play();
-                            document.getElementById("play-button-" + new_ID).style.backgroundImage = "url(https://icon-library.com/images/pause-icon-transparent/pause-icon-transparent-8.jpg)";
+                            document.getElementById("audio-player-" + new_audio).play();
+                            // document.getElementById("play-button-" + new_audio).style.backgroundImage = "url(https://icon-library.com/images/pause-icon-transparent/pause-icon-transparent-8.jpg)";
                             current_audio = new_audio;
                         }
                     }
@@ -127,7 +129,7 @@
                                 <div className={"entry image-entry entry-" + asset_ID}>
                                     <div className="image-preview" style={{backgroundImage: "url(" + asset.file + ")"}}>
                                         <div className="entry-title">{asset.title}</div>
-                                        <div className="download-button"></div>
+                                        <a className="download-button" href={asset.file} download></a>
                                     </div>
                                     <style>{style_content}</style>
                                 </div>
@@ -136,17 +138,56 @@
                         else if (asset.type == "audio")
                         {
                             return (
-                                <div className="entry audio-entry">
-                                    <div id={"play-button-" + asset_ID} className={"audio-play-button"} onClick={(event) => toggle_audio(document.getElementById("audio-player-" + asset_ID), asset_ID)}></div>
+                                <div id={"entry-" + asset_ID} className="entry audio-entry" onMouseOver={(event) => toggle_audio(asset_ID)} onMouseOut={(event) => toggle_audio(asset_ID)}>
+                                    <a id={"play-button-" + asset_ID} className={"audio-play-button"} href={asset.file} download></a>
                                     <audio id={"audio-player-" + asset_ID}>
                                         <source src={asset.file} type="audio/ogg" />
                                     </audio>
 
-                                    <div className="entry-title">{asset.title}</div>
+                                    <div className="entry-title" onMouseOver={(event) => setting_time = true} onMouseOut={(event) => setting_time = false}>
+                                        <div id={"media-progress-" + asset_ID} className="media-progress-bar">
+                                            <div className="media-progress-bar-tip"></div>
+                                        </div>
+                                        {asset.title}
+                                    </div>
                                 </div>
                             );
                         }
                     }
+
+                    function timer()
+                    {
+                        if (current_audio != -1)
+                        {
+                            document.getElementById("media-progress-" + current_audio).style.width = (document.getElementById("audio-player-" + current_audio).currentTime / document.getElementById("audio-player-" + current_audio).duration * 100) + "%";
+                        }
+                    }
+
+                    var mouseX = 0.0;
+                    var mouseY = 0.0;
+
+                    window.addEventListener("mousemove", event => {
+
+                        if (mouseX == event.clientX && mouseY == event.clientY)
+                            hover_time_counter = -10;
+
+                        mouseX = event.clientX;
+                        mouseY = event.clientY;
+
+                        if (setting_time)
+                        {
+                            hover_time_counter += 1;
+
+                            if (hover_time_counter >= 5)
+                                document.getElementById("audio-player-" + current_audio).currentTime = (
+                                    document.getElementById("audio-player-" + current_audio).duration
+                                    * (event.clientX - document.getElementById("entry-" + current_audio).getBoundingClientRect().left)
+                                    / (document.getElementById("entry-" + current_audio).getBoundingClientRect().right - document.getElementById("entry-" + current_audio).getBoundingClientRect().left)
+                                );
+                        }
+                        else
+                            hover_time_counter = 0;
+                    });
 
                     var entry_list = [];
                     for (var i = 0; i < 100; i++) {
@@ -156,6 +197,9 @@
                     const container = document.getElementById('browse-content');
                     const root = ReactDOM.createRoot(container);
                     root.render(entry_list);
+
+                    setInterval(timer, 33);
+
                 </script>
             </div>
         </div>

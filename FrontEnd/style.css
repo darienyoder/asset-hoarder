@@ -117,6 +117,10 @@ html, body {
     opacity: 80%;
 }
 
+.audio-entry .entry-title {
+    cursor: ew-resize;
+}
+
 .image-entry > .image-preview {
 
     width: 100%;
@@ -145,7 +149,7 @@ html, body {
 .audio-play-button {
     width: 70%;
     aspect-ratio: 1;
-    background-color: #bbb;
+    /* background-color: #bbb; */
     border-radius: 100%;
 
     background-image: url(https://icon-library.com/images/play-button-icon-vector/play-button-icon-vector-4.jpg);
@@ -154,22 +158,21 @@ html, body {
 
     cursor: pointer;
 
-    transition: transform 0.2s;
+    /* transition: transform 0.2s; */
 }
 
-.audio-play-button:hover {
+/* .audio-play-button:hover {
     transform: scale(1.1);
-}
+} */
 
-.download-button {
+.download-button, .audio-entry:hover .audio-play-button {
     background-color: #ddd;
     border-radius: 100%;
     position: absolute;
     aspect-ratio: 1;
     height: 30%;
-    right: 10px;
-    bottom: 10px;
-    opacity: 0%;
+    width: auto;
+    opacity: 90%;
     transition: opacity 0.4s;
     cursor: pointer;
     background-image: url(https://cdn4.iconfinder.com/data/icons/arrows-245/24/download_1-1024.png);
@@ -177,6 +180,34 @@ html, body {
     background-size: cover;
 }
 
+.download-button {
+    opacity: 0%;
+    right: 10px;
+    bottom: 10px;
+}
+
 .entry:hover .download-button {
     opacity: 90%;
+}
+
+.media-progress-bar {
+    position: absolute;
+    left: 0px;
+    top: -5px;
+    height: 5px;
+    background-color: red;
+}
+
+.media-progress-bar-tip {
+    --radius: 5px;
+    position: absolute;
+    right: calc(var(--radius) * -1);
+    top: calc(var(--radius) * -1 - 0px);
+    height: calc(var(--radius) * 2);
+    width: calc(var(--radius) * 2);
+    background-color: #888;
+    border-radius: 100%;
+    border: 2px solid #ddd;
+
+    cursor: ew-resize;
 }
