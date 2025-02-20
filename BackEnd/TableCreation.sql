@@ -75,7 +75,7 @@ ALTER TABLE
 ALTER TABLE
     `AudioAsset` ADD CONSTRAINT `audioasset_referencehash_foreign` FOREIGN KEY(`ReferenceHash`) REFERENCES `Asset`(`ReferenceHash`);
 ALTER TABLE
-    `APIEndpoints` ADD CONSTRAINT `apiendpoints_apiname_foreign` FOREIGN KEY(`APIName`) REFERENCES `API`(`Id`);
+    `APIEndpoints` ADD CONSTRAINT `apiendpoints_apiname_foreign` FOREIGN KEY(`APIName`) REFERENCES `API`(`Name`);
 ALTER TABLE
     `User` ADD CONSTRAINT `user_id_foreign` FOREIGN KEY(`Id`) REFERENCES `UserAddedAssets`(`UserId`);
 ALTER TABLE
