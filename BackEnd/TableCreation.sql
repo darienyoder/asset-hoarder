@@ -3,7 +3,8 @@ CREATE TABLE `Asset`(
     `ReferenceHash` VARCHAR(255) NOT NULL,
     `Name` VARCHAR(255) NOT NULL,
     `Type` VARCHAR(255) NOT NULL,
-    `StorageLocation` VARCHAR(255) NOT NULL
+    `StorageLocation` VARCHAR(255) NOT NULL,
+    `SourceUrl` VARCHAR(255) NOT NULL
 );
 ALTER TABLE
     `Asset` ADD UNIQUE `asset_referencehash_unique`(`ReferenceHash`);
