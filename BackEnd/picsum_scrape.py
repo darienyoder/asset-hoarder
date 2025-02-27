@@ -70,6 +70,7 @@ def fetch_and_store_images():
                 width = image['width']
                 height = image['height']
                 insert_image_asset(reference_hash, width, height)
+                print(f"Saved Image: ID={image['id']} Author={image['author']} Width={width} Height={height} Hash={reference_hash}")
 
             page += 1
         else:
