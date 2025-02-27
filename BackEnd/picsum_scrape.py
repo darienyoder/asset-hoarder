@@ -1,7 +1,5 @@
 import requests
 import mysql.connector
-from flask import Flask
-
 import hashlib
 
 def generate_unique_hash(image_id, author, api_name):
@@ -13,9 +11,7 @@ def generate_unique_hash(image_id, author, api_name):
     
     return unique_hash
 
-
-app = Flask(__name__)
-
+# Database configuration
 db_config = {
     'user': 'dbuser',
     'password': 'dbpass',
@@ -70,17 +66,16 @@ def fetch_and_store_images():
                 width = image['width']
                 height = image['height']
                 insert_image_asset(reference_hash, width, height)
+
+                # Print details about the image saved
                 print(f"Saved Image: ID={image['id']} Author={image['author']} Width={width} Height={height} Hash={reference_hash}")
 
+            # Increment page number for next request
             page += 1
         else:
             print(f"Failed to fetch data for page {page}, status code {response.status_code}")
             break
 
-@app.route('/')
-def index():
-    fetch_and_store_images()
-    return "Data has been fetched and stored in the database!"
-
+# Start scraping process when the script is run directly
 if __name__ == '__main__':
-    app.run(debug=True)
+    fetch_and_store_images()
