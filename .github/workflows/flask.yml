@@ -19,6 +19,8 @@ jobs:
         sudo apt-get install -y openssh-client sshpass  # Install sshpass
 
         sshpass -p "${{ secrets.ServerPass }}" ssh -o StrictHostKeyChecking=no ${{ secrets.ServerUser }}@${{ secrets.ServerSSH }} -p ${{ secrets.SSHPort }} << 'EOF'  # Use sshpass with password from GitHub secret
+          source .venv/bin/activate
+          
           cd /asset-hoarder
 
           git pull
@@ -26,8 +28,6 @@ jobs:
           cd BackEnd
           
           pid=$(lsof -t -i:5000) && if [ ! -z "$pid" ]; then kill -9 $pid; fi
-          
-          source ../bin/activate
 
           pip install flask requests mysql-connector-python
 
