@@ -31,10 +31,6 @@ jobs:
 
           pip install flask requests mysql-connector-python
 
-          nohup python3 flask-middleman.py
+          nohup python3 flask-middleman.py > /dev/null 2>&1 &
 
         EOF
-
-    - name: Clean up SSH private key
-      run: |
-        rm -f private_key.pem
