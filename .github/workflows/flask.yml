@@ -27,6 +27,8 @@ jobs:
           
           pid=$(lsof -t -i:5000) && if [ ! -z "$pid" ]; then kill -9 $pid; fi
           
+          source ../bin/activate
+
           pip install flask requests mysql-connector-python
 
           nohup python3 flask-middleman.py
