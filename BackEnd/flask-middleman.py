@@ -21,7 +21,7 @@ def get_db_connection():
 
 @app.route('/')
 def index():
-    return "Welcome to AssetHoarder!"
+    return render_templete("main.html")
 
 @app.route('/assets', methods=['GET'])
 def get_assets():
