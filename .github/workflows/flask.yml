@@ -22,7 +22,7 @@ jobs:
           
           source .venv/bin/activate
           ls
-          cd /asset-hoarder
+          cd /home/${{ secrets.ServerUser }}/asset-hoarder
           ls
           git pull
 
