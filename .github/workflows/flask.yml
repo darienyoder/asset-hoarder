@@ -21,13 +21,13 @@ jobs:
         sshpass -p "${{ secrets.ServerPass }}" ssh -o StrictHostKeyChecking=no ${{ secrets.ServerUser }}@${{ secrets.ServerSSH }} -p ${{ secrets.SSHPort }} << 'EOF'  # Use sshpass with password from GitHub secret
           
           source .venv/bin/activate
-          
+          ls
           cd /asset-hoarder
-
+          ls
           git pull
 
           cd BackEnd
-          
+          ls
           pid=$(lsof -t -i:5000) && if [ ! -z "$pid" ]; then kill -9 $pid; fi
 
           pip install flask requests mysql-connector-python
