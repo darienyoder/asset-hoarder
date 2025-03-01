@@ -45,5 +45,6 @@ def get_image_assets():
     conn.close()
     return jsonify({'image_assets': image_assets}), 200
 
+# This IP address doesn't matter, because its a local only address :)
 if __name__ == '__main__':
     app.run(host='192.168.50.230', port=5000)
