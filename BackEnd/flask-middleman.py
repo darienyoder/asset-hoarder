@@ -1,6 +1,6 @@
 #The Purpose of this file is to define the available actions that the API (this) can perform on the SQL Database
 
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, render_template
 import requests
 import mysql.connector
 import hashlib
@@ -21,7 +21,7 @@ def get_db_connection():
 
 @app.route('/')
 def index():
-    return render_template("main.html")
+    return render_template('main.html')
 
 @app.route('/assets', methods=['GET'])
 def get_assets():
