@@ -19,7 +19,6 @@ db_config = {
 def get_db_connection():
     return mysql.connector.connect(**db_config)
 
-# Main Page
 @app.route('/')
 def index():
     return render_template('main.html')
