@@ -6,8 +6,8 @@
         <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
         <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
         <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
-        <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-        <script src="{{ url_for('static', filename='main.js') }}"></script>
+        <script src="https://unpkg.com/@babel/standalone/babel.min.js" crossorigin></script>
+        <script src="{{ url_for('static', filename='main.js') }}" crossorigin></script>
     </head>
     <body onload="main();">
 
@@ -29,7 +29,7 @@
 
         <div id="browse-page">
             <div id="browse-content">
-                
+
             </div>
         </div>
 
