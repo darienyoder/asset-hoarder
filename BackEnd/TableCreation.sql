@@ -45,7 +45,8 @@ CREATE TABLE `APIEndpoints`(
 CREATE TABLE `User`(
     `Id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `Username` VARCHAR(255) NOT NULL,
-    `HashedPassword` VARCHAR(255) NOT NULL
+    `HashedPassword` VARCHAR(255) NOT NULL,
+    `PasswordSalt` VARCHAR(255) NOT NULL
 );
 CREATE TABLE `UserSavedAssets`(
     `UserId` INT UNSIGNED NOT NULL,
