@@ -1,0 +1,99 @@
+import requests
+import mysql.connector
+import hashlib
+
+def generate_unique_hash(image_id, author, api_name):
+    hash_input = f"{image_id}-{author}-{api_name}"
+    unique_hash = hashlib.sha256(hash_input.encode('utf-8')).hexdigest()
+
+    return unique_hash
+
+db_config = {
+    'user': 'dbuser',
+    'password': 'dbpass',
+    'host': 'localhost',
+    'database': 'ASSETHOARDER'
+}
+
+def get_db_connection():
+    return mysql.connector.connect(**db_config)
+
+def get_pexels_api_key():
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+    cursor.execute("SELECT Key FROM API WHERE Name = 'Pexels'")
+    api_key = cursor.fetchone()
+    cursor.close()
+    conn.close()
+
+    if api_key:
+        return api_key['Key']
+    return None
+
+def insert_asset(reference_hash, name, type_, storage_location):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    query = "INSERT INTO Asset (ReferenceHash, Name, Type, StorageLocation) VALUES (%s, %s, %s, %s)"
+    cursor.execute(query, (reference_hash, name, type_, storage_location))
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+def insert_image_asset(reference_hash, width, height):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    query = "INSERT INTO ImageAsset (ReferenceHash, Width, Height) VALUES (%s, %s, %s)"
+    cursor.execute(query, (reference_hash, width, height))
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+def fetch_and_store_images():
+    api_key = get_pexels_api_key()
+    if not api_key:
+        print("Error: Pexels API key not found in database.")
+        return
+
+    headers = {
+        "Authorization": api_key
+    }
+
+    base_url = "https://api.pexels.com/v1/curated?page={page}&per_page=50"
+    page = 1
+
+    while True:
+        url = base_url.format(page=page)
+        response = requests.get(url, headers=headers)
+
+        if response.status_code == 200:
+            images = response.json().get("photos", [])
+            if not images:  # If API returns an empty list, stop the loop
+                print(f"No more results returned on page {page}. Stopping.")
+                break
+
+            for image in images:
+                reference_hash = generate_unique_hash(str(image['id']), image['photographer'], "Pexels")
+                name = f"Pexels_{image['id']}"  # Image ID as name
+                type_ = 'image'  # Type for image assets
+                storage_location = image['src']['original']  # High-quality image URL
+
+                # Insert asset record
+                insert_asset(reference_hash, name, type_, storage_location)
+
+                # Insert image asset (width and height are part of the image data)
+                width = image['width']
+                height = image['height']
+                insert_image_asset(reference_hash, width, height)
+
+                # Print details about the image saved
+                print(f"Saved Image: ID={image['id']} Photographer={image['photographer']} Width={width} Height={height}")
+
+            # Increment page number for next request
+            page += 1
+        else:
+            print(f"Failed to fetch data from Pexels on page {page}, status code {response.status_code}")
+            break
+
+# Start fetching images when the script is run directly
+if __name__ == '__main__':
+    fetch_and_store_images()
