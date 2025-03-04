@@ -77,7 +77,7 @@ html, body {
 #content-filters * {
     height: 100px;
     width: 100px;
-    aspect-ration: 1/1;
+    aspect-ratio: 1/1;
     background-color: red;
     border-radius: 10px;
     cursor: pointer;
@@ -211,3 +211,5 @@ html, body {
 
     cursor: ew-resize;
 }
+
+
