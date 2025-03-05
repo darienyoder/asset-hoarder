@@ -76,18 +76,22 @@ def fetch_and_store_images():
         url = base_url.format(page=page)
         response = requests.get(url, headers=headers)
 
-        if reference_hash: 
-            name = "Pexels_" + image['id']
-            type_ = 'image'
-            storage_location = image_url
-            width = image['width']
-            height = image['height']
+        for image in images:
+            image_url = image['url']
+            reference_hash = generate_unique_hash(image_url)
+
+            if reference_hash: 
+                name = "Pexels_" + image['id']
+                type_ = 'image'
+                storage_location = image_url
+                width = image['width']
+                height = image['height']
             
-            if not asset_exists(reference_hash):
-                insert_asset(reference_hash, name, type_, storage_location)
-                insert_image_asset(reference_hash, width, height)
+                if not asset_exists(reference_hash):
+                    insert_asset(reference_hash, name, type_, storage_location)
+                    insert_image_asset(reference_hash, width, height)
             
-            print(f"Saved Image: ID={image['id']} Photographer={image['photographer']} Width={width} Height={height}")
+                print(f"Saved Image: ID={image['id']} Photographer={image['photographer']} Width={width} Height={height}")
             
             # Increment page number for next request
             page += 1
