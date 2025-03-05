@@ -21,13 +21,13 @@ def get_db_connection():
 def get_pexels_api_key():
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
-    cursor.execute("SELECT Key FROM API WHERE Name = 'Pexels'")
+    cursor.execute("SELECT APIKey FROM API WHERE Name = 'Pexels'")
     api_key = cursor.fetchone()
     cursor.close()
     conn.close()
 
     if api_key:
-        return api_key['Key']
+        return api_key['APIKey']
     return None
 
 def insert_asset(reference_hash, name, type_, storage_location):
