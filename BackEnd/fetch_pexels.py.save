@@ -4,20 +4,18 @@ import hashlib
 
 def generate_unique_hash(image_url):
     try:
-        response = requests.get(image_url, stream=True)
-        response.raise_for_status()  # Ensure we got a valid response
+	response = requests.get(image_url, stream=True)
+	response.raise_for_status()
 
-        # Read image data
-        image_data = response.content
+	image_data = response.content
 
-        # Generate SHA-256 hash from image content
-        unique_hash = hashlib.sha256(image_data).hexdigest()
-        return unique_hash
 
-    except requests.RequestException as e:
-        print(f"Error fetching image: {e}")
-        return None  # Return None if fetching fails
+    unique_hash = hashlib.sha256(image_data).hexdigest()
+    return unique_hash
 
+ except requests.RequestsExecption as e:
+   print(f"Error fetching image: {e}")
+   return None
 
 db_config = {
     'user': 'dbuser',
@@ -76,19 +74,33 @@ def fetch_and_store_images():
         url = base_url.format(page=page)
         response = requests.get(url, headers=headers)
 
-        if reference_hash: 
-            name = "Pexels_" + image['id']
-            type_ = 'image'
-            storage_location = image_url
-            width = image['width']
-            height = image['height']
-            
-            if not asset_exists(reference_hash):
+        if response.status_code == 200:
+            images = response.json().get("photos", [])
+            if not images:  # If API returns an empty list, stop the loop
+                print(f"No more results returned on page {page}. Stopping.")
+                break
+
+            for image in images:
+		image_url = image['url']
+                reference_hash = generate_unique_hash(image_url)
+		
+	     	if reference_hash:
+
+                   name = "Pexels
+                type_ = 'image'  # Type for image assets
+                storage_location = image['src']['original']  # High-quality image URL
+
+                # Insert asset record
                 insert_asset(reference_hash, name, type_, storage_location)
+
+                # Insert image asset (width and height are part of the image data)
+                width = image['width']
+                height = image['height']
                 insert_image_asset(reference_hash, width, height)
-            
-            print(f"Saved Image: ID={image['id']} Photographer={image['photographer']} Width={width} Height={height}")
-            
+
+                # Print details about the image saved
+                print(f"Saved Image: ID={image['id']} Photographer={image['photographer']} Width={width} Height={height}")
+
             # Increment page number for next request
             page += 1
         else:
