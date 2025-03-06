@@ -113,9 +113,9 @@
                         }
                     }
 
-                    function Entry()
+                    function Entry({ data })
                     {
-                        let asset = test_assets[Math.floor(Math.random() * test_assets.length)]
+                        let asset = data; //test_assets[Math.floor(Math.random() * test_assets.length)]
                         let asset_ID = Math.floor(Math.random() * 2147483000);
 
                         if (asset.type == "image")
@@ -190,14 +190,21 @@
                             hover_time_counter = 0;
                     });
 
-                    var entry_list = [];
-                    for (var i = 0; i < 100; i++) {
-                        entry_list.push(<Entry />)
-                    }
+                    var xhttp = new XMLHttpRequest();
+                    xhttp.onreadystatechange = function() {
+                        var entries = JSON.parse(this.responseText);
+                        var entry_list = [];
+                        for (var i = 0; i < 100; i++) {
+                            entry_list.push(<Entry data={entries[i]} />)
+                        }
 
-                    const container = document.getElementById('browse-content');
-                    const root = ReactDOM.createRoot(container);
-                    root.render(entry_list);
+                        const container = document.getElementById('browse-content');
+                        const root = ReactDOM.createRoot(container);
+                        root.render(entry_list);
+                        }
+                    };
+                    xhttp.open("GET", "http://174.104.199.92:5000/data/assets", true);
+                    xhttp.send();
 
                     setInterval(timer, 33);
 
