@@ -2,7 +2,6 @@ import requests
 import mysql.connector
 import hashlib
 
-# Database configuration
 db_config = {
     'user': 'dbuser',
     'password': 'dbpass',
@@ -100,7 +99,6 @@ def fetch_and_store_sounds():
 
         sound_details = details_response.json()
         
-        # Extract metadata
         sound_url = f"https://freesound.org/apiv2/sounds/{sound_id}/download/?token={api_key}"
         reference_hash = generate_unique_hash(sound_url)
 
@@ -117,6 +115,5 @@ def fetch_and_store_sounds():
 
             print(f"Saved Audio: ID={sound_id}, Duration={duration}s, Bitrate={bitrate}bps, SampleRate={sample_rate}Hz")
 
-# Start script execution
 if __name__ == '__main__':
     fetch_and_store_sounds()
