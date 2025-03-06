@@ -1,37 +1,92 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
-    <head>
-        <meta charset="utf-8">
-        <title>AssetHoarder</title>
-        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-        <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
-        <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
-        <script src="https://unpkg.com/@babel/standalone/babel.min.js" crossorigin></script>
-        <script src="{{ url_for('static', filename='main.js') }}" crossorigin></script>
-    </head>
-    <body onload="main();">
+<html lang="en">
 
-        <div id="search-page">
-            <!-- <div id="search-bg"></div> -->
-            <div id="search-interface">
-                <input placeholder="Search the Hoard" autofocus>
-                <div id="content-filters">
-                    <div></div>
-                    <div></div>
-                    <div></div>
-                    <div></div>
-                </div>
-            </div>
-            <div id="explore-button" onclick="document.getElementById('browse-page').scrollIntoView({ behavior: 'smooth'});">
-                Explore
-            </div>
-        </div>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Asset Hoarder API</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
 
-        <div id="browse-page">
-            <div id="browse-content">
+        h1 {
+            color: #2c3e50;
+        }
 
-            </div>
-        </div>
+        p {
+            color: #34495e;
+            font-size: 18px;
+        }
 
-    </body>
+        .endpoint {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #ecf0f1;
+            border-radius: 5px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .endpoint h3 {
+            color: #2980b9;
+        }
+
+        a {
+            color: #2980b9;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>Welcome to the Asset Hoarder API</h1>
+        <p>This API allows you to interact with an SQL database containing assets such as images, audio, and video.
+            Below are the available endpoints for retrieving and managing asset data.</p>
+    </header>
+
+    <section class="endpoint">
+        <h3>1. Get Assets</h3>
+        <p>Retrieve all assets stored in the database.</p>
+        <a href="/data/assets">Quick Link: /data/assets</a>
+    </section>
+
+    <section class="endpoint">
+        <h3>2. Get Image Assets</h3>
+        <p>Retrieve image assets, optionally filtered by a specific tag.</p>
+        <a href="/data/image_assets">Quick Link: /data/image_assets</a>
+    </section>
+
+    <section class="endpoint">
+        <h3>3. Get Audio Assets</h3>
+        <p>Retrieve audio assets, optionally filtered by a specific tag.</p>
+        <a href="/data/audio_assets">Quick Link: /data/audio_assets</a>
+    </section>
+
+    <section class="endpoint">
+        <h3>4. Get Video Assets</h3>
+        <p>Retrieve video assets, optionally filtered by a specific tag.</p>
+        <a href="/data/video_assets">Quick Link: /data/video_assets</a>
+    </section>
+
+    <section class="endpoint">
+        <h3>5. Create Account</h3>
+        <p>Create a new user account by providing a username and password.</p>
+        <a href="/data/create_account">Quick Link: /data/create_account</a>
+    </section>
+
+    <section class="endpoint">
+        <h3>6. User Login</h3>
+        <p>Log in to the system by providing a valid username and password.</p>
+        <a href="/data/login">Quick Link: /data/login</a>
+    </section>
+</body>
+
 </html>
