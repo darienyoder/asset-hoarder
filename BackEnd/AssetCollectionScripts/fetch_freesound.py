@@ -2,7 +2,6 @@ import requests
 import mysql.connector
 import hashlib
 
-# Database configuration
 db_config = {
     'user': 'dbuser',
     'password': 'dbpass',
@@ -29,8 +28,7 @@ def generate_unique_hash(file_url):
     try:
         response = requests.get(file_url, stream=True)
         response.raise_for_status()
-        file_data = response.content
-        return hashlib.sha256(file_data).hexdigest()
+        return hashlib.sha256(response.content).hexdigest()
     except requests.RequestException as e:
         print(f"Error fetching file: {e}")
         return None
@@ -74,9 +72,9 @@ def fetch_and_store_sounds():
         return
 
     headers = {"Authorization": f"Token {api_key}"}
-    base_url = "https://freesound.org/apiv2/search/text/?query=ambient&format=json&page_size=10"
+    search_url = f"https://freesound.org/apiv2/search/text/?query=ambient&format=json&page_size=10"
 
-    response = requests.get(base_url, headers=headers)
+    response = requests.get(search_url, headers=headers)
 
     if response.status_code != 200:
         print(f"Failed to fetch data from Freesound, status code {response.status_code}")
@@ -91,22 +89,31 @@ def fetch_and_store_sounds():
 
     for sound in sounds:
         sound_id = sound['id']
-        sound_url = f"https://freesound.org/apiv2/sounds/{sound_id}/download/"
+        sound_details_url = f"https://freesound.org/apiv2/sounds/{sound_id}/?token={api_key}"
+        
+        # Fetch sound details
+        details_response = requests.get(sound_details_url, headers=headers)
+        if details_response.status_code != 200:
+            print(f"Failed to fetch sound details for ID {sound_id}")
+            continue
+
+        sound_details = details_response.json()
+        
+        sound_url = f"https://freesound.org/apiv2/sounds/{sound_id}/download/?token={api_key}"
         reference_hash = generate_unique_hash(sound_url)
 
         if reference_hash and not asset_exists(reference_hash):
-            name = "Freesound_" + str(sound_id)
+            name = f"Freesound_{sound_id}"
             type_ = 'audio'
             storage_location = sound_url
-            duration = sound.get('duration', 0)
-            bitrate = sound.get('bitrate', 0)
-            sample_rate = sound.get('samplerate', 0)
+            duration = sound_details.get('duration', 0)
+            bitrate = sound_details.get('bitrate', 0)  # Might be None
+            sample_rate = sound_details.get('samplerate', 0)
 
             insert_asset(reference_hash, name, type_, storage_location)
             insert_audio_asset(reference_hash, duration, bitrate, sample_rate)
 
-            print(f"Saved Audio: ID={sound_id} Duration={duration}s Bitrate={bitrate}bps SampleRate={sample_rate}Hz")
+            print(f"Saved Audio: ID={sound_id}, Duration={duration}s, Bitrate={bitrate}bps, SampleRate={sample_rate}Hz")
 
-# Start script execution
 if __name__ == '__main__':
     fetch_and_store_sounds()
