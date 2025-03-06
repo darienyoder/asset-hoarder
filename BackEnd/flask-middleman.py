@@ -33,6 +33,7 @@ def get_ssh_db_connection():
     ssh_password = os.getenv('SSH_PASSWORD'),
     remote_bind_address = ('127.0.0.1', 3306)
     )
+    #We should probably hide the ip-address and the port in the dotenv
     tunnel.start()
     return mysql.connector.connect(
         user = db_config['user'],
@@ -205,8 +206,5 @@ def get_login():
     else:
         return 'wrong username or password', 400
 
-
-
-# This IP address doesn't matter, because its a local only address :)
 if __name__ == '__main__':
     app.run(host='192.168.50.230', port=5000)
