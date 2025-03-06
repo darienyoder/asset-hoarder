@@ -25,6 +25,7 @@ db_config = {
 # SSH_USERNAME="user"
 # SSH_PASSWORD="pass"
 # changing user and pass for your own
+
 def get_ssh_db_connection():
     load_dotenv()
     tunnel = SSHTunnelForwarder(
