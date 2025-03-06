@@ -133,7 +133,7 @@ def get_video_assets():
     conn.close()
     return jsonify({'video_assets': video_assets}), 200
 
-# get for now to easily test, change to post later once form set up
+# get for now to easily test, change to post later once form is set up
 @app.route('/data/create_account', methods=['GET'])
 def post_create_account():
     username = request.args.get('username')

@@ -27,7 +27,7 @@ jobs:
           git pull
           cd BackEnd
           pid=$(lsof -t -i:5000) && if [ ! -z "$pid" ]; then kill -9 $pid; fi
-          pip install flask requests mysql-connector-python
+          pip install flask requests mysql-connector-python sshtunnel dotenv
           nohup python3 flask-middleman.py > flask.log 2>&1 &
 
           disown
