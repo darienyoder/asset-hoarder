@@ -73,40 +73,42 @@ def fetch_and_store_images():
         print("Error: Pixabay API key not found in the database.")
         return
 
-    headers = {"Authorization": api_key}
-    base_url = "https://pixabay.com/api/?key={api_key}&image_type=photo&per_page=30"
+    base_url = "https://pixabay.com/api/?key={api_key}&image_type=photo&per_page=30&page={page}"
     page = 1
 
     while True:
-        url = base_url.format(page=page)
-        response = requests.get(url, headers=headers)
+        url = base_url.format(api_key=api_key, page=page)
+        response = requests.get(url)
 
         if response.status_code != 200:
             print(f"Failed to fetch data from Pixabay on page {page}, status code {response.status_code}")
             break
 
         data = response.json()
-        images = data.get('photos', [])
+        images = data.get('hits', [])
 
         if not images:
             print(f"No more images found on page {page}. Stopping.")
             break
 
         for image in images:
-            image_url = image['src']['original']  # Extract the high-quality image URL
-            reference_hash = generate_unique_hash(image_url)
+            image_url = image.get('largeImageURL', '')
+            if not image_url:
+                continue  # Skip if no image URL is found
 
+            reference_hash = generate_unique_hash(image_url)
             if reference_hash and not asset_exists(reference_hash):
                 name = "Pixabay_" + str(image['id'])
                 type_ = 'image'
                 storage_location = image_url
-                width = image['width']
-                height = image['height']
+                width = image.get('imageWidth', 0)
+                height = image.get('imageHeight', 0)
+                photographer = image.get('user', 'Unknown')  # Pixabay uses "user" for uploader
 
                 insert_asset(reference_hash, name, type_, storage_location)
                 insert_image_asset(reference_hash, width, height)
 
-                print(f"Saved Image: ID={image['id']} Photographer={image['photographer']} Width={width} Height={height}")
+                print(f"Saved Image: ID={image['id']} Photographer={photographer} Width={width} Height={height}")
 
         page += 1  # Move to the next page
 
