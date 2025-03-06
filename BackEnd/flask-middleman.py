@@ -7,6 +7,8 @@ import hashlib
 from sshtunnel import SSHTunnelForwarder
 import os
 from dotenv import load_dotenv
+import socket
+import base64
 
 app = Flask(__name__)
 
@@ -18,7 +20,7 @@ db_config = {
     'database': 'ASSETHOARDER'
 }
 
-# Use when running flask app locally, uncomment in get_db_connection()
+# Use when running flask app locally
 # Must make a .env file and have: 
 # SSH_USERNAME="user"
 # SSH_PASSWORD="pass"
@@ -42,8 +44,10 @@ def get_ssh_db_connection():
 
 # Helper functions for database interactions
 def get_db_connection():
-    # return get_ssh_db_connection()
-    return mysql.connector.connect(**db_config)
+    if socket.gethostname() == 'asset-hoarder':
+        return mysql.connector.connect(**db_config)
+    else:
+        return get_ssh_db_connection()
 
 # Main Page
 @app.route('/')
@@ -75,7 +79,7 @@ def get_image_assets():
         ON t.ReferenceHash = a.ReferenceHash
     WHERE 0=0
     """
-    if tag:
+    if tag is not None:
         query += "AND t.Tag = %(tag)s"
     cursor.execute(query, {'tag': tag})
     image_assets = cursor.fetchall()
@@ -98,7 +102,7 @@ def get_audio_assets():
         ON t.ReferenceHash = a.ReferenceHash
     WHERE 0=0
     """
-    if tag:
+    if tag is not None:
         query += "AND t.Tag = %(tag)s"
     cursor.execute(query, {'tag': tag})
     audio_assets = cursor.fetchone()
@@ -121,14 +125,87 @@ def get_video_assets():
         ON t.ReferenceHash = a.ReferenceHash
     WHERE 0=0
     """
-    if tag:
+    if tag is not None:
         query += "AND t.Tag = %(tag)s"
     cursor.execute(query, {'tag': tag})
-    print(cursor._executed)
     video_assets = cursor.fetchall()
     cursor.close()
     conn.close()
     return jsonify({'video_assets': video_assets}), 200
+
+# get for now to easily test, change to post later once form set up
+@app.route('/data/create_account', methods=['GET'])
+def post_create_account():
+    username = request.args.get('username')
+    password = request.args.get('password')
+
+    if username is None or password is None:
+        return 'enter username and password', 400
+
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+    query = """
+    SELECT
+        u.*
+    FROM User as u
+    WHERE 0=0
+    AND u.Username = %(username)s
+    """
+    cursor.execute(query, {'username': username})
+    cursor.fetchall()
+    if cursor.rowcount > 0:
+        return 'user already exists', 400
+    salt = os.urandom(16)
+    salted_password = salt + password.encode('utf-8')
+    hashed_password = hashlib.sha256(salted_password).hexdigest()
+    stringified_salt = base64.b64encode(salt).decode()
+    query = """
+    INSERT INTO User (Username, HashedPassword, PasswordSalt)
+    VALUES (%(username)s, %(hashed_password)s, %(salt)s)
+    """
+    try:
+        cursor.execute(query, {'username': username, 'hashed_password': hashed_password, 'salt': stringified_salt})
+        conn.commit()
+    except:
+        return 'error creating account', 500
+    cursor.close()
+    conn.close()
+    return 'succesfully created account', 200
+
+# username and password will not be passed over url, just for testing, change with form
+@app.route('/data/login', methods=['GET'])
+def get_login():
+    username = request.args.get('username')
+    password = request.args.get('password')
+
+    if username is None or password is None:
+        return 'enter username and password', 400
+
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+    query = """
+    SELECT
+        u.*
+    FROM User as u
+    WHERE 0=0
+    AND u.Username = %(username)s
+    """
+    cursor.execute(query, {'username': username})
+    user = cursor.fetchone()
+    if cursor.rowcount < 1:
+        return 'wrong username or password', 400
+    stringified_salt = user["PasswordSalt"]
+    salt = base64.b64decode(stringified_salt.encode())
+    salted_password = salt + password.encode('utf-8')
+    hashed_password = hashlib.sha256(salted_password).hexdigest()
+    cursor.close()
+    conn.close()
+    if hashed_password == user["HashedPassword"]:
+        return 'successful login', 200
+    else:
+        return 'wrong username or password', 400
+
+
 
 # This IP address doesn't matter, because its a local only address :)
 if __name__ == '__main__':
