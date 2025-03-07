@@ -1,6 +1,6 @@
 #The Purpose of this file is to define the available actions that the API (this) can perform on the SQL Database
 
-from flask import Flask, jsonify, request, render_template
+from flask import Flask, jsonify, request, render_template, session
 from flask_cors import CORS
 import requests
 import mysql.connector
@@ -12,6 +12,8 @@ import socket
 import base64
 
 app = Flask(__name__)
+load_dotenv()
+app.secret_key = os.getenv('SECRET_KEY', 'devsecretkey').encode()
 
 # Enables CORS to allow the frontend pages to access the backend data
 CORS(app)
@@ -28,17 +30,18 @@ db_config = {
 # Must make a .env file and have:
 # SSH_USERNAME="user"
 # SSH_PASSWORD="pass"
+# SSH_SERVER_IP_ADDRESS="111.111.111.11"
+# SSH_SERVER_PORT="11"
 # changing user and pass for your own
+# changing server ip and port for servers
 
 def get_ssh_db_connection():
-    load_dotenv()
     tunnel = SSHTunnelForwarder(
-    ('174.104.199.92', 28),
+    (os.getenv('SSH_SERVER_IP_ADDRESS'), int(os.getenv('SSH_SERVER_PORT'))),
     ssh_username = os.getenv('SSH_USERNAME'),
     ssh_password = os.getenv('SSH_PASSWORD'),
     remote_bind_address = ('127.0.0.1', 3306)
     )
-    #We should probably hide the ip-address and the port in the dotenv
     tunnel.start()
     return mysql.connector.connect(
         user = db_config['user'],
@@ -60,90 +63,82 @@ def get_db_connection():
 def index():
     return render_template('main.html')
 
+# get by each by type but use Asset.Id to have common reference id for user saving
+# got rid of by asset types, use this to filter maybe, can revert if needed
 @app.route('/data/assets', methods=['GET'])
 def get_assets():
-    conn = get_db_connection()
-    cursor = conn.cursor(dictionary=True)
-    query = "SELECT * FROM Asset"
-    cursor.execute(query)
-    assets = cursor.fetchall()
-    cursor.close()
-    conn.close()
-    return jsonify({'assets': assets}), 200
-
-@app.route('/data/image_assets', methods=['GET'])
-def get_image_assets():
     tag = request.args.get('tag')
 
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
     query = """
     SELECT
-        a.*
-    FROM ImageAsset AS a
+        a.Id
+        ,a.StorageLocation
+        ,ia.ReferenceHash
+        ,ia.Width
+        ,ia.Height
+        ,t.Tag
+    FROM ImageAsset AS ia
     LEFT JOIN Tags AS t
-        ON t.ReferenceHash = a.ReferenceHash
+        ON t.ReferenceHash = ia.ReferenceHash
+    JOIN Asset AS a
+        ON a.ReferenceHash = ia.ReferenceHash
     WHERE 0=0
     """
     if tag is not None:
         query += "AND t.Tag = %(tag)s"
     cursor.execute(query, {'tag': tag})
     image_assets = cursor.fetchall()
-    cursor.close()
-    conn.close()
-    return jsonify({'image_assets': image_assets}), 200
 
-@app.route('/data/audio_assets', methods=['GET'])
-def get_audio_assets():
-    tag = request.args.get('tag')
-
-    conn = get_db_connection()
-    cursor = conn.cursor(dictionary=True)
     query = """
     SELECT
-        a.*,
-        t.Tag
-    FROM AudioAsset AS a
+        a.Id
+        ,a.StorageLocation
+        ,aa.ReferenceHash
+        ,aa.Duration
+        ,t.Tag
+    FROM AudioAsset AS aa
     LEFT JOIN Tags AS t
-        ON t.ReferenceHash = a.ReferenceHash
+        ON t.ReferenceHash = aa.ReferenceHash
+    JOIN Asset AS a
+        ON a.ReferenceHash = aa.ReferenceHash
     WHERE 0=0
     """
     if tag is not None:
         query += "AND t.Tag = %(tag)s"
     cursor.execute(query, {'tag': tag})
-    audio_assets = cursor.fetchone()
-    cursor.close()
-    conn.close()
-    return jsonify({'audio_assets': audio_assets}), 200
+    audio_assets = cursor.fetchall()
 
-@app.route('/data/video_assets', methods=['GET'])
-def get_video_assets():
-    tag = request.args.get('tag')
-
-    conn = get_db_connection()
-    cursor = conn.cursor(dictionary=True)
     query = """
     SELECT
-        a.*,
-        t.Tag
-    FROM VideoAsset AS a
+        a.Id
+        ,a.StorageLocation
+        ,va.ReferenceHash
+        ,va.Width
+        ,va.Height
+        ,va.Duration
+        ,t.Tag
+    FROM VideoAsset AS va
     LEFT JOIN Tags AS t
-        ON t.ReferenceHash = a.ReferenceHash
+        ON t.ReferenceHash = va.ReferenceHash
+    JOIN Asset AS a
+        ON a.ReferenceHash = va.ReferenceHash
     WHERE 0=0
     """
     if tag is not None:
         query += "AND t.Tag = %(tag)s"
     cursor.execute(query, {'tag': tag})
     video_assets = cursor.fetchall()
+
     cursor.close()
     conn.close()
-    return jsonify({'video_assets': video_assets}), 200
+    return jsonify({'imageAssets': image_assets, 'audioAssets': audio_assets, 'videoAssets': video_assets}), 200
 
-# get for now to easily test, change to post later once form is set up
-@app.route('/data/create_account', methods=['GET'])
+@app.route('/data/create_account', methods=['POST'])
 def post_create_account():
-    username = request.args.get('username')
-    password = request.args.get('password')
+    username = request.form['username']
+    password = request.form['password']
 
     if username is None or password is None:
         return 'enter username and password', 400
@@ -153,7 +148,7 @@ def post_create_account():
     query = """
     SELECT
         u.*
-    FROM User as u
+    FROM User AS u
     WHERE 0=0
     AND u.Username = %(username)s
     """
@@ -179,10 +174,12 @@ def post_create_account():
     return 'succesfully created account', 200
 
 # username and password will not be passed over url, just for testing, change with form
-@app.route('/data/login', methods=['GET'])
+@app.route('/data/login', methods=['POST'])
 def get_login():
-    username = request.args.get('username')
-    password = request.args.get('password')
+    username = request.form['username']
+    password = request.form['password']
+    #username = request.args.get('username')
+    #password = request.args.get('password')
 
     if username is None or password is None:
         return 'enter username and password', 400
@@ -192,24 +189,178 @@ def get_login():
     query = """
     SELECT
         u.*
-    FROM User as u
+    FROM User AS u
     WHERE 0=0
     AND u.Username = %(username)s
     """
     cursor.execute(query, {'username': username})
+
     user = cursor.fetchone()
     if cursor.rowcount < 1:
         return 'wrong username or password', 400
-    stringified_salt = user["PasswordSalt"]
+    
+    stringified_salt = user['PasswordSalt']
     salt = base64.b64decode(stringified_salt.encode())
     salted_password = salt + password.encode('utf-8')
     hashed_password = hashlib.sha256(salted_password).hexdigest()
+
     cursor.close()
     conn.close()
-    if hashed_password == user["HashedPassword"]:
+
+    if hashed_password == user['HashedPassword']:
+        session['userId'] = user['Id']
         return 'successful login', 200
     else:
         return 'wrong username or password', 400
+    
+@app.route('/data/logout', methods=['GET'])
+def get_logout():
+    if 'userId' not in session:
+        return 'user not logged in', 400
+    session.pop('userId')
+    return 'successfully logged out', 200
+
+@app.route('/data/user_toggle_save_asset/<int:asset_id>', methods=['POST'])
+def post_user_toggle_save_asset(asset_id):
+    if 'userId' not in session:
+        return 'user not logged in', 400
+    
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+    query = """
+    SELECT
+        a.*
+    FROM Asset AS a
+    WHERE 0=0
+    AND a.Id = %(asset_id)s
+    """
+    cursor.execute(query, {'asset_id': asset_id})
+    asset = cursor.fetchone()
+    if cursor.rowcount < 1:
+        return 'no asset found', 400
+    cursor.fetchall()
+
+    query = """
+    SELECT
+        *
+    FROM UserSavedAssets AS usa
+    WHERE 0=0
+    AND usa.UserId = %(User_Id)s
+    AND usa.ReferenceHash = %(Reference_Hash)s
+    """
+    cursor.execute(query, {'User_Id': session['userId'], 'Reference_Hash': asset['ReferenceHash']})
+    cursor.fetchall()
+    if cursor.rowcount > 0:
+        query = """
+        DELETE 
+        FROM UserSavedAssets AS usa
+        WHERE 0=0
+        AND usa.UserId = %(User_Id)s
+        AND usa.ReferenceHash = %(Reference_Hash)s
+        """
+        try:
+            cursor.execute(query, {'User_Id': session['userId'], 'Reference_Hash': asset['ReferenceHash']})
+            conn.commit()
+        except:
+            return 'error unsaving asset', 500
+        cursor.close()
+        conn.close()
+        return 'asset unsaved from user', 200
+    else:
+        query = """
+        INSERT INTO UserSavedAssets (UserId, ReferenceHash)
+        VALUES (%(User_Id)s, %(Reference_Hash)s)
+        """
+        try:
+            cursor.execute(query, {'User_Id': session['userId'], 'Reference_Hash': asset['ReferenceHash']})
+            conn.commit()
+        except:
+            return 'error saving asset', 500
+        cursor.close()
+        conn.close()
+        return 'asset saved to user', 200
+    
+@app.route('/data/user_saved_assets', methods=['GET'])
+def get_user_saved_assets():
+    if 'userId' not in session:
+        return 'user not logged in', 400
+    
+    tag = request.args.get('tag')
+
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+    query = """
+    SELECT
+        a.Id
+        ,a.StorageLocation
+        ,ia.ReferenceHash
+        ,ia.Width
+        ,ia.Height
+        ,t.Tag
+    FROM ImageAsset AS ia
+    LEFT JOIN Tags AS t
+        ON t.ReferenceHash = ia.ReferenceHash
+    JOIN Asset AS a
+        ON a.ReferenceHash = ia.ReferenceHash
+    JOIN UserSavedAssets AS usa
+        ON usa.ReferenceHash = ia.ReferenceHash
+    WHERE 0=0
+    AND usa.UserId = %(User_Id)s
+    """
+    if tag is not None:
+        query += "AND t.Tag = %(tag)s"
+    cursor.execute(query, {'User_Id': session['userId'], 'tag': tag})
+    image_assets = cursor.fetchall()
+
+    query = """
+    SELECT
+        a.Id
+        ,a.StorageLocation
+        ,aa.ReferenceHash
+        ,aa.Duration
+        ,t.Tag
+    FROM AudioAsset AS aa
+    LEFT JOIN Tags AS t
+        ON t.ReferenceHash = aa.ReferenceHash
+    JOIN Asset AS a
+        ON a.ReferenceHash = aa.ReferenceHash
+    JOIN UserSavedAssets AS usa
+        ON usa.ReferenceHash = aa.ReferenceHash
+    WHERE 0=0
+    AND usa.UserId = %(User_Id)s
+    """
+    if tag is not None:
+        query += "AND t.Tag = %(tag)s"
+    cursor.execute(query, {'User_Id': session['userId'], 'tag': tag})
+    audio_assets = cursor.fetchall()
+
+    query = """
+    SELECT
+        a.Id
+        ,a.StorageLocation
+        ,va.ReferenceHash
+        ,va.Width
+        ,va.Height
+        ,va.Duration
+        ,t.Tag
+    FROM VideoAsset AS va
+    LEFT JOIN Tags AS t
+        ON t.ReferenceHash = va.ReferenceHash
+    JOIN Asset AS a
+        ON a.ReferenceHash = va.ReferenceHash
+    JOIN UserSavedAssets AS usa
+        ON usa.ReferenceHash = va.ReferenceHash
+    WHERE 0=0
+    AND usa.UserId = %(User_Id)s
+    """
+    if tag is not None:
+        query += "AND t.Tag = %(tag)s"
+    cursor.execute(query, {'User_Id': session['userId'], 'tag': tag})
+    video_assets = cursor.fetchall()
+
+    cursor.close()
+    conn.close()
+    return jsonify({'imageAssets': image_assets, 'audioAssets': audio_assets, 'videoAssets': video_assets}), 200
 
 if __name__ == '__main__':
     app.run(host='192.168.50.230', port=5000)
