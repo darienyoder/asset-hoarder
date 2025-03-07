@@ -192,7 +192,7 @@
 
                     var xhttp = new XMLHttpRequest();
                     xhttp.onreadystatechange = function() {
-                        var entries = JSON.parse(this.responseText);
+                        var entries = JSON.parse(this.responseText).assets;
                         var entry_list = [];
                         for (var i = 0; i < 100; i++) {
                             entry_list.push(<Entry data={entries[i]} />)

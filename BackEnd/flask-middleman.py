@@ -1,6 +1,7 @@
 #The Purpose of this file is to define the available actions that the API (this) can perform on the SQL Database
 
 from flask import Flask, jsonify, request, render_template
+from flask_cors import CORS
 import requests
 import mysql.connector
 import hashlib
@@ -12,6 +13,9 @@ import base64
 
 app = Flask(__name__)
 
+# Enables CORS to allow the frontend pages to access the backend data
+CORS(app)
+
 # Database configuration
 db_config = {
     'user': 'dbuser',
@@ -21,7 +25,7 @@ db_config = {
 }
 
 # Use when running flask app locally
-# Must make a .env file and have: 
+# Must make a .env file and have:
 # SSH_USERNAME="user"
 # SSH_PASSWORD="pass"
 # changing user and pass for your own

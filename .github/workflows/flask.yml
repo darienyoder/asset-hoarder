@@ -21,13 +21,13 @@ jobs:
         sudo apt-get install -y openssh-client sshpass  # Install sshpass
 
         sshpass -p "${{ secrets.ServerPass }}" ssh -o StrictHostKeyChecking=no ${{ secrets.ServerUser }}@${{ secrets.ServerSSH }} -p ${{ secrets.SSHPort }} << 'EOF'  # Use sshpass with password from GitHub secret
-          
+
           source .venv/bin/activate
           cd /home/${{ secrets.ServerUser }}/asset-hoarder
           git pull
           cd BackEnd
           pid=$(lsof -t -i:5000) && if [ ! -z "$pid" ]; then kill -9 $pid; fi
-          pip install flask requests mysql-connector-python sshtunnel dotenv
+          pip install flask flask-cors requests mysql-connector-python sshtunnel dotenv
           nohup python3 flask-middleman.py > flask.log 2>&1 &
 
           disown
