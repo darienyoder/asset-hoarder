@@ -70,6 +70,7 @@ def get_assets():
     query = """
     SELECT
         a.Id
+        ,a.StorageLocation
         ,ia.ReferenceHash
         ,ia.Width
         ,ia.Height
@@ -89,6 +90,7 @@ def get_assets():
     query = """
     SELECT
         a.Id
+        ,a.StorageLocation
         ,aa.ReferenceHash
         ,aa.Duration
         ,t.Tag
