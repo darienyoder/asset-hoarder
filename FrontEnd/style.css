@@ -99,7 +99,7 @@ html, body {
 
 .entry {
     position: relative;
-    background-color: darkgreen;
+    background-color: #ddd;
     aspect-ratio: 1;
     display: flex;
     justify-content: center;

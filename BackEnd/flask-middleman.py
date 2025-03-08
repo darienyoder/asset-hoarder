@@ -74,6 +74,7 @@ def get_assets():
     query = """
     SELECT
         a.Id
+        ,a.Name
         ,a.StorageLocation
         ,ia.ReferenceHash
         ,ia.Width
@@ -198,7 +199,7 @@ def get_login():
     user = cursor.fetchone()
     if cursor.rowcount < 1:
         return 'wrong username or password', 400
-    
+
     stringified_salt = user['PasswordSalt']
     salt = base64.b64decode(stringified_salt.encode())
     salted_password = salt + password.encode('utf-8')
@@ -212,7 +213,7 @@ def get_login():
         return 'successful login', 200
     else:
         return 'wrong username or password', 400
-    
+
 @app.route('/data/logout', methods=['GET'])
 def get_logout():
     if 'userId' not in session:
@@ -224,7 +225,7 @@ def get_logout():
 def post_user_toggle_save_asset(asset_id):
     if 'userId' not in session:
         return 'user not logged in', 400
-    
+
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
     query = """
@@ -252,7 +253,7 @@ def post_user_toggle_save_asset(asset_id):
     cursor.fetchall()
     if cursor.rowcount > 0:
         query = """
-        DELETE 
+        DELETE
         FROM UserSavedAssets AS usa
         WHERE 0=0
         AND usa.UserId = %(User_Id)s
@@ -279,12 +280,12 @@ def post_user_toggle_save_asset(asset_id):
         cursor.close()
         conn.close()
         return 'asset saved to user', 200
-    
+
 @app.route('/data/user_saved_assets', methods=['GET'])
 def get_user_saved_assets():
     if 'userId' not in session:
         return 'user not logged in', 400
-    
+
     tag = request.args.get('tag')
 
     conn = get_db_connection()

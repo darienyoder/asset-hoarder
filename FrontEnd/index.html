@@ -121,10 +121,21 @@
                         if (asset.type == "image")
                         {
                             let style_content = ".entry-" + asset_ID + `:hover > .image-preview {
-                                z-index: 10;
+                                z-index: 10; ` + (asset.width > asset.height ? `
                                 width: calc(100% * ` + (asset.width / asset.height)  + `);
+                                ` : `width: 100%;
+                                height: calc(100% * ` + (asset.height / asset.width)  + `);`) + `
                                 transform: scale(1.1);
                             }`;
+
+                            if (asset.height > asset.width)
+                            {
+                                style_content += ".entry-" + asset_ID + ` .download-button {
+                                    aspect-ratio: 1;
+                                    width: 30%;
+                                    height: auto;
+                                }`;
+                            }
 
                             return (
                                 <div className={"entry image-entry entry-" + asset_ID}>
@@ -190,6 +201,43 @@
                             hover_time_counter = 0;
                     });
 
+                    async function main()
+                    {
+
+                        try
+                        {
+                            const response = await fetch("http://174.104.199.92:5000/data/assets");
+                            if (!response.ok)
+                            {
+                                throw new Error(`Response status: ${response.status}`);
+                            }
+
+                            const json = await response.json();
+
+                            var entry_list = [];
+                            for (var i = 0; i < 30; i++)
+                            {
+                                let entry = {
+                                    "type": "image",
+                                    "file": json.imageAssets[i].StorageLocation,
+                                    "title": json.imageAssets[i].Name,
+                                    "width": json.imageAssets[i].Width,
+                                    "height": json.imageAssets[i].Height,
+                                };
+                                entry_list.push(<Entry data={entry} />)
+                            }
+
+                            const container = document.getElementById('browse-content');
+                            const root = ReactDOM.createRoot(container);
+                            root.render(entry_list);
+                        }
+                        catch (error)
+                        {
+                            console.error(error.message);
+                        }
+                    }
+
+                    /*
                     var xhttp = new XMLHttpRequest();
                     xhttp.onreadystatechange = function() {
                         var entries = JSON.parse(this.responseText).assets;
@@ -204,8 +252,10 @@
                     };
                     xhttp.open("GET", "http://174.104.199.92:5000/data/assets", true);
                     xhttp.send();
+                    */
 
                     setInterval(timer, 33);
+                    main();
 
                 </script>
             </div>
