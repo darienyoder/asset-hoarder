@@ -67,7 +67,7 @@ def index():
 
 # get by each by type but use Asset.Id to have common reference id for user saving
 # got rid of by asset types, use this to filter maybe, can revert if needed
-@app.route('/data/assets', methods=['GET'])
+@app.route('/assets', methods=['GET'])
 def get_assets():
     tag = request.args.get('tag')
 
