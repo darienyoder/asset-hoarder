@@ -61,13 +61,13 @@ def get_db_connection():
         return get_ssh_db_connection()
 
 # Main Page
-@app.route('/')
+@app.route('/db')
 def index():
     return render_template('main.html')
 
 # get by each by type but use Asset.Id to have common reference id for user saving
 # got rid of by asset types, use this to filter maybe, can revert if needed
-@app.route('/data/assets', methods=['GET'])
+@app.route('/db/assets', methods=['GET'])
 def get_assets():
     tag = request.args.get('tag')
 
@@ -138,7 +138,7 @@ def get_assets():
     conn.close()
     return jsonify({'imageAssets': image_assets, 'audioAssets': audio_assets, 'videoAssets': video_assets}), 200
 
-@app.route('/data/create_account', methods=['POST'])
+@app.route('/db/create_account', methods=['POST'])
 def post_create_account():
     username = request.form['username']
     password = request.form['password']
@@ -177,7 +177,7 @@ def post_create_account():
     return 'succesfully created account', 200
 
 # username and password will not be passed over url, just for testing, change with form
-@app.route('/data/login', methods=['POST'])
+@app.route('/db/login', methods=['POST'])
 def get_login():
     username = request.form['username']
     password = request.form['password']
@@ -216,7 +216,7 @@ def get_login():
     else:
         return 'wrong username or password', 400
 
-@app.route('/data/logout', methods=['GET'])
+@app.route('/db/logout', methods=['GET'])
 def get_logout():
     if 'userId' not in session:
         return 'user not logged in', 400
@@ -283,7 +283,7 @@ def post_user_toggle_save_asset(asset_id):
         conn.close()
         return 'asset saved to user', 200
 
-@app.route('/data/user_saved_assets', methods=['GET'])
+@app.route('/db/user_saved_assets', methods=['GET'])
 def get_user_saved_assets():
     if 'userId' not in session:
         return 'user not logged in', 400
