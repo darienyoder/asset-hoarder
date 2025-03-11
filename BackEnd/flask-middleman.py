@@ -176,7 +176,7 @@ def post_create_account():
     conn.close()
     return 'succesfully created account', 200
 
-# username and password will not be passed over url, just for testing, change with form
+# username and password will not be passed over url, just for testing, change with form.
 @app.route('/db/login', methods=['POST'])
 def get_login():
     username = request.form['username']
