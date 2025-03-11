@@ -35,6 +35,8 @@ db_config = {
 # changing user and pass for your own
 # changing server ip and port for servers
 
+# This is going to be broken
+
 def get_ssh_db_connection():
     tunnel = SSHTunnelForwarder(
     (os.getenv('SSH_SERVER_IP_ADDRESS'), int(os.getenv('SSH_SERVER_PORT'))),
@@ -364,4 +366,4 @@ def get_user_saved_assets():
     return jsonify({'imageAssets': image_assets, 'audioAssets': audio_assets, 'videoAssets': video_assets}), 200
 
 if __name__ == '__main__':
-    app.run(host='192.168.50.230', port=5000)
+    app.run(host='localhost', port=5000)

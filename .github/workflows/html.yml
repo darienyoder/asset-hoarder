@@ -25,9 +25,8 @@ jobs:
           source .venv/bin/activate
           cd /home/${{ secrets.ServerUser }}/asset-hoarder
           git pull
-          cd FrontEnd
-          pid=$(lsof -t -i:5004) && if [ ! -z "$pid" ]; then kill -9 $pid; fi
-          nohup python3 -m http.server 5004 --directory . > http-server.log 2>&1 &
+          sudo cp FrontEnd/ /var/www/FrontEnd -r
+          sudo systemctl restart apache2.service
 
           disown
 
