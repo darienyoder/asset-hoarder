@@ -1,5 +1,4 @@
 #The Purpose of this file is to define the available actions that the API (this) can perform on the SQL Database
-# edit so deployment triggers
 from flask import Flask, jsonify, request, render_template, session
 from flask_cors import CORS
 import requests
