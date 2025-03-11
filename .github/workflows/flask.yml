@@ -29,6 +29,7 @@ jobs:
           pid=$(lsof -t -i:5000) && if [ ! -z "$pid" ]; then kill -9 $pid; fi
           pip install flask flask-cors requests mysql-connector-python sshtunnel dotenv
           nohup python3 flask-middleman.py > flask.log 2>&1 &
+          sudo systemctl restart apache2.service
 
           disown
 
