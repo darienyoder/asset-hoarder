@@ -437,7 +437,7 @@ def download_asset(asset_id):
                 print(f"Error removing or closing downloaded file: {e}")
             return response
 
-        return send_file(file_path, as_attachment=True)
+        return send_file(file_path, as_attachment=True, download_name=asset["StorageLocation"].split("/")[-1])
     else:
         return "Failed to download asset"
 
