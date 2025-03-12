@@ -59,31 +59,37 @@
     </section>
 
     <section class="endpoint">
-        <h3>2. Create Account - POST</h3>
+        <h3>2. Get Random Assets - GET</h3>
+        <p>Retrieve all assets stored in the database, ordered by random.</p>
+        <a href="/db/random_assets">Quick Link: /db/random_assets</a>
+    </section>
+
+    <section class="endpoint">
+        <h3>3. Create Account - POST</h3>
         <p>Create a new user account by providing a username and password.</p>
         <a href="/">Quick Link: /db/create_account</a>
     </section>
 
     <section class="endpoint">
-        <h3>3. User Login - POST</h3>
+        <h3>4. User Login - POST</h3>
         <p>Log in to the system, getting auth cookie, by providing a valid username and password.</p>
         <a href="/">Quick Link: /db/login</a>
     </section>
 
     <section class="endpoint">
-        <h3>4. User Logout - GET</h3>
+        <h3>5. User Logout - GET</h3>
         <p>Logout of the system removing auth cookie</p>
         <a href="/db/logout">Quick Link: /db/logout</a>
     </section>
 
     <section class="endpoint">
-        <h3>5. User Toggle Save Asset - POST</h3>
+        <h3>6. User Toggle Save Asset - POST</h3>
         <p>Save or unsave provided asset to user if logged in.</p>
         <a href="/">Quick Link: /db/user_toggle_save_asset/&lt;int:asset_id&gt;</a>
     </section>
 
     <section class="endpoint">
-        <h3>6. User Toggle Save Asset - GET</h3>
+        <h3>7. User Toggle Save Asset - GET</h3>
         <p>View saved assets to user if logged in.</p>
         <a href="/db/user_saved_assets">Quick Link: /db/user_saved_assets</a>
     </section>

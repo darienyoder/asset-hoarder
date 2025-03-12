@@ -136,6 +136,62 @@ def get_assets():
     conn.close()
     return jsonify({'imageAssets': image_assets, 'audioAssets': audio_assets, 'videoAssets': video_assets}), 200
 
+@app.route('/random_assets', methods=['GET'])
+def get_random_assets():
+    tag = request.args.get('tag')  # Optional filter by tag
+
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    # Combine all asset types (image, audio, video) into a single query
+    query = """
+    (
+        SELECT a.Id, a.StorageLocation, ia.ReferenceHash, ia.Width, ia.Height, t.Tag, 'image' AS asset_type
+        FROM ImageAsset AS ia
+        LEFT JOIN Tags AS t
+            ON t.ReferenceHash = ia.ReferenceHash
+        JOIN Asset AS a
+            ON a.ReferenceHash = ia.ReferenceHash
+    )
+    UNION
+    (
+        SELECT a.Id, a.StorageLocation, aa.ReferenceHash, aa.Duration, t.Tag, 'audio' AS asset_type
+        FROM AudioAsset AS aa
+        LEFT JOIN Tags AS t
+            ON t.ReferenceHash = aa.ReferenceHash
+        JOIN Asset AS a
+            ON a.ReferenceHash = aa.ReferenceHash
+    )
+    UNION
+    (
+        SELECT a.Id, a.StorageLocation, va.ReferenceHash, va.Width, va.Height, va.Duration, t.Tag, 'video' AS asset_type
+        FROM VideoAsset AS va
+        LEFT JOIN Tags AS t
+            ON t.ReferenceHash = va.ReferenceHash
+        JOIN Asset AS a
+            ON a.ReferenceHash = va.ReferenceHash
+    )
+    """
+
+    # If a tag is specified, add it to the query filter
+    if tag:
+        query += " AND t.Tag = %(tag)s"
+
+    # Add random ordering and execute the query
+    query += " ORDER BY RAND()"
+
+    cursor.execute(query, {'tag': tag})
+    assets = cursor.fetchall()
+
+    cursor.close()
+    conn.close()
+
+    if not assets:
+        return 'No assets found', 404
+
+    return jsonify({'assets': assets}), 200
+
+
 @app.route('/create_account', methods=['POST'])
 def post_create_account():
     username = request.form['username']
