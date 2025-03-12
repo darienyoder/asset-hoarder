@@ -214,7 +214,14 @@
 
                             const json = await response.json();
 
-                            // Shuffle asset order
+                            // Remove Picsum and shuffle asset order
+                            for (var i = 0; i < json.imageAssets.length; i++) {
+                                if (json.imageAssets[i].StorageLocation.includes("picsum"))
+                                {
+                                    array.splice(i, 1);
+                                    i--;
+                                }
+                            }
                             json.imageAssets.sort( () => Math.random() -0.5 );
 
                             var entry_list = [];
