@@ -53,7 +53,7 @@ def get_ssh_db_connection():
 
 # Helper functions for database interactions
 def get_db_connection():
-    if socket.gethostname() == 'asset-hoarder':
+    if socket.gethostname() == 'capstone1.cs.kent.edu':
         return mysql.connector.connect(**db_config)
     else:
         return get_ssh_db_connection()
