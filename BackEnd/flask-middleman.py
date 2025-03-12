@@ -1,5 +1,5 @@
 #The Purpose of this file is to define the available actions that the API (this) can perform on the SQL Database
-from flask import Flask, jsonify, request, render_template, session
+from flask import Flask, jsonify, request, render_template, session, send_file, after_this_request
 from flask_cors import CORS
 import requests
 import mysql.connector
@@ -397,6 +397,41 @@ def get_user_saved_assets():
     cursor.close()
     conn.close()
     return jsonify({'imageAssets': image_assets, 'audioAssets': audio_assets, 'videoAssets': video_assets}), 200
+
+@app.route('/download/<int:asset_id>', methods=['GET'])
+def download_asset(asset_id):
+
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+    query = """
+    SELECT StorageLocation
+    FROM Asset
+    WHERE id=""" + str(asset_id)
+    cursor.execute(query)
+    assets = cursor.fetchall()
+    url = ""
+
+    if assets:
+        url = assets[0]["StorageLocation"]
+
+    response = requests.get(url)
+
+    file_path = "/download/" + str(asset_id)
+
+    if response.status_code == 200:
+        os.makedirs("/download/", exist_ok=True)
+        with open(file_path, 'wb') as file:
+            file.write(response.content)
+
+        @after_this_request
+        def remove_file(response):
+            try:
+                os.remove(file_path)
+            except Exception as e:
+                print(f"Error removing or closing downloaded file: {e}")
+            return response
+
+        return send_file(file_path)
 
 if __name__ == '__main__':
     app.run(host='localhost', port=5000)

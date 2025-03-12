@@ -116,7 +116,7 @@
                     function Entry({ data })
                     {
                         let asset = data; //test_assets[Math.floor(Math.random() * test_assets.length)]
-                        let asset_ID = Math.floor(Math.random() * 2147483000);
+                        let asset_ID = asset.id //Math.floor(Math.random() * 2147483000);
 
                         if (asset.type == "image")
                         {
@@ -141,7 +141,7 @@
                                 <div className={"entry image-entry entry-" + asset_ID}>
                                     <div className="image-preview" style={{backgroundImage: "url(" + asset.file + ")"}}>
                                         <div className="entry-title">{asset.title}</div>
-                                        <a className="download-button" href={asset.file} download></a>
+                                        <a className="download-button" href={"/db/download/" + asset.id} download></a>
                                     </div>
                                     <style>{style_content}</style>
                                 </div>
@@ -219,6 +219,7 @@
                             {
                                 let entry = {
                                     "type": "image",
+                                    "id": json.imageAssets[i].Id,
                                     "file": json.imageAssets[i].StorageLocation,
                                     "title": json.imageAssets[i].Name,
                                     "width": json.imageAssets[i].Width,
