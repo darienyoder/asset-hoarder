@@ -218,7 +218,7 @@
                             for (var i = 0; i < json.imageAssets.length; i++) {
                                 if (json.imageAssets[i].StorageLocation.includes("picsum"))
                                 {
-                                    array.splice(i, 1);
+                                    json.imageAssets.splice(i, 1);
                                     i--;
                                 }
                             }
