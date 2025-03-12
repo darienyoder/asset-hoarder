@@ -401,27 +401,33 @@ def get_user_saved_assets():
 @app.route('/download/<int:asset_id>', methods=['GET'])
 def download_asset(asset_id):
 
-    conn = get_db_connection()
-    cursor = conn.cursor(dictionary=True)
-    query = """
-    SELECT StorageLocation
-    FROM Asset
-    WHERE id=""" + str(asset_id)
-    cursor.execute(query)
-    assets = cursor.fetchall()
-    url = ""
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True)
+        query = """
+        SELECT StorageLocation
+        FROM Asset
+        WHERE id=""" + str(asset_id)
+        cursor.execute(query)
+        assets = cursor.fetchall()
+        url = ""
 
-    if assets:
-        url = assets[0]["StorageLocation"]
+        if assets:
+            url = assets[0]["StorageLocation"]
 
-    response = requests.get(url)
+            response = requests.get(url)
+    except Exception as e:
+        return print(f"Error querying database: {e}")
 
     file_path = "/download/" + str(asset_id)
 
     if response.status_code == 200:
-        os.makedirs("/download/", exist_ok=True)
-        with open(file_path, 'wb') as file:
-            file.write(response.content)
+        try:
+            os.makedirs("/download/", exist_ok=True)
+            with open(file_path, 'wb') as file:
+                file.write(response.content)
+        except Exception as e:
+            return print(f"Error Writing file to server: {e}")
 
         @after_this_request
         def remove_file(response):
