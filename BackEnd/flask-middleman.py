@@ -419,11 +419,11 @@ def download_asset(asset_id):
     except Exception as e:
         return print(f"Error querying database: {e}")
 
-    file_path = "/download/" + str(asset_id)
+    file_path = "download/" + str(asset_id)
 
     if response.status_code == 200:
         try:
-            os.makedirs("/download/", exist_ok=True)
+            os.makedirs("download/", exist_ok=True)
             return "Got this far."
             with open(file_path, 'wb') as file:
                 file.write(response.content)
