@@ -90,7 +90,7 @@ def fetch_and_store_sounds():
     for sound in sounds:
         sound_id = sound['id']
         sound_details_url = f"https://freesound.org/apiv2/sounds/{sound_id}/?token={api_key}"
-        
+
         # Fetch sound details
         details_response = requests.get(sound_details_url, headers=headers)
         if details_response.status_code != 200:
@@ -98,12 +98,12 @@ def fetch_and_store_sounds():
             continue
 
         sound_details = details_response.json()
-        
+
         sound_url = f"https://freesound.org/apiv2/sounds/{sound_id}/download/?token={api_key}"
         reference_hash = generate_unique_hash(sound_url)
 
         if reference_hash and not asset_exists(reference_hash):
-            name = f"Freesound_{sound_id}"
+            name = sound_details.get('name', 0)
             type_ = 'audio'
             storage_location = sound_url
             duration = sound_details.get('duration', 0)

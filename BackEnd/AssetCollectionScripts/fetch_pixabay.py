@@ -98,7 +98,7 @@ def fetch_and_store_images():
 
             reference_hash = generate_unique_hash(image_url)
             if reference_hash and not asset_exists(reference_hash):
-                name = "Pixabay_" + str(image['id'])
+                name = image['tags'].replace(",", "").title() # image['tags'] returns a string like "blossom, bloom, flower", which is changed to "Blossom Bloom Flower"
                 type_ = 'image'
                 storage_location = image_url
                 width = image.get('imageWidth', 0)

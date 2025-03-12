@@ -28,7 +28,7 @@ def get_api_key(api_name):
 def insert_asset(reference_hash, name, type_, storage_location):
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute("INSERT INTO Asset (ReferenceHash, Name, Type, StorageLocation) VALUES (%s, %s, %s, %s)", 
+    cursor.execute("INSERT INTO Asset (ReferenceHash, Name, Type, StorageLocation) VALUES (%s, %s, %s, %s)",
                    (reference_hash, name, type_, storage_location))
     conn.commit()
     cursor.close()
@@ -37,7 +37,7 @@ def insert_asset(reference_hash, name, type_, storage_location):
 def insert_image_asset(reference_hash, width, height):
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute("INSERT INTO ImageAsset (ReferenceHash, Width, Height) VALUES (%s, %s, %s)", 
+    cursor.execute("INSERT INTO ImageAsset (ReferenceHash, Width, Height) VALUES (%s, %s, %s)",
                    (reference_hash, width, height))
     conn.commit()
     cursor.close()
@@ -57,7 +57,7 @@ def fetch_and_store_unsplash_images():
         images = response.json()
         for image in images:
             reference_hash = generate_unique_hash(image['id'], image['user']['name'], "Unsplash")
-            name = f"Unsplash_{image['id']}"
+            name = image['description']
             type_ = 'image'
             storage_location = image['urls']['full']
             width = image['width']

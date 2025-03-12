@@ -5,10 +5,10 @@ import hashlib
 def generate_unique_hash(image_id, author, api_name):
     # Create a string by combining the image id, author, and the API name
     hash_input = f"{image_id}-{author}-{api_name}"
-    
+
     # Generate a SHA-256 hash of the input string
     unique_hash = hashlib.sha256(hash_input.encode('utf-8')).hexdigest()
-    
+
     return unique_hash
 
 # Database configuration
@@ -46,7 +46,7 @@ def fetch_and_store_images():
     while True:
         url = base_url.format(page=page)
         response = requests.get(url)
-        
+
         if response.status_code == 200:
             images = response.json()
             if not images:  # If the API returns an empty list, stop the loop
@@ -55,7 +55,7 @@ def fetch_and_store_images():
 
             for image in images:
                 reference_hash = generate_unique_hash(image['id'], image['author'], "PicSum")
-                name = "PicSum" + image['id']  # Author of the image
+                name = ""  # Author of the image
                 type_ = 'image'  # Type for image assets
                 storage_location = image['download_url']
 

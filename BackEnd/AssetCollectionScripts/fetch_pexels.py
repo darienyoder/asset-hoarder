@@ -97,7 +97,7 @@ def fetch_and_store_images():
             reference_hash = generate_unique_hash(image_url)
 
             if reference_hash and not asset_exists(reference_hash):
-                name = "Pexels_" + str(image['id'])
+                name = image['alt']
                 type_ = 'image'
                 storage_location = image_url
                 width = image['width']
