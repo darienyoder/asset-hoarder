@@ -415,7 +415,7 @@ def download_asset(asset_id):
         if assets:
             url = assets[0]["StorageLocation"]
 
-            response = requests.get(url)
+        response = requests.get(url)
     except Exception as e:
         return print(f"Error querying database: {e}")
 
@@ -423,6 +423,7 @@ def download_asset(asset_id):
 
     if response.status_code == 200:
         try:
+            return "Got this far."
             os.makedirs("/download/", exist_ok=True)
             with open(file_path, 'wb') as file:
                 file.write(response.content)
