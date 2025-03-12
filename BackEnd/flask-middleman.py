@@ -432,6 +432,8 @@ def download_asset(asset_id):
             return response
 
         return send_file(file_path)
+    else:
+        return "Failed to download asset"
 
 if __name__ == '__main__':
     app.run(host='localhost', port=5000)
