@@ -38,7 +38,7 @@ db_config = {
 
 def get_ssh_db_connection():
     tunnel = SSHTunnelForwarder(
-    (os.getenv('SSH_SERVER_IP_ADDRESS'), int(os.getenv('SSH_SERVER_PORT'))),
+    (os.getenv('SSH_SERVER_IP_ADDRESS')),
     ssh_username = os.getenv('SSH_USERNAME'),
     ssh_password = os.getenv('SSH_PASSWORD'),
     remote_bind_address = ('127.0.0.1', 3306)
@@ -48,7 +48,6 @@ def get_ssh_db_connection():
         user = db_config['user'],
         password = db_config['password'],
         host = db_config['host'],
-        port = tunnel.local_bind_port,
         database = db_config['database'],
         )
 
