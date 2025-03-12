@@ -214,6 +214,9 @@
 
                             const json = await response.json();
 
+                            // Shuffle asset order
+                            json.imageAssets.sort( () => Math.random() -0.5 );
+
                             var entry_list = [];
                             for (var i = 0; i < 30; i++)
                             {
