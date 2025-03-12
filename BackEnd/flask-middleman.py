@@ -438,7 +438,7 @@ def download_asset(asset_id):
             return response
 
         downloadname = assets[0]["StorageLocation"].split("/")[-1]
-        if !("." in downloadname):
+        if not ("." in downloadname):
             downloadname += ".png"
 
         return send_file(file_path, as_attachment=True, download_name=downloadname)
