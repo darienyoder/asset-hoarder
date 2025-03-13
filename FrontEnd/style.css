@@ -1,14 +1,16 @@
 html, body {
     margin: 0px;
     font-family: sans-serif;
+    background-color: #fdf0e0;
 }
 
 #search-page {
     position: relative;
-    height: 95vh;
+    height: calc(95vh - 20px);
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
+    padding-top: 20px;
     background-color: #832;
 }
 
@@ -34,7 +36,7 @@ html, body {
     padding-left: 20px;
     padding-right: 20px;
     border-radius: 10px;
-    background-color: white;
+    background-color: #fdf0e0;
     text-align: center;
 
     cursor: pointer;
@@ -56,7 +58,7 @@ html, body {
 }
 
 #search-interface {
-    height: calc(100% - 40px);
+    height: calc(100% - 60px);
     width: calc(100% - 40px);
     display: flex;
     justify-content: center;
@@ -79,8 +81,6 @@ html, body {
 
 #search-logo img {
     height: 100%;
-    aspect-ratio: 16/9;
-    background-color: orange;
 }
 
 #search-interface > div {
