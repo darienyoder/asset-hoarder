@@ -2,10 +2,11 @@
 <html lang="en" dir="ltr">
     <head>
         <meta charset="utf-8">
-        <title></title>
+        <title>Home - AssetHoarder</title>
         <link rel="stylesheet" href="style.css">
         <link rel="stylesheet" href="navBar.css">
         <link rel="stylesheet" href="signupLogin.css">
+        <script defer src="signupLogin.js"></script>
         <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
         <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
         <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -23,22 +24,24 @@
                 <li><a class="active" href="index.html">Home</a></li>
                 <li><a class = "active" href = "index.html">Login</a></li>
                 <!-- <li><a href="index.html">Signup</a></li> -->
-                 <button data-signup-target="#signupModal">Signup</button>
+                <button data-modal-target="#modal">Open Modal</button>
+                
+                <div class="modal" id="modal">
+                    <div class="modal-header">
+                        <div class ="title">Sign up please. Leo the Magnificent wants your data</div>
+                        <button data-close-button class="close-button">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        Please do it. Leo is holding my family hostage.
+                        He threatened to make them into orange pancakes
+                        and feed them to Dinnertime if you don't.
+                    </div>            
+                </div>
+                <div id="overlay"></div>
+                
             </ul>
         </div>
-
-        <div class="signupModal" id="signupModal"> <!--Add "active" in class to show header-->
-            <div class="signup-header">
-                <div class ="title">Sign up please. Leo the Magnificent wants your data</div>
-                <button data-signup-close class="close-signup">&times;</button>
-            </div>
-            <div class="signup-body">
-                Please do it. Leo is holding my family hostage.
-                He threatened to make them into orange pancakes
-                and feed them to Dinnertime if you don't.
-            </div>
-        </div>
-        <div id="signup-overlay"></div>
+        
 
         <div id="search-page">
             <!-- <div id="search-bg"></div> -->

@@ -1,31 +1,39 @@
-const openModalButtons = document.querySelectorAll('[data-signup-target]')
-const closeModalButtons = document.querySelectorAll('[data-signup-close]')
-const overlay = document.getElementById('signup-overlay')
+// Modals made with help from YouTube: https://youtu.be/MBaw_6cPmAw
 
-openModalButtons.forEach(button => {
+const openModalButtons = document.querySelectorAll('[data-modal-target]')
+const closeModalButtons = document.querySelectorAll('[data-close-button]')
+const overlay = document.getElementById('overlay')
+
+openModalButtons.forEach(button => { 
     button.addEventListener('click', () => {
-        const signupModal = document.querySelector(button.dataset.signupTarget)
-            // may need to fix above line a little
+        const modal = document.querySelector(button.dataset.modalTarget)
         openModal(modal)
+    })
+})
+
+overlay.addEventListener('click', () => {
+    const modals = document.querySelectorAll('.modal.active')
+    modals.forEach(modal => {
+        closeModal(modal)
     })
 })
 
 closeModalButtons.forEach(button => {
     button.addEventListener('click', () => {
-        const signupModal = button.closest('signupModal')
+        const modal = button.closest('.modal')
             // may need to fix above line a little
-        openModal(modal)
+        closeModal(modal)
     })
 })
 
-function openModal(signupModal){
-    if (signupModal == null) return
-    signupModal.classList.add('active')
+function openModal(modal){
+    if (modal == null) return
+    modal.classList.add('active')
     overlay.classList.add('active')
 }
 
-function closeModal(signupModal){
-    if (signupModal == null) return
-    signupModal.classList.remove('active')
+function closeModal(modal){
+    if (modal == null) return
+    modal.classList.remove('active')
     overlay.classList.remove('active')
 }

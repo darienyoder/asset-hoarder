@@ -1,9 +1,4 @@
-/* Following a tutorial. Not sure if this bit is necessary */
-/* *, *::after, *::before{
-    box-sizing:border-box;
-} */
-
-.signupModal{
+.modal{
     position:fixed;
     top:50%;
     left:50%;
@@ -18,11 +13,11 @@
     max-width: 80%;
 }
 
-.signupModal.active{
+.modal.active{
     transform: translate(-50%, -50%) scale(1);
 }
 
-.signup-header{
+.modal-header{
     padding: 10px 15px;
     display: flex;
     justify-content: space-between;
@@ -30,12 +25,12 @@
     border-bottom: 1px solid black;
 }
 
-.signup-header .title{
+.modal-header .title{
     font-size: 1.25rem;
     font-weight: bold;
 }
 
-.signup-header .close-signup{
+.modal-header .close-modal{
     cursor:pointer;
     border: none;
     outline: none;
@@ -44,23 +39,24 @@
     font-weight: bold;
 }
 
-.signup-body{
+.modal-body{
     padding: 10px 15px;
 }
 
-#signup-overlay{
+#overlay{
     position: fixed;
-    /* opacity: 70; */
+    opacity: 0;
+    transition: 200ms ease-in-out;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
     background-color: rgba(0, 0, 0, .5);
     z-index: 1;
-    pointer-events: none;
+    pointer-events:none; 
 }
 
-#signup-overlay.active{
+#overlay.active{
     opacity: 1;
     pointer-events:all;
 }
