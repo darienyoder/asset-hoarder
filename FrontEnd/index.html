@@ -14,12 +14,35 @@
         <div id="search-page">
             <!-- <div id="search-bg"></div> -->
             <div id="search-interface">
-                <input placeholder="Search the Hoard" autofocus>
+                <div>
+                    <div id="search-logo"><img></div>
+                    <input id="main-searchbar" placeholder="Search the Hoard" autofocus>
+                </div>
                 <div id="content-filters">
-                    <div></div>
-                    <div></div>
-                    <div></div>
-                    <div></div>
+                    <div>
+                        <img src="https://www.pngrepo.com/png/310911/180/image.png" class="filter-toggle-button" onclick="toggleFilter(this.parentElement);" />
+                        <div class="filter-menu">
+
+                        </div>
+                    </div>
+                    <div>
+                        <img src="https://cdn-icons-png.flaticon.com/128/59/59284.png" class="filter-toggle-button" onclick="toggleFilter(this.parentElement);" />
+                        <div class="filter-menu">
+
+                        </div>
+                    </div>
+                    <div>
+                        <img src="https://edusasha.com/wp-content/uploads/2017/05/video.png" class="filter-toggle-button" onclick="toggleFilter(this.parentElement);" />
+                        <div class="filter-menu">
+
+                        </div>
+                    </div>
+                    <div>
+                        <img src="https://cdn-icons-png.flaticon.com/128/1724/1724090.png" class="filter-toggle-button" onclick="toggleFilter(this.parentElement);" />
+                        <div class="filter-menu">
+
+                        </div>
+                    </div>
                 </div>
             </div>
             <div id="explore-button" onclick="document.getElementById('browse-page').scrollIntoView({ behavior: 'smooth'});">
@@ -29,6 +52,31 @@
 
         <div id="browse-page">
             <div id="browse-content">
+                <script>
+
+                document.getElementById("search-logo").style.height = (document.getElementById("main-searchbar").getBoundingClientRect().top - document.getElementById("search-interface").getBoundingClientRect().top - 10) + "px";
+                document.getElementById("search-logo").style.top = "-" + (document.getElementById("main-searchbar").getBoundingClientRect().top - document.getElementById("search-interface").getBoundingClientRect().top + 10) + "px"
+
+                function toggleFilter(filterElement)
+                {
+                    filterElement.classList.toggle("selected");
+                    if (filterElement.classList.contains("selected"))
+                    {
+                        document.getElementById("content-filters").classList.add("selected");
+                    }
+                    else
+                    {
+                        let found = false;
+                        for (var child of document.getElementById("content-filters").children)
+                        {
+                            found = found || child.classList.contains("selected");
+                        }
+                        if (!found)
+                            document.getElementById("content-filters").classList.remove("selected");
+                    }
+                }
+
+                </script>
                 <script type="text/babel">
 
                     const test_assets = [
@@ -230,7 +278,7 @@
                             json.imageAssets.sort( () => Math.random() -0.5 );
 
                             var entry_list = [];
-                            for (var i = 0; i < 30; i++)
+                            for (var i = 0; i < 0; i++)
                             {
                                 let entry = {
                                     "type": "image",
