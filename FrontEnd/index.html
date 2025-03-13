@@ -216,7 +216,7 @@
 
                             // Remove Picsum and shuffle asset order
                             for (var i = 0; i < json.imageAssets.length; i++) {
-                                if (json.imageAssets[i].StorageLocation.includes("picsum"))
+                                if (json.imageAssets[i].StorageLocation.includes("picsum") || json.imageAssets[i].StorageLocation.includes("Pixabay"))
                                 {
                                     json.imageAssets.splice(i, 1);
                                     i--;
