@@ -145,6 +145,22 @@ html, body {
     width: 100%;
     border-radius: 10px;
     transition: flex 0.4s;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.filter-menu * {
+    font-size: 16px;
+}
+
+.filter-menu-margin {
+    display: none;
+
+    flex: 1;
+    height: calc(100% - 40px);
+    margin: 10px;
 }
 
 .selected .filter-toggle-button {
@@ -160,6 +176,15 @@ html, body {
 
 .selected > .filter-menu {
     flex: 1;
+}
+
+.toggle-button {
+    border-radius: 100px;
+    padding: 5px 10px;
+    margin: 2px;
+    background-color: orange;
+    border: 2px solid darkred;
+    cursor: pointer;
 }
 
 #browse-content {
