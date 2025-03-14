@@ -24,19 +24,31 @@
                 <li><a class="active" href="index.html">Home</a></li>
                 <li><a class = "active" href = "index.html">Login</a></li>
                 <!-- <li><a href="index.html">Signup</a></li> -->
-                <button data-modal-target="#modal">Open Modal</button>
+                <button data-modal-target="#modal">Signup</button>
                 
-                <div class="modal" id="modal">
+                <!-- Signup form -->
+                <form class="modal" id="modal">
                     <div class="modal-header">
-                        <div class ="title">Sign up please. Leo the Magnificent wants your data</div>
+                        <div class ="title">Signup</div>
                         <button data-close-button class="close-button">&times;</button>
                     </div>
                     <div class="modal-body">
-                        Please do it. Leo is holding my family hostage.
-                        He threatened to make them into orange pancakes
-                        and feed them to Dinnertime if you don't.
+                        <div><label for="email"><b>Email</b></label></div>
+                        <div><input type="text" placeholder="Enter Email" name="email" required></div>
+
+                        <div><label for="username"><b>Username</b></label></div>
+                        <div><input type="text" placeholder="Enter your username" name="username" required></div>
+
+                        <div><label for="psw"><b>Password</b></label></div>
+                        <div><input type="password" placeholder="Enter Password" name="psw" required></div>
+
+                        <div><label for="psw-repeat"><b>Repeat Password</b></label></div>
+                        <div><input type="password" placeholder="Repeat Password" name="psw-repeat" required></div>
+                        
+                        <button type="submit" class="signup">Sign Up</button>
+
                     </div>            
-                </div>
+                </form>
                 <div id="overlay"></div>
                 
             </ul>
