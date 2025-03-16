@@ -4,6 +4,8 @@ const openModalButtons = document.querySelectorAll('[data-modal-target]')
 const closeModalButtons = document.querySelectorAll('[data-close-button]')
 const overlay = document.getElementById('overlay')
 
+// Signup:
+
 openModalButtons.forEach(button => { 
     button.addEventListener('click', () => {
         const modal = document.querySelector(button.dataset.modalTarget)
@@ -12,7 +14,7 @@ openModalButtons.forEach(button => {
 })
 
 overlay.addEventListener('click', () => {
-    const modals = document.querySelectorAll('.modal.active')
+    const modals = document.querySelectorAll('.signup-modal.active')
     modals.forEach(modal => {
         closeModal(modal)
     })
@@ -20,11 +22,37 @@ overlay.addEventListener('click', () => {
 
 closeModalButtons.forEach(button => {
     button.addEventListener('click', () => {
-        const modal = button.closest('.modal')
+        const modal = button.closest('.signup-modal')
             // may need to fix above line a little
         closeModal(modal)
     })
 })
+
+// Login:
+
+openModalButtons.forEach(button => { 
+    button.addEventListener('click', () => {
+        const modal = document.querySelector(button.dataset.modalTarget)
+        openModal(modal)
+    })
+})
+
+overlay.addEventListener('click', () => {
+    const modals = document.querySelectorAll('.login-modal.active')
+    modals.forEach(modal => {
+        closeModal(modal)
+    })
+})
+
+closeModalButtons.forEach(button => {
+    button.addEventListener('click', () => {
+        const modal = button.closest('.login-modal')
+            // may need to fix above line a little
+        closeModal(modal)
+    })
+})
+
+// Open/Close
 
 function openModal(modal){
     if (modal == null) return

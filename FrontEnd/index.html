@@ -24,15 +24,15 @@
                 <li><a class="active" href="index.html">Home</a></li>
                 <li><a class = "active" href = "index.html">Login</a></li>
                 <!-- <li><a href="index.html">Signup</a></li> -->
-                <button data-modal-target="#modal">Signup</button>
+                <button data-modal-target="#signup-modal">Signup</button>
                 
                 <!-- Signup form -->
-                <form class="modal" id="modal">
-                    <div class="modal-header">
+                <form class="signup-modal" id="signup-modal">
+                    <div class="signup-modal-header">
                         <div class ="title">Signup</div>
                         <button data-close-button class="close-button">&times;</button>
                     </div>
-                    <div class="modal-body">
+                    <div class="signup-modal-body">
                         <div><label for="email"><b>Email</b></label></div>
                         <div><input type="text" placeholder="Enter Email" name="email" required></div>
 
@@ -50,6 +50,28 @@
                     </div>            
                 </form>
                 <div id="overlay"></div>
+
+                <!-- Login button in header -->
+                <button data-modal-target="#login-modal">Login</button>
+                
+                <!-- Login form -->
+                <form class="login-modal" id="login-modal">
+                    <div class="login-modal-header">
+                        <div class ="title">Login</div>
+                        <button data-close-button class="close-button">&times;</button>
+                    </div>
+                    <div class="login-modal-body">
+                        <div><label for="email"><b>Username or Email</b></label></div>
+                        <div><input type="text" placeholder="Username or Email" name="email" required></div>
+
+                        <div><label for="psw"><b>Password</b></label></div>
+                        <div><input type="password" placeholder="Enter Password" name="psw" required></div>
+                        
+                        <button type="submit" class="login">Log In</button>
+
+                    </div>            
+                </form>
+                <!-- <div id="overlay"></div> -->
                 
             </ul>
         </div>
