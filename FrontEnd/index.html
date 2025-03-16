@@ -311,13 +311,13 @@
                             json.imageAssets.sort( () => Math.random() -0.5 );
 
                             var entry_list = [];
-                            for (var i = 0; i < 0; i++)
+                            for (var i = 0; i < 30; i++)
                             {
                                 let entry = {
                                     "type": "image",
                                     "id": json.imageAssets[i].Id,
                                     "file": json.imageAssets[i].StorageLocation,
-                                    "title": json.imageAssets[i].Name,
+                                    "title": "",//json.imageAssets[i].Name,
                                     "width": json.imageAssets[i].Width,
                                     "height": json.imageAssets[i].Height,
                                 };
