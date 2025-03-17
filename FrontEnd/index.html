@@ -3,7 +3,7 @@
 <html lang="en" dir="ltr">
     <head>
         <meta charset="utf-8">
-        <title></title>
+        <title>AssetHoarder</title>
         <link rel="stylesheet" href="style.css">
         <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
         <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
@@ -14,12 +14,59 @@
         <div id="search-page">
             <!-- <div id="search-bg"></div> -->
             <div id="search-interface">
-                <input placeholder="Search the Hoard" autofocus>
+                <div>
+                    <div id="search-logo"><img src="logo.png" /></div>
+                    <input id="main-searchbar" placeholder="Search the Hoard" autofocus>
+                </div>
                 <div id="content-filters">
-                    <div></div>
-                    <div></div>
-                    <div></div>
-                    <div></div>
+                    <div>
+                        <img src="https://www.pngrepo.com/png/310911/180/image.png" class="filter-toggle-button" onclick="toggleFilter(this.parentElement);" />
+                        <div class="filter-menu">
+                            <div class="filter-menu-margin">
+                                <div>
+                                    <button class="toggle-button" onclick="toggleButton(this);">Photos</button>
+                                    <button class="toggle-button" onclick="toggleButton(this);">Icons</button>
+                                    <button class="toggle-button" onclick="toggleButton(this);">Textures</button>
+                                    <button class="toggle-button" onclick="toggleButton(this);">Sprites</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <img src="https://cdn-icons-png.flaticon.com/128/59/59284.png" class="filter-toggle-button" onclick="toggleFilter(this.parentElement);" />
+                        <div class="filter-menu">
+                            <div class="filter-menu-margin">
+                                <div>
+                                    <button class="toggle-button" onclick="toggleButton(this);">Music</button>
+                                    <button class="toggle-button" onclick="toggleButton(this);">Sound Effects</button>
+                                    <button class="toggle-button" onclick="toggleButton(this);">Ambient</button>
+                                    <button class="toggle-button" onclick="toggleButton(this);">Voice</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <img src="https://edusasha.com/wp-content/uploads/2017/05/video.png" class="filter-toggle-button" onclick="toggleFilter(this.parentElement);" />
+                        <div class="filter-menu">
+                            <div class="filter-menu-margin">
+                                <div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <img src="https://cdn-icons-png.flaticon.com/128/1724/1724090.png" class="filter-toggle-button" onclick="toggleFilter(this.parentElement);" />
+                        <div class="filter-menu">
+                            <div class="filter-menu-margin">
+                                <div>
+                                    <button class="toggle-button" onclick="toggleButton(this);">Characters</button>
+                                    <button class="toggle-button" onclick="toggleButton(this);">Objects</button>
+                                    <button class="toggle-button" onclick="toggleButton(this);">Environments</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div id="explore-button" onclick="document.getElementById('browse-page').scrollIntoView({ behavior: 'smooth'});">
@@ -29,6 +76,40 @@
 
         <div id="browse-page">
             <div id="browse-content">
+                <script>
+
+                document.getElementById("search-logo").style.height = (document.getElementById("main-searchbar").getBoundingClientRect().top - document.getElementById("search-interface").getBoundingClientRect().top - 10) + "px";
+                document.getElementById("search-logo").style.top = "-" + (document.getElementById("main-searchbar").getBoundingClientRect().top - document.getElementById("search-interface").getBoundingClientRect().top + 10) + "px"
+
+                function toggleFilter(filterElement)
+                {
+                    filterElement.classList.toggle("selected");
+                    if (filterElement.classList.contains("selected"))
+                    {
+                        document.getElementById("content-filters").classList.add("selected");
+
+                        setTimeout(() => {
+                            filterElement.children[1].children[0].style.display = "block";
+                        }, 100);
+                    }
+                    else
+                    {
+                        filterElement.children[1].children[0].style.display = "none";
+                        filterElement.classList.add("selected");
+                        setTimeout(() => {
+                            filterElement.classList.remove("selected");
+                            let found = false;
+                            for (var child of document.getElementById("content-filters").children)
+                            {
+                                found = found || child.classList.contains("selected");
+                            }
+                            if (!found)
+                                document.getElementById("content-filters").classList.remove("selected");
+                        }, 00);
+                    }
+                }
+
+                </script>
                 <script type="text/babel">
 
                     const test_assets = [
@@ -236,7 +317,7 @@
                                     "type": "image",
                                     "id": json.imageAssets[i].Id,
                                     "file": json.imageAssets[i].StorageLocation,
-                                    "title": json.imageAssets[i].Name,
+                                    "title": "",//json.imageAssets[i].Name,
                                     "width": json.imageAssets[i].Width,
                                     "height": json.imageAssets[i].Height,
                                 };
