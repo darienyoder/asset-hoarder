@@ -225,12 +225,20 @@
 
                             return (
                                 <div className={"entry image-entry entry-" + asset_ID}>
-                                    <div className="image-preview" style={{backgroundImage: "url(" + asset.file + ")"}}>
+                                    <div className="image-preview"
+                                        style={{ backgroundImage: `url(${asset.file})` }}
+                                        loading="lazy">
                                         <div className="entry-title">{asset.title}</div>
-                                        <a className="download-button" href={"/db/download/" + asset.id} download></a>
+                                        <a className="download-button" href={`/db/download/${asset.id}`} download></a>
                                     </div>
+
+                                    {/* Preload the image to ensure it's fetched as soon as possible */}
+                                    <link rel="preload" href={asset.file} as="image" />
+
+                                    {/* Critical CSS for the image-entry styles */}
                                     <style>{style_content}</style>
                                 </div>
+
                             );
                         }
                         else if (asset.type == "audio")
