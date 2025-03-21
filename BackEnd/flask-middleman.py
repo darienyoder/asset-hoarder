@@ -176,7 +176,7 @@ def post_create_account():
     username = request.form['username']
     password = request.form['password']
 
-    if username is None or password is None:
+    if username is None or not username or password is None or not password:
         return jsonify('enter username and password'), 400
 
     conn = get_db_connection()
@@ -191,7 +191,7 @@ def post_create_account():
     cursor.execute(query, {'username': username})
     cursor.fetchall()
     if cursor.rowcount > 0:
-        return jsonify('user already exists'), 400
+        return jsonify('username already exists'), 400
     salt = os.urandom(16)
     salted_password = salt + password.encode('utf-8')
     hashed_password = hashlib.sha256(salted_password).hexdigest()
@@ -211,13 +211,16 @@ def post_create_account():
 
 # username and password will not be passed over url, just for testing, change with form.
 @app.route('/login', methods=['POST'])
-def get_login():
+def post_login():
     username = request.form['username']
     password = request.form['password']
     #username = request.args.get('username')
     #password = request.args.get('password')
 
-    if username is None or password is None:
+    if 'userId' in session:
+        return jsonify('already logged in'), 400
+
+    if username is None or not username or password is None or not password:
         return jsonify('enter username and password'), 400
 
     conn = get_db_connection()
@@ -264,7 +267,7 @@ def post_delete_account():
     username = request.form['username']
     password = request.form['password']
 
-    if username is None or password is None:
+    if username is None or not username or password is None or not password:
         return jsonify('enter username and password'), 400
 
     conn = get_db_connection()
@@ -320,12 +323,12 @@ def post_delete_account():
     """
     cursor.execute(query, {'userId': user['Id']})
     deleted = cursor.rowcount > 0
-    cursor.close()
-    conn.close()
-
     if not deleted:
         return jsonify('something went wrong'), 500
 
+    conn.commit()
+    cursor.close()
+    conn.close()
     session.pop('userId')
     return jsonify('successfully deleted account and logged out'), 200
     
