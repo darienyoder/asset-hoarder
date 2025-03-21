@@ -39,8 +39,32 @@
             text-decoration: none;
         }
 
-        a:hover {
+        a:hover,
+        a:focus {
             text-decoration: underline;
+        }
+
+        label[for=output] {
+            margin: 1rem auto 0;
+            width: 80%;
+            padding: 0.25rem;
+            background-color: rgb(62, 62, 62);
+            color: white;
+            font-size: 1rem;
+            display: block;
+            position: sticky;
+            bottom: 0;
+        }
+
+        #output {
+            scroll-margin-top: 2rem;
+            margin: 0 auto;
+            width: 80%;
+            padding: 0.25rem;
+            white-space: pre-wrap;
+            background-color: black;
+            color: white;
+            font-size: 0.5rem;
         }
     </style>
 </head>
@@ -49,53 +73,136 @@
     <header>
         <h1>Welcome to the Asset Hoarder API</h1>
         <p>This API allows you to interact with an SQL database containing assets such as images, audio, and video.
-            Below are the available endpoints for retrieving and managing asset data. POST quick links work in progress</p>
+            Below are the available endpoints for retrieving and managing asset data.
+        </p>
     </header>
 
     <section class="endpoint">
         <h3>1. Get Assets - GET</h3>
         <p>Retrieve all assets stored in the database.</p>
-        <a href="/db/assets">Quick Link: /db/assets</a>
+        <a href="/assets">Quick Link: </a>
     </section>
 
     <section class="endpoint">
         <h3>2. Get Random Assets - GET</h3>
         <p>Retrieve all assets stored in the database, ordered by random.</p>
-        <a href="/db/random_assets">Quick Link: /db/random_assets</a>
+        <a href="/random_assets">Quick Link: </a>
     </section>
 
     <section class="endpoint">
         <h3>3. Create Account - POST</h3>
         <p>Create a new user account by providing a username and password.</p>
-        <a href="/">Quick Link: /db/create_account</a>
+        <form action="/create_account" method="post">
+            <label for="username1">username:</label>
+            <input type="text" name="username" id="username1">
+            <label for="password1">password:</label>
+            <input type="password" name="password" id="password1">
+            <input type="submit" value="submit">
+        </form>
     </section>
 
     <section class="endpoint">
         <h3>4. User Login - POST</h3>
         <p>Log in to the system, getting auth cookie, by providing a valid username and password.</p>
-        <a href="/">Quick Link: /db/login</a>
+        <form action="/login" method="post">
+            <label for="username2">username:</label>
+            <input type="text" name="username" id="username2">
+            <label for="password2">password:</label>
+            <input type="password" name="password" id="password2">
+            <input type="submit" value="submit">
+        </form>
     </section>
 
     <section class="endpoint">
         <h3>5. User Logout - GET</h3>
         <p>Logout of the system removing auth cookie</p>
-        <a href="/db/logout">Quick Link: /db/logout</a>
+        <a href="/logout">Quick Link: </a>
     </section>
 
     <section class="endpoint">
-        <h3>6. User Toggle Save Asset - POST</h3>
+        <h3>6. Delete Account - DELETE</h3>
+        <p>If logged in, delete account from database and logout of the system removing auth cookie</p>
+        <form action="/delete_account" method="post">
+            <label for="username3">username:</label>
+            <input type="text" name="username" id="username3">
+            <label for="password3">password:</label>
+            <input type="password" name="password" id="password3">
+            <input type="submit" value="submit">
+        </form>
+    </section>
+
+    <section class="endpoint">
+        <h3>7. User Toggle Save Asset - POST</h3>
         <p>Save or unsave provided asset to user if logged in.</p>
-        <a href="/">Quick Link: /db/user_toggle_save_asset/&lt;int:asset_id&gt;</a>
+        <form action="/user_toggle_save_asset" method="post" id="saveAsset">
+            <label for="assetId">asset id:</label>
+            <input type="number" name="assetId" id="assetId">
+            <input type="submit" value="submit">
+        </form>
     </section>
 
     <section class="endpoint">
-        <h3>7. User Toggle Save Asset - GET</h3>
+        <h3>8. User Saved Assets - GET</h3>
         <p>View saved assets to user if logged in.</p>
-        <a href="/db/user_saved_assets">Quick Link: /db/user_saved_assets</a>
+        <a href="/user_saved_assets">Quick Link: </a>
     </section>
 
-
-
+    <label for="output">Response: </label>
+    <div id="output"></div>
 </body>
+<script>
+    const output = document.querySelector('#output');
+    const pathname = window.location.pathname;
+
+    const anchors = document.querySelectorAll('a');
+    anchors.forEach(anchor => {
+        anchorPath = anchor.href.replace(window.location.href, '');
+        anchor.innerText = anchor.innerText + ' ' + pathname + anchorPath;
+        anchor.href = pathname + anchorPath;
+
+        anchor.addEventListener('click', async function (event) {
+            event.preventDefault();
+            const response = await fetch(anchor.href, {
+                method: 'get',
+            });
+            let responseData = await response.json();
+            output.innerText = JSON.stringify(responseData, null, 2);
+            output.scrollIntoView();
+        });
+    });
+
+    const forms = document.querySelectorAll('form');
+    forms.forEach(form => {
+        formPath = form.action.replace(window.location.href, '');
+        form.action = pathname + formPath;
+        if (form.id !== 'saveAsset') {
+            form.addEventListener('submit', async function (event) {
+                event.preventDefault();
+                const response = await fetch(form.action, {
+                    method: form.method,
+                    body: new FormData(form),
+                });
+
+                let responseData = await response.json();
+                output.innerText = JSON.stringify(responseData, null, 2);
+                output.scrollIntoView();
+        });
+        }
+    });
+
+    const saveAsset = document.querySelector('#saveAsset');
+    saveAsset.addEventListener('submit', async function (event) {
+        event.preventDefault();
+        const formData = new FormData(saveAsset);
+        const response = await fetch(saveAsset.action + '/' + formData.get('assetId'), {
+            method: saveAsset.method,
+        });
+
+        let responseData = await response.json()
+        output.innerText = JSON.stringify(responseData, null, 2);
+        output.scrollIntoView();
+    });
+
+</script>
 
 </html>
