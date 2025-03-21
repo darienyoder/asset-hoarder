@@ -88,7 +88,7 @@ def fetch_picsum():
                 break
 
             for image in images:
-                reference_hash = generate_unique_hash(image['id'], image['author'], "PicSum")
+                reference_hash = generate_unique_hash(image['download_url'])
                 name = ""  # Author of the image
                 type_ = 'image'  # Type for image assets
                 storage_location = image['download_url']
@@ -123,7 +123,7 @@ def fetch_unsplash():
     if response.status_code == 200:
         images = response.json()
         for image in images:
-            reference_hash = generate_unique_hash(image['id'], image['user']['name'], "Unsplash")
+            reference_hash = generate_unique_hash(image['urls']['full'])
             name = image['description']
             type_ = 'image'
             storage_location = image['urls']['full']
