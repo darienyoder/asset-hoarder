@@ -9,6 +9,7 @@ import os
 from dotenv import load_dotenv
 import socket
 import base64
+import subprocess
 
 app = Flask(__name__)
 load_dotenv()
@@ -169,8 +170,6 @@ def get_random_assets():
         return jsonify('No assets found'), 404
 
     return jsonify({'assets': assets}), 200
-
-
 
 @app.route('/create_account', methods=['POST'])
 def post_create_account():
@@ -519,6 +518,29 @@ def download_asset(asset_id):
         return send_file(file_path, as_attachment=True, download_name=downloadname)
     else:
         return "Failed to download asset"
+
+@app.route('/fetch-api', methods=['GET'])
+def fetch_all():
+    result = subprocess.run(['python3', 'AssetCollectionScripts/fetch_mega_script.py', '--all'])
+    if result.returncode == 0:
+        return jsonify({'status': 'success'}), 200
+    else:
+        return jsonify({'error': 'Failed to start subprocess'}), 500
+
+
+@app.route('/fetch-api/<string:api>', methods=['GET'])
+def fetch_specific(api):
+    # Validate if the api argument is valid
+    valid_apis = ['picsum', 'unsplash', 'pixabay', 'pexels', 'freesound']
+    
+    if api.lower() not in valid_apis:
+        return jsonify({'error': 'API not found'}), 404
+
+    result = subprocess.run(['python3', 'AssetCollectionScripts/fetch_mega_script.py', f'--{api.lower()}'])
+    if result.returncode == 0:
+        return jsonify({'status': 'success'}), 200
+    else:
+        return jsonify({'error': 'Failed to start subprocess'}), 500
 
 if __name__ == '__main__':
     app.run(host='localhost', port=5000)
