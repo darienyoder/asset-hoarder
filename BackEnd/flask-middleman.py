@@ -446,7 +446,11 @@ def download_asset(asset_id):
 
 @app.route('/fetch-api', methods=['GET'])
 def fetch_all():
-    subprocess.run(['python3', 'fetch_script.py', '--all'])
+    result = subprocess.run(['python3', 'fetch_script.py', '--all'])
+    if result.returncode == 0:
+        return jsonify({'status': 'success'}), 200
+    else:
+        return jsonify({'error': 'Failed to start subprocess'}), 500
 
 
 @app.route('/fetch-api/<string:api>', methods=['GET'])
@@ -457,7 +461,11 @@ def fetch_specific(api):
     if api.lower() not in valid_apis:
         return jsonify({'error': 'API not found'}), 404
 
-    subprocess.run(['python3', 'fetch_script.py', f'--{api.lower()}'])
+    result = subprocess.run(['python3', 'fetch_script.py', f'--{api.lower()}'])
+    if result.returncode == 0:
+        return jsonify({'status': 'success'}), 200
+    else:
+        return jsonify({'error': 'Failed to start subprocess'}), 500
 
 if __name__ == '__main__':
     app.run(host='localhost', port=5000)
