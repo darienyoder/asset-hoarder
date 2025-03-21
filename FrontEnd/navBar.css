@@ -2,59 +2,49 @@
     width: 100%;
     list-style-type: none; 
     z-index: 10;
-    padding: 1px;
     text-align: left;
     align-items: center;
     font-size: 16.5px;
-    background-color: black;
-    height: 50px;
+    background-color: #262626;
+    height: 45px;
+    top:0;
+    position: absolute;
+    display: flex;
 } 
 
 .topnav a{
     color: white;
-    background-color: black;
+    background-color: darkred;
     text-decoration: none;
     padding-left: 10px;
     padding-right: 10px;
-    padding-top: 100px;
-    padding-bottom: 100px; 
+    /* padding-bottom: 24px; */
 }
 
 .topnav a:hover,.logSignButton:hover {
     color: black;
-    background-color: lightblue;
+    background-color: palevioletred;
 }
 
-ul {
-    list-style-type: none;
-    margin: 0;
-    padding: 10px;
-    /* overflow: visible; */
-    /* background-color: #990; */
-}
 
 li {
-    display: inline;
+    display: inline-flex;
+    align-items: center;
 }
 
 .logSignButton {
     color: white;
-    background-color: black;
+    background-color: darkcyan;
     border: none;
     font-size: 16.5px;
     padding-left: 10px;
     padding-right: 10px;
+    /* padding-bottom: 24.1px; */
     overflow: none;
-    align-items: baseline;
-    padding-bottom: 100px;
+    /* align-items: baseline; */
+    display:inline-flex;
+    vertical-align: center;
 }
-
-/* .logSignButton:hover {
-    color: black;
-    background-color: lightblue;
-} */
-
-
 
 
 /* .logo {

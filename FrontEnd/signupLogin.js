@@ -14,7 +14,7 @@ openModalButtons.forEach(button => {
 })
 
 overlay.addEventListener('click', () => {
-    const modals = document.querySelectorAll('.signup-modal.active')
+    const modals = document.querySelectorAll('.signup.active')
     modals.forEach(modal => {
         closeModal(modal)
     })
@@ -22,7 +22,7 @@ overlay.addEventListener('click', () => {
 
 closeModalButtons.forEach(button => {
     button.addEventListener('click', () => {
-        const modal = button.closest('.signup-modal')
+        const modal = button.closest('.signup')
             // may need to fix above line a little
         closeModal(modal)
     })
@@ -38,7 +38,7 @@ openModalButtons.forEach(button => {
 })
 
 overlay.addEventListener('click', () => {
-    const modals = document.querySelectorAll('.login-modal.active')
+    const modals = document.querySelectorAll('.login.active')
     modals.forEach(modal => {
         closeModal(modal)
     })
@@ -46,7 +46,7 @@ overlay.addEventListener('click', () => {
 
 closeModalButtons.forEach(button => {
     button.addEventListener('click', () => {
-        const modal = button.closest('.login-modal')
+        const modal = button.closest('.login')
             // may need to fix above line a little
         closeModal(modal)
     })
