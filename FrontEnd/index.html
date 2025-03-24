@@ -16,7 +16,7 @@
             <div id="search-interface">
                 <div>
                     <div id="search-logo"><img src="logo.png" /></div>
-                    <input id="main-searchbar" placeholder="Search the Hoard" autofocus>
+                    <input id="main-searchbar" placeholder="Search the Hoard" autofocus oninput="document.getElementById('explore-button').innerHTML='Search'">
                 </div>
                 <div id="content-filters">
                     <div>
@@ -28,6 +28,23 @@
                                     <button class="toggle-button" onclick="toggleButton(this);">Icons</button>
                                     <button class="toggle-button" onclick="toggleButton(this);">Textures</button>
                                     <button class="toggle-button" onclick="toggleButton(this);">Sprites</button>
+                                </div>
+                                <hr>
+                                <div>
+                                    <button class="toggle-button" onclick="toggleButton(this);">Square</button>
+                                    <button class="toggle-button" onclick="toggleButton(this);">Wide</button>
+                                    <button class="toggle-button" onclick="toggleButton(this);">Tall</button>
+                                    <button class="toggle-button" onclick="toggleButton(this);">16:9</button>
+                                    <button class="toggle-button" onclick="toggleButton(this);">4:3</button>
+                                </div>
+                                <hr>
+                                <div style="display:flex; justify-content:space-around;">
+                                    <button class="color-button" style="background-color:red;"></button>
+                                    <button class="color-button" style="background-color:orange;"></button>
+                                    <button class="color-button" style="background-color:yellow;"></button>
+                                    <button class="color-button" style="background-color:green;"></button>
+                                    <button class="color-button" style="background-color:blue;"></button>
+                                    <button class="color-button" style="background-color:purple;"></button>
                                 </div>
                             </div>
                         </div>
@@ -69,12 +86,13 @@
                     </div>
                 </div>
             </div>
-            <div id="explore-button" onclick="document.getElementById('browse-page').scrollIntoView({ behavior: 'smooth'});">
+            <div id="explore-button" onclick="document.getElementById('browse-page').style.display='block'; document.getElementById('browse-anchor').scrollIntoView({ behavior: 'smooth'});">
                 Explore
             </div>
         </div>
 
-        <div id="browse-page">
+        <div id="browse-page" style="display:none;">
+            <div id="browse-anchor" style="height:50px;"></div> <!-- Buffer -->
             <div id="browse-content">
                 <script>
 
@@ -105,7 +123,7 @@
                             }
                             if (!found)
                                 document.getElementById("content-filters").classList.remove("selected");
-                        }, 00);
+                        }, 0);
                     }
                 }
 

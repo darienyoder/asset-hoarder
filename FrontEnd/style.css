@@ -43,7 +43,7 @@ html, body {
 }
 
 #browse-page {
-
+    padding-top: 40px;
 }
 
 #search-page > div {
@@ -185,6 +185,14 @@ html, body {
     background-color: orange;
     border: 2px solid darkred;
     cursor: pointer;
+}
+
+.color-button {
+    aspect-ratio: 1;
+    border:2px solid black;
+    border-radius:100%;
+    cursor:pointer;
+    width: 30px;
 }
 
 #browse-content {
