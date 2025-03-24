@@ -1,0 +1,36 @@
+name: Deploy Flask App to SSH Server
+
+on:
+  push:
+    branches:
+      - main  # Trigger deployment on push to the main branch
+    paths:
+      - 'BackEnd/flask-middleman.py'  # Only trigger the workflow if this file is updated
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest  # Runs on a GitHub-hosted Ubuntu runner
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3  # This checks out your repository so that we can deploy the code
+
+    - name: Deploy to server
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y openssh-client sshpass  # Install sshpass
+
+        sshpass -p "${{ secrets.ServerPass }}" ssh -o StrictHostKeyChecking=no ${{ secrets.ServerUser }}@${{ secrets.ServerSSH }} << 'EOF'  # Use sshpass with password from GitHub secret
+
+          source .venv/bin/activate
+          cd /home/${{ secrets.ServerUser }}/asset-hoarder
+          git pull
+          cd BackEnd
+          pid=$(lsof -t -i:5000) && if [ ! -z "$pid" ]; then kill -9 $pid; fi
+          pip install flask flask-cors requests mysql-connector-python sshtunnel dotenv
+          nohup python3 flask-middleman.py > flask.log 2>&1 &
+          sudo systemctl restart apache2.service
+
+          disown
+
+        EOF

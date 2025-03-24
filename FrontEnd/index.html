@@ -1,8 +1,9 @@
 <!DOCTYPE html>
+<!-- This is a comment to test something, again, again, again (add agaom every edit)-->
 <html lang="en" dir="ltr">
     <head>
         <meta charset="utf-8">
-        <title>Home - AssetHoarder</title>
+        <title>AssetHoarder</title>
         <link rel="stylesheet" href="style.css">
         <link rel="stylesheet" href="betterNavBar.css">
         <link rel="stylesheet" href="signupLogin.css">
@@ -80,12 +81,59 @@
         <div id="search-page">
             <!-- <div id="search-bg"></div> -->
             <div id="search-interface">
-                <input placeholder="Search the Hoard" autofocus>
+                <div>
+                    <div id="search-logo"><img src="logo.png" /></div>
+                    <input id="main-searchbar" placeholder="Search the Hoard" autofocus>
+                </div>
                 <div id="content-filters">
-                    <div></div>
-                    <div></div>
-                    <div></div>
-                    <div></div>
+                    <div>
+                        <img src="https://www.pngrepo.com/png/310911/180/image.png" class="filter-toggle-button" onclick="toggleFilter(this.parentElement);" />
+                        <div class="filter-menu">
+                            <div class="filter-menu-margin">
+                                <div>
+                                    <button class="toggle-button" onclick="toggleButton(this);">Photos</button>
+                                    <button class="toggle-button" onclick="toggleButton(this);">Icons</button>
+                                    <button class="toggle-button" onclick="toggleButton(this);">Textures</button>
+                                    <button class="toggle-button" onclick="toggleButton(this);">Sprites</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <img src="https://cdn-icons-png.flaticon.com/128/59/59284.png" class="filter-toggle-button" onclick="toggleFilter(this.parentElement);" />
+                        <div class="filter-menu">
+                            <div class="filter-menu-margin">
+                                <div>
+                                    <button class="toggle-button" onclick="toggleButton(this);">Music</button>
+                                    <button class="toggle-button" onclick="toggleButton(this);">Sound Effects</button>
+                                    <button class="toggle-button" onclick="toggleButton(this);">Ambient</button>
+                                    <button class="toggle-button" onclick="toggleButton(this);">Voice</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <img src="https://edusasha.com/wp-content/uploads/2017/05/video.png" class="filter-toggle-button" onclick="toggleFilter(this.parentElement);" />
+                        <div class="filter-menu">
+                            <div class="filter-menu-margin">
+                                <div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <img src="https://cdn-icons-png.flaticon.com/128/1724/1724090.png" class="filter-toggle-button" onclick="toggleFilter(this.parentElement);" />
+                        <div class="filter-menu">
+                            <div class="filter-menu-margin">
+                                <div>
+                                    <button class="toggle-button" onclick="toggleButton(this);">Characters</button>
+                                    <button class="toggle-button" onclick="toggleButton(this);">Objects</button>
+                                    <button class="toggle-button" onclick="toggleButton(this);">Environments</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div id="explore-button" onclick="document.getElementById('browse-page').scrollIntoView({ behavior: 'smooth'});">
@@ -95,6 +143,40 @@
 
         <div id="browse-page">
             <div id="browse-content">
+                <script>
+
+                document.getElementById("search-logo").style.height = (document.getElementById("main-searchbar").getBoundingClientRect().top - document.getElementById("search-interface").getBoundingClientRect().top - 10) + "px";
+                document.getElementById("search-logo").style.top = "-" + (document.getElementById("main-searchbar").getBoundingClientRect().top - document.getElementById("search-interface").getBoundingClientRect().top + 10) + "px"
+
+                function toggleFilter(filterElement)
+                {
+                    filterElement.classList.toggle("selected");
+                    if (filterElement.classList.contains("selected"))
+                    {
+                        document.getElementById("content-filters").classList.add("selected");
+
+                        setTimeout(() => {
+                            filterElement.children[1].children[0].style.display = "block";
+                        }, 100);
+                    }
+                    else
+                    {
+                        filterElement.children[1].children[0].style.display = "none";
+                        filterElement.classList.add("selected");
+                        setTimeout(() => {
+                            filterElement.classList.remove("selected");
+                            let found = false;
+                            for (var child of document.getElementById("content-filters").children)
+                            {
+                                found = found || child.classList.contains("selected");
+                            }
+                            if (!found)
+                                document.getElementById("content-filters").classList.remove("selected");
+                        }, 0o0);
+                    }
+                }
+
+                </script>
                 <script type="text/babel">
 
                     const test_assets = [
@@ -149,7 +231,7 @@
                         {
                             "type": "audio",
                             "file": "https://ia902902.us.archive.org/31/items/01.smellsliketeenspirit/01.Smells%20Like%20Teen%20Spirit.mp3",
-                            "title": "Smells Like Team Spirit",
+                            "title": "Smells Like Teen Spirit",
                             "duration": 5*60+1,
                         },
                     ]
@@ -179,27 +261,51 @@
                         }
                     }
 
-                    function Entry()
+                    function Entry({ data })
                     {
-                        let asset = test_assets[Math.floor(Math.random() * test_assets.length)]
-                        let asset_ID = Math.floor(Math.random() * 2147483000);
+                        let asset = data; //test_assets[Math.floor(Math.random() * test_assets.length)]
+                        let asset_ID = asset.id //Math.floor(Math.random() * 2147483000);
+                        if (Math.random() < 0.3)
+                        {
+                            asset = test_assets[4 + Math.floor(Math.random() * 4)]
+                            asset_ID = Math.floor(Math.random() * 2147483000);
+                        }
 
                         if (asset.type == "image")
                         {
                             let style_content = ".entry-" + asset_ID + `:hover > .image-preview {
-                                z-index: 10;
+                                z-index: 10; ` + (asset.width > asset.height ? `
                                 width: calc(100% * ` + (asset.width / asset.height)  + `);
+                                ` : `width: 100%;
+                                height: calc(100% * ` + (asset.height / asset.width)  + `);`) + `
                                 transform: scale(1.1);
                             }`;
 
+                            if (asset.height > asset.width)
+                            {
+                                style_content += ".entry-" + asset_ID + ` .download-button {
+                                    aspect-ratio: 1;
+                                    width: 30%;
+                                    height: auto;
+                                }`;
+                            }
+
                             return (
                                 <div className={"entry image-entry entry-" + asset_ID}>
-                                    <div className="image-preview" style={{backgroundImage: "url(" + asset.file + ")"}}>
+                                    <div className="image-preview"
+                                        style={{ backgroundImage: `url(${asset.file})` }}
+                                        loading="lazy">
                                         <div className="entry-title">{asset.title}</div>
-                                        <a className="download-button" href={asset.file} download></a>
+                                        <a className="download-button" href={`/db/download/${asset.id}`} download></a>
                                     </div>
+
+                                    {/* Preload the image to ensure it's fetched as soon as possible */}
+                                    <link rel="preload" href={asset.file} as="image" />
+
+                                    {/* Critical CSS for the image-entry styles */}
                                     <style>{style_content}</style>
                                 </div>
+
                             );
                         }
                         else if (asset.type == "audio")
@@ -256,16 +362,72 @@
                             hover_time_counter = 0;
                     });
 
-                    var entry_list = [];
-                    for (var i = 0; i < 100; i++) {
-                        entry_list.push(<Entry />)
+                    async function main()
+                    {
+
+                        try
+                        {
+                            const response = await fetch("https://capstone1.cs.kent.edu/db/assets");
+                            if (!response.ok)
+                            {
+                                throw new Error(`Response status: ${response.status}`);
+                            }
+
+                            const json = await response.json();
+
+                            // Remove Picsum and shuffle asset order
+                            for (var i = 0; i < json.imageAssets.length; i++) {
+                                if (json.imageAssets[i].StorageLocation.includes("picsum") || json.imageAssets[i].StorageLocation.includes("pixabay"))
+                                {
+                                    json.imageAssets.splice(i, 1);
+                                    i--;
+                                }
+                            }
+                            json.imageAssets.sort( () => Math.random() -0.5 );
+
+                            var entry_list = [];
+                            for (var i = 0; i < 30; i++)
+                            {
+                                let entry = {
+                                    "type": "image",
+                                    "id": json.imageAssets[i].Id,
+                                    "file": json.imageAssets[i].StorageLocation,
+                                    "title": "",//json.imageAssets[i].Name,
+                                    "width": json.imageAssets[i].Width,
+                                    "height": json.imageAssets[i].Height,
+                                };
+                                entry_list.push(<Entry data={entry} />)
+                            }
+
+                            const container = document.getElementById('browse-content');
+                            const root = ReactDOM.createRoot(container);
+                            root.render(entry_list);
+                        }
+                        catch (error)
+                        {
+                            console.error(error.message);
+                        }
                     }
 
-                    const container = document.getElementById('browse-content');
-                    const root = ReactDOM.createRoot(container);
-                    root.render(entry_list);
+                    /*
+                    var xhttp = new XMLHttpRequest();
+                    xhttp.onreadystatechange = function() {
+                        var entries = JSON.parse(this.responseText).assets;
+                        var entry_list = [];
+                        for (var i = 0; i < 100; i++) {
+                            entry_list.push(<Entry data={entries[i]} />)
+                        }
+
+                        const container = document.getElementById('browse-content');
+                        const root = ReactDOM.createRoot(container);
+                        root.render(entry_list);
+                    };
+                    xhttp.open("GET", "http://174.104.199.92:5000/data/assets", true);
+                    xhttp.send();
+                    */
 
                     setInterval(timer, 33);
+                    main();
 
                 </script>
             </div>

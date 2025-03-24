@@ -1,0 +1,31 @@
+name: Deploy HTML App to SSH Server
+
+on:
+  push:
+    branches:
+      - main  # Trigger deployment on push to the main branch
+    paths:
+      - 'FrontEnd/**'  # Only trigger the workflow if any file in the folder is changed
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Deploy to server
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y openssh-client sshpass  # Install sshpass
+
+        sshpass -p "${{ secrets.ServerPass }}" ssh -o StrictHostKeyChecking=no ${{ secrets.ServerUser }}@${{ secrets.ServerSSH }} << 'EOF'  # Use sshpass with password from GitHub secret
+          
+          source .venv/bin/activate
+          cd /home/${{ secrets.ServerUser }}/asset-hoarder
+          git pull
+          sudo cp FrontEnd/ /var/www/ -r
+          sudo systemctl restart apache2.service
+
+        EOF
