@@ -1,0 +1,115 @@
+/* *** Signup *** */
+
+.signup{
+    position:fixed;
+    top:50%;
+    left:50%;
+    transform: translate(-50%, -50%) scale(0);
+    transition: 200ms ease-in-out;
+    border: 1px solid black;
+    border-radius: 10px;
+    z-index: 10; /* This is what makes it appear in front! */
+        /*Higher makes it appear above things*/
+    background-color:seagreen;
+    width: 500px;
+    max-width: 80%;
+}
+
+.signup.active{
+    transform: translate(-50%, -50%) scale(1);
+}
+
+.signup-modal-header{
+    padding: 10px 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid black;
+}
+
+.signup-modal-header .title{
+    font-size: 1.25rem;
+    font-weight: bold;
+}
+
+.signup-modal-header .close-modal{
+    cursor:pointer;
+    border: none;
+    outline: none;
+    background: none;
+    font-size: 1.25rem;
+    font-weight: bold;
+}
+
+.signup-modal-body{
+    padding: 10px 15px;
+}
+
+/* *** Login *** */
+/* It's possible there's a more efficient way to do this
+    but I'd need to do some research first */
+
+.login{
+    position:fixed;
+    top:50%;
+    left:50%;
+    transform: translate(-50%, -50%) scale(0);
+    transition: 200ms ease-in-out;
+    border: 1px solid black;
+    border-radius: 10px;
+    z-index: 10; /* This is what makes it appear in front! */
+        /*Higher makes it appear above things*/
+    background-color:seagreen;
+    width: 500px;
+    max-width: 80%;
+}
+
+.login.active{
+    transform: translate(-50%, -50%) scale(1);
+}
+
+.login-modal-header{
+    padding: 10px 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid black;
+}
+
+.login-modal-header .title{
+    font-size: 1.25rem;
+    font-weight: bold;
+}
+
+.login-modal-header .close-modal{
+    cursor:pointer;
+    border: none;
+    outline: none;
+    background: none;
+    font-size: 1.25rem;
+    font-weight: bold;
+}
+
+.login-modal-body{
+    padding: 10px 15px;
+}
+
+/* *** Overlay *** */
+
+#overlay{
+    position: fixed;
+    opacity: 0;
+    transition: 200ms ease-in-out;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, .5);
+    z-index: 1;
+    pointer-events:none; 
+}
+
+#overlay.active{
+    opacity: 1;
+    pointer-events:all;
+}

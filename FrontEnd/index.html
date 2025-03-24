@@ -5,11 +5,78 @@
         <meta charset="utf-8">
         <title>AssetHoarder</title>
         <link rel="stylesheet" href="style.css">
+        <link rel="stylesheet" href="betterNavBar.css">
+        <link rel="stylesheet" href="signupLogin.css">
+        <script defer src="signupLogin.js"></script>
         <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
         <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
         <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     </head>
     <body>
+        
+        <!-- Navigation Bars -->
+        <div class="topnav">
+            <!-- <div class="logo"> -->
+                <!--<img src="assets/logo.png">-->
+                <!-- <a href="index.html">AssetHoarder</a> -->
+            <!-- </div> -->
+            <!--This can be updated later to look nicer. See navBar.css-->
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                    <!-- href is for a test link here. Change it to the homepage link later-->
+                <li><button class="logSignButton" data-modal-target="#signup-modal">Signup</button></li>
+                <li><button class="logSignButton" data-modal-target="#login-modal">Login</button></li>
+                <li><a href="index.html">Profile</a></li>
+                    <!-- Profile should go to another page
+                     or prompt them to log in if they haven't already -->            
+            </ul>
+
+            <!-- Signup form -->
+            <form class="signup" id="signup-modal">
+                <div class="signup-modal-header">
+                    <div class ="title">Signup</div>
+                    <button data-close-button class="close-button">&times;</button>
+                </div>
+                <div class="signup-modal-body">
+                    <div><label for="email"><b>Email</b></label></div>
+                    <div><input type="text" placeholder="Enter Email" name="email" required></div>
+
+                    <div><label for="username"><b>Username</b></label></div>
+                    <div><input type="text" placeholder="Enter your username" name="username" required></div>
+
+                    <div><label for="psw"><b>Password</b></label></div>
+                    <div><input type="password" placeholder="Enter Password" name="psw" required></div>
+
+                    <div><label for="psw-repeat"><b>Repeat Password</b></label></div>
+                    <div><input type="password" placeholder="Repeat Password" name="psw-repeat" required></div>
+                    
+                    <button type="submit" class="signup">Sign Up</button>
+
+                </div>            
+            </form>
+            
+            <!-- Login form -->
+            <form class="login" id="login-modal">
+                <div class="login-modal-header">
+                    <div class ="title">Login</div>
+                    <button data-close-button class="close-button">&times;</button>
+                </div>
+                <div class="login-modal-body">
+                    <div><label for="email"><b>Username or Email</b></label></div>
+                    <div><input type="text" placeholder="Username or Email" name="email" required></div>
+
+                    <div><label for="psw"><b>Password</b></label></div>
+                    <div><input type="password" placeholder="Enter Password" name="psw" required></div>
+                    
+                    <button type="submit" class="login">Log In</button>
+
+                </div>            
+            </form>
+            
+            <!-- Overlay to dim background -->
+            <div id="overlay"></div>
+        </div> <!-- End navbar code -->
+        
 
         <div id="search-page">
             <!-- <div id="search-bg"></div> -->
@@ -71,7 +138,7 @@
             </div>
             <div id="explore-button" onclick="document.getElementById('browse-page').scrollIntoView({ behavior: 'smooth'});">
                 Explore
-            </div>
+            </div> 
         </div>
 
         <div id="browse-page">
