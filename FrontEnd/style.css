@@ -6,7 +6,7 @@ html, body {
 
 #search-page {
     position: relative;
-    height: calc(95vh - 20px);
+    height: calc(95vh - 20px - 46px);
     display: flex;
     justify-content: center;
     align-items: flex-start;
@@ -43,7 +43,7 @@ html, body {
 }
 
 #browse-page {
-    
+
 }
 
 #search-page > div {
@@ -311,5 +311,3 @@ html, body {
 
     cursor: ew-resize;
 }
-
-
