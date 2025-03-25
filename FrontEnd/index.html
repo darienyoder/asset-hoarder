@@ -4,7 +4,14 @@
     <head>
         <meta charset="utf-8">
         <title>AssetHoarder</title>
+        <!-- Style -->
         <link rel="stylesheet" href="style.css">
+        <link rel="stylesheet" href="betterNavBar.css">
+        <link rel="stylesheet" href="signupLogin.css">
+        <!-- Scripts -->
+        <script defer src="search.js"></script>
+        <script defer src="signupLogin.js"></script>
+        <!-- React.js -->
         <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
         <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
         <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -86,7 +93,7 @@
                     </div>
                 </div>
             </div>
-            <div id="explore-button" onclick="document.getElementById('browse-page').style.display='block'; document.getElementById('browse-anchor').scrollIntoView({ behavior: 'smooth'});">
+            <div id="explore-button" onclick="search();">
                 Explore
             </div>
         </div>
@@ -313,39 +320,20 @@
                             hover_time_counter = 0;
                     });
 
-                    async function main()
+                    async function update_results()
                     {
-
                         try
                         {
-                            const response = await fetch("https://capstone1.cs.kent.edu/db/assets");
-                            if (!response.ok)
-                            {
-                                throw new Error(`Response status: ${response.status}`);
-                            }
-
-                            const json = await response.json();
-
-                            // Remove Picsum and shuffle asset order
-                            // for (var i = 0; i < json.imageAssets.length; i++) {
-                            //     if (json.imageAssets[i].StorageLocation.includes("picsum") || json.imageAssets[i].StorageLocation.includes("pixabay"))
-                            //     {
-                            //         json.imageAssets.splice(i, 1);
-                            //         i--;
-                            //     }
-                            // }
-                            // json.imageAssets.sort( () => Math.random() -0.5 );
-
                             var entry_list = [];
                             for (var i = 0; i < 15; i++)
                             {
                                 let entry = {
                                     "type": "image",
-                                    "id": json.imageAssets[i].Id,
-                                    "file": json.imageAssets[i].StorageLocation,
-                                    "title": "",//json.imageAssets[i].Name,
-                                    "width": json.imageAssets[i].Width,
-                                    "height": json.imageAssets[i].Height,
+                                    "id": document.results[i].Id,
+                                    "file": document.results[i].StorageLocation,
+                                    "title": document.results[i].Name,
+                                    "width": document.results[i].Width,
+                                    "height": document.results[i].Height,
                                 };
                                 entry_list.push(<Entry data={entry} />)
                             }
@@ -360,25 +348,7 @@
                         }
                     }
 
-                    /*
-                    var xhttp = new XMLHttpRequest();
-                    xhttp.onreadystatechange = function() {
-                        var entries = JSON.parse(this.responseText).assets;
-                        var entry_list = [];
-                        for (var i = 0; i < 100; i++) {
-                            entry_list.push(<Entry data={entries[i]} />)
-                        }
-
-                        const container = document.getElementById('browse-content');
-                        const root = ReactDOM.createRoot(container);
-                        root.render(entry_list);
-                    };
-                    xhttp.open("GET", "http://174.104.199.92:5000/data/assets", true);
-                    xhttp.send();
-                    */
-
                     setInterval(timer, 33);
-                    main();
 
                 </script>
             </div>
