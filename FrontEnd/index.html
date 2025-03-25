@@ -15,12 +15,12 @@
             <!-- <div id="search-bg"></div> -->
             <div id="search-interface">
                 <div>
-                    <div id="search-logo"><img src="logo.png" /></div>
-                    <input id="main-searchbar" placeholder="Search the Hoard" autofocus oninput="document.getElementById('explore-button').innerHTML='Search'">
+                    <div id="search-logo"><img src="img/logo.png" /></div>
+                    <input id="main-searchbar" placeholder="Search the hoard" autofocus oninput="document.getElementById('explore-button').innerHTML='Search'">
                 </div>
                 <div id="content-filters">
                     <div>
-                        <img src="https://www.pngrepo.com/png/310911/180/image.png" class="filter-toggle-button" onclick="toggleFilter(this.parentElement);" />
+                        <img src="img/images.png" class="filter-toggle-button" onclick="toggleFilter(this.parentElement);" />
                         <div class="filter-menu">
                             <div class="filter-menu-margin">
                                 <div>
@@ -50,7 +50,7 @@
                         </div>
                     </div>
                     <div>
-                        <img src="https://cdn-icons-png.flaticon.com/128/59/59284.png" class="filter-toggle-button" onclick="toggleFilter(this.parentElement);" />
+                        <img src="img/audio.png" class="filter-toggle-button" onclick="toggleFilter(this.parentElement);" />
                         <div class="filter-menu">
                             <div class="filter-menu-margin">
                                 <div>
@@ -96,8 +96,8 @@
             <div id="browse-content">
                 <script>
 
-                document.getElementById("search-logo").style.height = (document.getElementById("main-searchbar").getBoundingClientRect().top - document.getElementById("search-interface").getBoundingClientRect().top - 10) + "px";
-                document.getElementById("search-logo").style.top = "-" + (document.getElementById("main-searchbar").getBoundingClientRect().top - document.getElementById("search-interface").getBoundingClientRect().top + 10) + "px"
+                document.getElementById("search-logo").style.height = Math.min((document.getElementById("main-searchbar").getBoundingClientRect().top - document.getElementById("search-interface").getBoundingClientRect().top - 20), 150 ) + "px";
+                document.getElementById("search-logo").style.top = "-" + (document.getElementById("search-logo").getBoundingClientRect().bottom - document.getElementById("search-logo").getBoundingClientRect().top + 20) + "px";
 
                 function toggleFilter(filterElement)
                 {
@@ -327,17 +327,17 @@
                             const json = await response.json();
 
                             // Remove Picsum and shuffle asset order
-                            for (var i = 0; i < json.imageAssets.length; i++) {
-                                if (json.imageAssets[i].StorageLocation.includes("picsum") || json.imageAssets[i].StorageLocation.includes("pixabay"))
-                                {
-                                    json.imageAssets.splice(i, 1);
-                                    i--;
-                                }
-                            }
-                            json.imageAssets.sort( () => Math.random() -0.5 );
+                            // for (var i = 0; i < json.imageAssets.length; i++) {
+                            //     if (json.imageAssets[i].StorageLocation.includes("picsum") || json.imageAssets[i].StorageLocation.includes("pixabay"))
+                            //     {
+                            //         json.imageAssets.splice(i, 1);
+                            //         i--;
+                            //     }
+                            // }
+                            // json.imageAssets.sort( () => Math.random() -0.5 );
 
                             var entry_list = [];
-                            for (var i = 0; i < 30; i++)
+                            for (var i = 0; i < 15; i++)
                             {
                                 let entry = {
                                     "type": "image",
