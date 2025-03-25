@@ -30,6 +30,7 @@
                         <img src="img/images.png" class="filter-toggle-button" onclick="toggleFilter(this.parentElement);" />
                         <div class="filter-menu">
                             <div class="filter-menu-margin">
+                                <h2>Type</h2>
                                 <div>
                                     <button class="toggle-button" onclick="toggleButton(this);">Photos</button>
                                     <button class="toggle-button" onclick="toggleButton(this);">Icons</button>
@@ -37,6 +38,7 @@
                                     <button class="toggle-button" onclick="toggleButton(this);">Sprites</button>
                                 </div>
                                 <hr>
+                                <h2>Size</h2>
                                 <div>
                                     <button class="toggle-button" onclick="toggleButton(this);">Square</button>
                                     <button class="toggle-button" onclick="toggleButton(this);">Wide</button>
@@ -45,6 +47,7 @@
                                     <button class="toggle-button" onclick="toggleButton(this);">4:3</button>
                                 </div>
                                 <hr>
+                                <h2>Color</h2>
                                 <div style="display:flex; justify-content:space-around;">
                                     <button class="color-button" style="background-color:red;"></button>
                                     <button class="color-button" style="background-color:orange;"></button>
@@ -53,6 +56,7 @@
                                     <button class="color-button" style="background-color:blue;"></button>
                                     <button class="color-button" style="background-color:purple;"></button>
                                 </div>
+                                <hr>
                             </div>
                         </div>
                     </div>
@@ -60,12 +64,18 @@
                         <img src="img/audio.png" class="filter-toggle-button" onclick="toggleFilter(this.parentElement);" />
                         <div class="filter-menu">
                             <div class="filter-menu-margin">
+                                <h2>Type</h2>
                                 <div>
                                     <button class="toggle-button" onclick="toggleButton(this);">Music</button>
                                     <button class="toggle-button" onclick="toggleButton(this);">Sound Effects</button>
                                     <button class="toggle-button" onclick="toggleButton(this);">Ambient</button>
                                     <button class="toggle-button" onclick="toggleButton(this);">Voice</button>
                                 </div>
+                                <hr>
+                                <h2>Duration</h2>
+                                <input type="text">
+                                <hr>
+
                             </div>
                         </div>
                     </div>
@@ -132,6 +142,11 @@
                                 document.getElementById("content-filters").classList.remove("selected");
                         }, 0);
                     }
+                }
+
+                function toggleButton(button)
+                {
+                    button.classList.toggle("selected");
                 }
 
                 </script>
@@ -329,11 +344,11 @@
                             {
                                 let entry = {
                                     "type": "image",
-                                    "id": document.results[i].Id,
-                                    "file": document.results[i].StorageLocation,
-                                    "title": document.results[i].Name,
-                                    "width": document.results[i].Width,
-                                    "height": document.results[i].Height,
+                                    "id": results[i].Id,
+                                    "file": results[i].StorageLocation,
+                                    "title": results[i].Name,
+                                    "width": results[i].Width,
+                                    "height": results[i].Height,
                                 };
                                 entry_list.push(<Entry data={entry} />)
                             }

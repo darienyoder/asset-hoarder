@@ -18,7 +18,7 @@ async function search()
     }
 
     let json = await response.json();
-    document.results = json.imageAssets;
+    results = json.imageAssets;
 
     update_results();
 
