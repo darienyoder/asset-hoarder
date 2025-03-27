@@ -562,5 +562,23 @@ def fetch_specific(api):
     else:
         return jsonify({'error': 'Failed to start subprocess'}), 500
 
+@app.route('/cleanup', methods=['GET'])
+def cleanup():
+    # Sometimes assets are scraped improperly and
+    # their records need to be deleted.
+    # Edit this function as you need to remove certain entries.
+
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    # Change this to delete certain assets
+    cursor.execute("DELETE FROM Asset WHERE Name LIKE 'PicSum%' OR Name LIKE 'Pexels%' OR Name LIKE 'Pixabay%'")
+
+    # Don't change; automatically removes deleted assets from other tables
+    cursor.execute("DELETE FROM ImageAsset WHERE NOT EXISTS (SELECT * FROM Asset WHERE ImageAsset.ReferenceHash = Asset.ReferenceHash)")
+    cursor.execute("DELETE FROM AudioAsset WHERE NOT EXISTS (SELECT * FROM Asset WHERE AudioAsset.ReferenceHash = Asset.ReferenceHash)")
+    cursor.execute("DELETE FROM VideoAsset WHERE NOT EXISTS (SELECT * FROM Asset WHERE VideoAsset.ReferenceHash = Asset.ReferenceHash)")
+    cursor.execute("DELETE FROM Tags WHERE NOT EXISTS (SELECT * FROM Asset WHERE Tags.ReferenceHash = Asset.ReferenceHash)")
+
 if __name__ == '__main__':
     app.run(host='localhost', port=5000)
