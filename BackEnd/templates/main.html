@@ -157,7 +157,7 @@
     const anchors = document.querySelectorAll('a');
     anchors.forEach(anchor => {
         anchorPath = anchor.href.replace(window.location.href, '');
-        anchor.innerText = anchor.innerText + ' ' + pathname + anchorPath;
+        anchor.innerText += ' ' + anchorPath;
         anchor.href = anchorPath;
         // I think the pathname just is everything after the domain name
 

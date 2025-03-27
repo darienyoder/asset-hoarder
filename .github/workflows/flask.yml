@@ -5,7 +5,7 @@ on:
     branches:
       - main  # Trigger deployment on push to the main branch
     paths:
-      - 'BackEnd/flask-middleman.py'  # Only trigger the workflow if this file is updated
+      - 'BackEnd/**'  # Only trigger the workflow if this folder
 
 jobs:
   deploy:
