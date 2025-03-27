@@ -31,30 +31,30 @@
                         <div class="filter-menu">
                             <div class="filter-menu-margin">
                                 <h2>Type</h2>
-                                <div>
-                                    <button class="toggle-button" onclick="toggleButton(this);">Photos</button>
-                                    <button class="toggle-button" onclick="toggleButton(this);">Icons</button>
-                                    <button class="toggle-button" onclick="toggleButton(this);">Textures</button>
-                                    <button class="toggle-button" onclick="toggleButton(this);">Sprites</button>
+                                <div id="img-type-filters">
+                                    <button value="photos" class="toggle-button" onclick="toggleButton(this);">Photos</button>
+                                    <button value="icons" class="toggle-button" onclick="toggleButton(this);">Icons</button>
+                                    <button value="textures" class="toggle-button" onclick="toggleButton(this);">Textures</button>
+                                    <button value="sprites" class="toggle-button" onclick="toggleButton(this);">Sprites</button>
                                 </div>
                                 <hr>
                                 <h2>Size</h2>
-                                <div>
-                                    <button class="toggle-button" onclick="toggleButton(this);">Square</button>
-                                    <button class="toggle-button" onclick="toggleButton(this);">Wide</button>
-                                    <button class="toggle-button" onclick="toggleButton(this);">Tall</button>
-                                    <button class="toggle-button" onclick="toggleButton(this);">16:9</button>
-                                    <button class="toggle-button" onclick="toggleButton(this);">4:3</button>
+                                <div id="img-size-filters">
+                                    <button value="square" class="toggle-button" onclick="toggleButton(this);">Square</button>
+                                    <button value="wide" class="toggle-button" onclick="toggleButton(this);">Wide</button>
+                                    <button value="tall" class="toggle-button" onclick="toggleButton(this);">Tall</button>
+                                    <button value="16:9" class="toggle-button" onclick="toggleButton(this);">16:9</button>
+                                    <button value="4:3" class="toggle-button" onclick="toggleButton(this);">4:3</button>
                                 </div>
                                 <hr>
                                 <h2>Color</h2>
-                                <div style="display:flex; justify-content:space-around;">
-                                    <button class="color-button" style="background-color:red;"></button>
-                                    <button class="color-button" style="background-color:orange;"></button>
-                                    <button class="color-button" style="background-color:yellow;"></button>
-                                    <button class="color-button" style="background-color:green;"></button>
-                                    <button class="color-button" style="background-color:blue;"></button>
-                                    <button class="color-button" style="background-color:purple;"></button>
+                                <div id="img-color-filters" style="display:flex; justify-content:space-around;">
+                                    <button value="red" class="color-button" onclick="toggleButton(this);" style="background-color:red;"></button>
+                                    <button value="orange" class="color-button" onclick="toggleButton(this);" style="background-color:orange;"></button>
+                                    <button value="yellow" class="color-button" onclick="toggleButton(this);" style="background-color:yellow;"></button>
+                                    <button value="green" class="color-button" onclick="toggleButton(this);" style="background-color:green;"></button>
+                                    <button value="blue" class="color-button" onclick="toggleButton(this);" style="background-color:blue;"></button>
+                                    <button value="purple" class="color-button" onclick="toggleButton(this);" style="background-color:purple;"></button>
                                 </div>
                                 <hr>
                             </div>
@@ -65,15 +65,15 @@
                         <div class="filter-menu">
                             <div class="filter-menu-margin">
                                 <h2>Type</h2>
-                                <div>
-                                    <button class="toggle-button" onclick="toggleButton(this);">Music</button>
-                                    <button class="toggle-button" onclick="toggleButton(this);">Sound Effects</button>
-                                    <button class="toggle-button" onclick="toggleButton(this);">Ambient</button>
-                                    <button class="toggle-button" onclick="toggleButton(this);">Voice</button>
+                                <div id="audio-type-filters">
+                                    <button value="music" class="toggle-button" onclick="toggleButton(this);">Music</button>
+                                    <button value="effect" class="toggle-button" onclick="toggleButton(this);">Sound Effects</button>
+                                    <button value="ambient" class="toggle-button" onclick="toggleButton(this);">Ambient</button>
+                                    <button value="voice" class="toggle-button" onclick="toggleButton(this);">Voice</button>
                                 </div>
                                 <hr>
                                 <h2>Duration</h2>
-                                <input type="text">
+                                <input name="duration" type="text">
                                 <hr>
 
                             </div>
@@ -238,11 +238,11 @@
                     {
                         let asset = data; //test_assets[Math.floor(Math.random() * test_assets.length)]
                         let asset_ID = asset.id //Math.floor(Math.random() * 2147483000);
-                        if (Math.random() < 0.3)
-                        {
-                            asset = test_assets[4 + Math.floor(Math.random() * 4)]
-                            asset_ID = Math.floor(Math.random() * 2147483000);
-                        }
+                        // if (Math.random() < 0.3)
+                        // {
+                        //     asset = test_assets[4 + Math.floor(Math.random() * 4)]
+                        //     asset_ID = Math.floor(Math.random() * 2147483000);
+                        // }
 
                         if (asset.type == "image")
                         {
