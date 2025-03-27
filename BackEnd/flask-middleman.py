@@ -9,6 +9,7 @@ import os
 from dotenv import load_dotenv
 import socket
 import base64
+import subprocess
 
 app = Flask(__name__)
 load_dotenv()
@@ -21,7 +22,7 @@ CORS(app)
 db_config = {
     'user': 'dbuser',
     'password': 'dbpass',
-    'host': 'localhost',
+    'host': '127.0.0.1',
     'database': 'ASSETHOARDER'
 }
 
@@ -48,6 +49,7 @@ def get_ssh_db_connection():
         user = db_config['user'],
         password = db_config['password'],
         host = db_config['host'],
+        port = tunnel.local_bind_port,
         database = db_config['database'],
         )
 
@@ -165,19 +167,17 @@ def get_random_assets():
     conn.close()
 
     if not assets:
-        return 'No assets found', 404
+        return jsonify('No assets found'), 404
 
     return jsonify({'assets': assets}), 200
-
-
 
 @app.route('/create_account', methods=['POST'])
 def post_create_account():
     username = request.form['username']
     password = request.form['password']
 
-    if username is None or password is None:
-        return 'enter username and password', 400
+    if username is None or not username or password is None or not password:
+        return jsonify('enter username and password'), 400
 
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
@@ -191,7 +191,7 @@ def post_create_account():
     cursor.execute(query, {'username': username})
     cursor.fetchall()
     if cursor.rowcount > 0:
-        return 'user already exists', 400
+        return jsonify('username already exists'), 400
     salt = os.urandom(16)
     salted_password = salt + password.encode('utf-8')
     hashed_password = hashlib.sha256(salted_password).hexdigest()
@@ -204,21 +204,24 @@ def post_create_account():
         cursor.execute(query, {'username': username, 'hashed_password': hashed_password, 'salt': stringified_salt})
         conn.commit()
     except:
-        return 'error creating account', 500
+        return jsonify('error creating account'), 500
     cursor.close()
     conn.close()
-    return 'succesfully created account', 200
+    return jsonify('succesfully created account'), 200
 
 # username and password will not be passed over url, just for testing, change with form.
 @app.route('/login', methods=['POST'])
-def get_login():
+def post_login():
     username = request.form['username']
     password = request.form['password']
     #username = request.args.get('username')
     #password = request.args.get('password')
 
-    if username is None or password is None:
-        return 'enter username and password', 400
+    if 'userId' in session:
+        return jsonify('already logged in'), 400
+
+    if username is None or not username or password is None or not password:
+        return jsonify('enter username and password'), 400
 
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
@@ -233,7 +236,7 @@ def get_login():
 
     user = cursor.fetchone()
     if cursor.rowcount < 1:
-        return 'wrong username or password', 400
+        return jsonify('wrong username or password'), 400
 
     stringified_salt = user['PasswordSalt']
     salt = base64.b64decode(stringified_salt.encode())
@@ -245,21 +248,95 @@ def get_login():
 
     if hashed_password == user['HashedPassword']:
         session['userId'] = user['Id']
-        return 'successful login', 200
+        return jsonify('successful login'), 200
     else:
-        return 'wrong username or password', 400
+        return jsonify('wrong username or password'), 400
 
 @app.route('/logout', methods=['GET'])
 def get_logout():
     if 'userId' not in session:
-        return 'user not logged in', 400
+        return jsonify('user not logged in'), 400
     session.pop('userId')
-    return 'successfully logged out', 200
+    return jsonify('successfully logged out'), 200
+
+@app.route('/delete_account', methods=['POST'])
+def post_delete_account():
+    if 'userId' not in session:
+        return jsonify('user not logged in'), 400
+    
+    username = request.form['username']
+    password = request.form['password']
+
+    if username is None or not username or password is None or not password:
+        return jsonify('enter username and password'), 400
+
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    query = """
+    SELECT
+        u.*
+    FROM User AS u
+    WHERE 0=0
+    AND u.Id = %(id)s
+    """
+    cursor.execute(query, {'id': session['userId']})
+    user = cursor.fetchone()
+
+    # should not happen but just checking anyway
+    if user is None:
+        return jsonify('something went wrong'), 500
+    
+    if user['Username'] != username:
+        return jsonify('username does not match current user'), 400
+    cursor.fetchall()
+
+    query = """
+    SELECT
+        u.*
+    FROM User AS u
+    WHERE 0=0
+    AND u.Username = %(username)s
+    """
+    cursor.execute(query, {'username': username})
+
+    user = cursor.fetchone()
+    if cursor.rowcount < 1:
+        return jsonify('wrong username or password'), 400
+
+    stringified_salt = user['PasswordSalt']
+    salt = base64.b64decode(stringified_salt.encode())
+    salted_password = salt + password.encode('utf-8')
+    hashed_password = hashlib.sha256(salted_password).hexdigest()
+
+    cursor.fetchall()
+
+    if hashed_password != user['HashedPassword']:
+        return jsonify('wrong username or password'), 400
+    
+    
+    query = """
+    DELETE 
+    FROM User
+    WHERE 0=0
+    AND Id = %(userId)s
+    """
+    cursor.execute(query, {'userId': user['Id']})
+    deleted = cursor.rowcount > 0
+    if not deleted:
+        return jsonify('something went wrong'), 500
+
+    conn.commit()
+    cursor.close()
+    conn.close()
+    session.pop('userId')
+    return jsonify('successfully deleted account and logged out'), 200
+    
 
 @app.route('/user_toggle_save_asset/<int:asset_id>', methods=['POST'])
 def post_user_toggle_save_asset(asset_id):
     if 'userId' not in session:
-        return 'user not logged in', 400
+        return jsonify('user not logged in'), 400
 
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
@@ -273,7 +350,7 @@ def post_user_toggle_save_asset(asset_id):
     cursor.execute(query, {'asset_id': asset_id})
     asset = cursor.fetchone()
     if cursor.rowcount < 1:
-        return 'no asset found', 400
+        return jsonify('no asset found'), 400
     cursor.fetchall()
 
     query = """
@@ -298,10 +375,10 @@ def post_user_toggle_save_asset(asset_id):
             cursor.execute(query, {'User_Id': session['userId'], 'Reference_Hash': asset['ReferenceHash']})
             conn.commit()
         except:
-            return 'error unsaving asset', 500
+            return jsonify('error unsaving asset'), 500
         cursor.close()
         conn.close()
-        return 'asset unsaved from user', 200
+        return jsonify('asset unsaved from user'), 200
     else:
         query = """
         INSERT INTO UserSavedAssets (UserId, ReferenceHash)
@@ -311,15 +388,15 @@ def post_user_toggle_save_asset(asset_id):
             cursor.execute(query, {'User_Id': session['userId'], 'Reference_Hash': asset['ReferenceHash']})
             conn.commit()
         except:
-            return 'error saving asset', 500
+            return jsonify('error saving asset'), 500
         cursor.close()
         conn.close()
-        return 'asset saved to user', 200
+        return jsonify('asset saved to user'), 200
 
 @app.route('/user_saved_assets', methods=['GET'])
 def get_user_saved_assets():
     if 'userId' not in session:
-        return 'user not logged in', 400
+        return jsonify('user not logged in'), 400
 
     tag = request.args.get('tag')
 
@@ -444,6 +521,29 @@ def download_asset(asset_id):
         return send_file(file_path, as_attachment=True, download_name=downloadname)
     else:
         return "Failed to download asset"
+
+@app.route('/fetch-api', methods=['GET'])
+def fetch_all():
+    result = subprocess.run(['python3', 'AssetCollectionScripts/fetch_mega_script.py', '--all'])
+    if result.returncode == 0:
+        return jsonify({'status': 'success'}), 200
+    else:
+        return jsonify({'error': 'Failed to start subprocess'}), 500
+
+
+@app.route('/fetch-api/<string:api>', methods=['GET'])
+def fetch_specific(api):
+    # Validate if the api argument is valid
+    valid_apis = ['picsum', 'unsplash', 'pixabay', 'pexels', 'freesound']
+    
+    if api.lower() not in valid_apis:
+        return jsonify({'error': 'API not found'}), 404
+
+    result = subprocess.run(['python3', 'AssetCollectionScripts/fetch_mega_script.py', f'--{api.lower()}'])
+    if result.returncode == 0:
+        return jsonify({'status': 'success'}), 200
+    else:
+        return jsonify({'error': 'Failed to start subprocess'}), 500
 
 if __name__ == '__main__':
     app.run(host='localhost', port=5000)

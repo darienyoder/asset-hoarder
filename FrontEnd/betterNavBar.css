@@ -1,0 +1,30 @@
+.topnav ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow:hidden;
+    background-color: #333;
+    height: 46px;
+    position: relative;
+    z-index: 1;
+}
+
+.topnav li{
+    float:left;
+}
+
+.topnav li a, .topnav li button {
+    display: block;
+    color: white;
+    background-color: #333;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 16px;
+    border: none;
+}
+
+.topnav li a:hover, .topnav li button:hover {
+    background-color: palevioletred;
+    color: black;
+}
