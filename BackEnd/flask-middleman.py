@@ -73,70 +73,87 @@ def get_assets():
 
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
-    query = """
+
+    # Helper function to fetch assets without tags
+    def fetch_assets(query, tag):
+        if tag:
+            query += " AND t.Tag = %(tag)s"
+        cursor.execute(query, {'tag': tag})
+        return cursor.fetchall()
+
+    # Helper function to fetch tags for assets
+    def fetch_tags_for_assets(asset_ids):
+        if not asset_ids:
+            return []
+        
+        # Query to get tags for the list of asset ids
+        query = """
+        SELECT
+            t.ReferenceHash,
+            t.Tag
+        FROM Tags AS t
+        WHERE t.ReferenceHash IN (%s)
+        """ % ','.join(['%s'] * len(asset_ids))  # Safely insert asset IDs into the query
+
+        cursor.execute(query, asset_ids)
+        return cursor.fetchall()
+
+    # Queries for different asset types (without tags)
+    image_query = """
     SELECT
-        a.Id
-        ,a.Name
-        ,a.StorageLocation
-        ,ia.ReferenceHash
-        ,ia.Width
-        ,ia.Height
-        ,t.Tag
+        a.Id, a.Name, a.StorageLocation, ia.ReferenceHash, ia.Width, ia.Height
     FROM ImageAsset AS ia
-    LEFT JOIN Tags AS t
-        ON t.ReferenceHash = ia.ReferenceHash
-    JOIN Asset AS a
-        ON a.ReferenceHash = ia.ReferenceHash
+    JOIN Asset AS a ON a.ReferenceHash = ia.ReferenceHash
     WHERE 0=0
     """
-    if tag is not None:
-        query += "AND t.Tag = %(tag)s"
-    cursor.execute(query, {'tag': tag})
-    image_assets = cursor.fetchall()
-
-    query = """
+    audio_query = """
     SELECT
-        a.Id
-        ,a.StorageLocation
-        ,aa.ReferenceHash
-        ,aa.Duration
-        ,t.Tag
+        a.Id, a.StorageLocation, aa.ReferenceHash, aa.Duration
     FROM AudioAsset AS aa
-    LEFT JOIN Tags AS t
-        ON t.ReferenceHash = aa.ReferenceHash
-    JOIN Asset AS a
-        ON a.ReferenceHash = aa.ReferenceHash
+    JOIN Asset AS a ON a.ReferenceHash = aa.ReferenceHash
     WHERE 0=0
     """
-    if tag is not None:
-        query += "AND t.Tag = %(tag)s"
-    cursor.execute(query, {'tag': tag})
-    audio_assets = cursor.fetchall()
-
-    query = """
+    video_query = """
     SELECT
-        a.Id
-        ,a.StorageLocation
-        ,va.ReferenceHash
-        ,va.Width
-        ,va.Height
-        ,va.Duration
-        ,t.Tag
+        a.Id, a.StorageLocation, va.ReferenceHash, va.Width, va.Height, va.Duration
     FROM VideoAsset AS va
-    LEFT JOIN Tags AS t
-        ON t.ReferenceHash = va.ReferenceHash
-    JOIN Asset AS a
-        ON a.ReferenceHash = va.ReferenceHash
+    JOIN Asset AS a ON a.ReferenceHash = va.ReferenceHash
     WHERE 0=0
     """
-    if tag is not None:
-        query += "AND t.Tag = %(tag)s"
-    cursor.execute(query, {'tag': tag})
-    video_assets = cursor.fetchall()
+
+    # Fetch asset data (no tags included)
+    image_assets = fetch_assets(image_query, tag)
+    audio_assets = fetch_assets(audio_query, tag)
+    video_assets = fetch_assets(video_query, tag)
+
+    # Extract all ReferenceHashes from assets to fetch tags
+    asset_ids = [asset['ReferenceHash'] for asset in image_assets + audio_assets + video_assets]
+
+    # Fetch tags for these assets
+    tags = fetch_tags_for_assets(asset_ids)
+
+    # Group tags by ReferenceHash
+    tags_dict = {}
+    for tag in tags:
+        if tag['ReferenceHash'] not in tags_dict:
+            tags_dict[tag['ReferenceHash']] = []
+        tags_dict[tag['ReferenceHash']].append(tag['Tag'])
+
+    # Add tags to assets
+    def add_tags_to_assets(assets):
+        for asset in assets:
+            asset['Tags'] = tags_dict.get(asset['ReferenceHash'], [])
+        return assets
+
+    image_assets = add_tags_to_assets(image_assets)
+    audio_assets = add_tags_to_assets(audio_assets)
+    video_assets = add_tags_to_assets(video_assets)
 
     cursor.close()
     conn.close()
+
     return jsonify({'imageAssets': image_assets, 'audioAssets': audio_assets, 'videoAssets': video_assets}), 200
+
 
 @app.route('/random_assets', methods=['GET'])
 def get_random_assets():
