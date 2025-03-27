@@ -4,9 +4,12 @@
     <head>
         <meta charset="utf-8">
         <title>AssetHoarder</title>
+        <!-- Style -->
         <link rel="stylesheet" href="style.css">
         <link rel="stylesheet" href="betterNavBar.css">
         <link rel="stylesheet" href="signupLogin.css">
+        <!-- Scripts -->
+        <script defer src="search.js"></script>
         <script defer src="signupLogin.js"></script>
         <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
         <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
@@ -82,33 +85,60 @@
             <!-- <div id="search-bg"></div> -->
             <div id="search-interface">
                 <div>
-                    <div id="search-logo"><img src="logo.png" /></div>
-                    <input id="main-searchbar" placeholder="Search the Hoard" autofocus>
+                    <div id="search-logo"><img src="img/logo.png" /></div>
+                    <input id="main-searchbar" placeholder="Search the hoard" autofocus oninput="document.getElementById('explore-button').innerHTML='Search'">
                 </div>
                 <div id="content-filters">
                     <div>
-                        <img src="https://www.pngrepo.com/png/310911/180/image.png" class="filter-toggle-button" onclick="toggleFilter(this.parentElement);" />
+                        <img src="img/images.png" class="filter-toggle-button" onclick="toggleFilter(this.parentElement);" />
                         <div class="filter-menu">
                             <div class="filter-menu-margin">
-                                <div>
-                                    <button class="toggle-button" onclick="toggleButton(this);">Photos</button>
-                                    <button class="toggle-button" onclick="toggleButton(this);">Icons</button>
-                                    <button class="toggle-button" onclick="toggleButton(this);">Textures</button>
-                                    <button class="toggle-button" onclick="toggleButton(this);">Sprites</button>
+                                <h2>Type</h2>
+                                <div id="img-type-filters">
+                                    <button value="photos" class="toggle-button" onclick="toggleButton(this);">Photos</button>
+                                    <button value="icons" class="toggle-button" onclick="toggleButton(this);">Icons</button>
+                                    <button value="textures" class="toggle-button" onclick="toggleButton(this);">Textures</button>
+                                    <button value="sprites" class="toggle-button" onclick="toggleButton(this);">Sprites</button>
                                 </div>
+                                <hr>
+                                <h2>Size</h2>
+                                <div id="img-size-filters">
+                                    <button value="square" class="toggle-button" onclick="toggleButton(this);">Square</button>
+                                    <button value="wide" class="toggle-button" onclick="toggleButton(this);">Wide</button>
+                                    <button value="tall" class="toggle-button" onclick="toggleButton(this);">Tall</button>
+                                    <button value="16:9" class="toggle-button" onclick="toggleButton(this);">16:9</button>
+                                    <button value="4:3" class="toggle-button" onclick="toggleButton(this);">4:3</button>
+                                </div>
+                                <hr>
+                                <h2>Color</h2>
+                                <div id="img-color-filters" style="display:flex; justify-content:space-around;">
+                                    <button value="red" class="color-button" onclick="toggleButton(this);" style="background-color:red;"></button>
+                                    <button value="orange" class="color-button" onclick="toggleButton(this);" style="background-color:orange;"></button>
+                                    <button value="yellow" class="color-button" onclick="toggleButton(this);" style="background-color:yellow;"></button>
+                                    <button value="green" class="color-button" onclick="toggleButton(this);" style="background-color:green;"></button>
+                                    <button value="blue" class="color-button" onclick="toggleButton(this);" style="background-color:blue;"></button>
+                                    <button value="purple" class="color-button" onclick="toggleButton(this);" style="background-color:purple;"></button>
+                                </div>
+                                <hr>
                             </div>
                         </div>
                     </div>
                     <div>
-                        <img src="https://cdn-icons-png.flaticon.com/128/59/59284.png" class="filter-toggle-button" onclick="toggleFilter(this.parentElement);" />
+                        <img src="img/audio.png" class="filter-toggle-button" onclick="toggleFilter(this.parentElement);" />
                         <div class="filter-menu">
                             <div class="filter-menu-margin">
-                                <div>
-                                    <button class="toggle-button" onclick="toggleButton(this);">Music</button>
-                                    <button class="toggle-button" onclick="toggleButton(this);">Sound Effects</button>
-                                    <button class="toggle-button" onclick="toggleButton(this);">Ambient</button>
-                                    <button class="toggle-button" onclick="toggleButton(this);">Voice</button>
+                                <h2>Type</h2>
+                                <div id="audio-type-filters">
+                                    <button value="music" class="toggle-button" onclick="toggleButton(this);">Music</button>
+                                    <button value="effect" class="toggle-button" onclick="toggleButton(this);">Sound Effects</button>
+                                    <button value="ambient" class="toggle-button" onclick="toggleButton(this);">Ambient</button>
+                                    <button value="voice" class="toggle-button" onclick="toggleButton(this);">Voice</button>
                                 </div>
+                                <hr>
+                                <h2>Duration</h2>
+                                <input name="duration" type="text">
+                                <hr>
+
                             </div>
                         </div>
                     </div>
@@ -136,17 +166,18 @@
                     </div>
                 </div>
             </div>
-            <div id="explore-button" onclick="document.getElementById('browse-page').scrollIntoView({ behavior: 'smooth'});">
+            <div id="explore-button" onclick="search();">
                 Explore
             </div> 
         </div>
 
-        <div id="browse-page">
+        <div id="browse-page" style="display:none;">
+            <div id="browse-anchor" style="height:50px;"></div> <!-- Buffer -->
             <div id="browse-content">
                 <script>
 
-                document.getElementById("search-logo").style.height = (document.getElementById("main-searchbar").getBoundingClientRect().top - document.getElementById("search-interface").getBoundingClientRect().top - 10) + "px";
-                document.getElementById("search-logo").style.top = "-" + (document.getElementById("main-searchbar").getBoundingClientRect().top - document.getElementById("search-interface").getBoundingClientRect().top + 10) + "px"
+                document.getElementById("search-logo").style.height = Math.min((document.getElementById("main-searchbar").getBoundingClientRect().top - document.getElementById("search-interface").getBoundingClientRect().top - 20), 150 ) + "px";
+                document.getElementById("search-logo").style.top = "-" + (document.getElementById("search-logo").getBoundingClientRect().bottom - document.getElementById("search-logo").getBoundingClientRect().top + 20) + "px";
 
                 function toggleFilter(filterElement)
                 {
@@ -174,6 +205,11 @@
                                 document.getElementById("content-filters").classList.remove("selected");
                         }, 0o0);
                     }
+                }
+
+                function toggleButton(button)
+                {
+                    button.classList.toggle("selected");
                 }
 
                 </script>
@@ -265,11 +301,11 @@
                     {
                         let asset = data; //test_assets[Math.floor(Math.random() * test_assets.length)]
                         let asset_ID = asset.id //Math.floor(Math.random() * 2147483000);
-                        if (Math.random() < 0.3)
-                        {
-                            asset = test_assets[4 + Math.floor(Math.random() * 4)]
-                            asset_ID = Math.floor(Math.random() * 2147483000);
-                        }
+                        // if (Math.random() < 0.3)
+                        // {
+                        //     asset = test_assets[4 + Math.floor(Math.random() * 4)]
+                        //     asset_ID = Math.floor(Math.random() * 2147483000);
+                        // }
 
                         if (asset.type == "image")
                         {
@@ -362,39 +398,20 @@
                             hover_time_counter = 0;
                     });
 
-                    async function main()
+                    async function update_results()
                     {
-
                         try
                         {
-                            const response = await fetch("https://capstone1.cs.kent.edu/db/assets");
-                            if (!response.ok)
-                            {
-                                throw new Error(`Response status: ${response.status}`);
-                            }
-
-                            const json = await response.json();
-
-                            // Remove Picsum and shuffle asset order
-                            for (var i = 0; i < json.imageAssets.length; i++) {
-                                if (json.imageAssets[i].StorageLocation.includes("picsum") || json.imageAssets[i].StorageLocation.includes("pixabay"))
-                                {
-                                    json.imageAssets.splice(i, 1);
-                                    i--;
-                                }
-                            }
-                            json.imageAssets.sort( () => Math.random() -0.5 );
-
                             var entry_list = [];
-                            for (var i = 0; i < 30; i++)
+                            for (var i = 0; i < 15; i++)
                             {
                                 let entry = {
                                     "type": "image",
-                                    "id": json.imageAssets[i].Id,
-                                    "file": json.imageAssets[i].StorageLocation,
-                                    "title": "",//json.imageAssets[i].Name,
-                                    "width": json.imageAssets[i].Width,
-                                    "height": json.imageAssets[i].Height,
+                                    "id": results[i].Id,
+                                    "file": results[i].StorageLocation,
+                                    "title": results[i].Name,
+                                    "width": results[i].Width,
+                                    "height": results[i].Height,
                                 };
                                 entry_list.push(<Entry data={entry} />)
                             }
@@ -409,25 +426,7 @@
                         }
                     }
 
-                    /*
-                    var xhttp = new XMLHttpRequest();
-                    xhttp.onreadystatechange = function() {
-                        var entries = JSON.parse(this.responseText).assets;
-                        var entry_list = [];
-                        for (var i = 0; i < 100; i++) {
-                            entry_list.push(<Entry data={entries[i]} />)
-                        }
-
-                        const container = document.getElementById('browse-content');
-                        const root = ReactDOM.createRoot(container);
-                        root.render(entry_list);
-                    };
-                    xhttp.open("GET", "http://174.104.199.92:5000/data/assets", true);
-                    xhttp.send();
-                    */
-
                     setInterval(timer, 33);
-                    main();
 
                 </script>
             </div>
