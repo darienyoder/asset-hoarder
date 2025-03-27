@@ -564,21 +564,33 @@ def fetch_specific(api):
 
 @app.route('/cleanup', methods=['GET'])
 def cleanup():
-    # Sometimes assets are scraped improperly and
-    # their records need to be deleted.
-    # Edit this function as you need to remove certain entries.
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True)
 
-    conn = get_db_connection()
-    cursor = conn.cursor(dictionary=True)
+        cursor.execute("DELETE FROM Asset WHERE Name LIKE 'PicSum%' OR Name LIKE 'Pexels%' OR Name LIKE 'Pixabay%'")
 
-    # Change this to delete certain assets
-    cursor.execute("DELETE FROM Asset WHERE Name LIKE 'PicSum%' OR Name LIKE 'Pexels%' OR Name LIKE 'Pixabay%'")
+        cursor.execute("DELETE FROM ImageAsset WHERE NOT EXISTS (SELECT * FROM Asset WHERE ImageAsset.ReferenceHash = Asset.ReferenceHash)")
+        cursor.execute("DELETE FROM AudioAsset WHERE NOT EXISTS (SELECT * FROM Asset WHERE AudioAsset.ReferenceHash = Asset.ReferenceHash)")
+        cursor.execute("DELETE FROM VideoAsset WHERE NOT EXISTS (SELECT * FROM Asset WHERE VideoAsset.ReferenceHash = Asset.ReferenceHash)")
+        cursor.execute("DELETE FROM Tags WHERE NOT EXISTS (SELECT * FROM Asset WHERE Tags.ReferenceHash = Asset.ReferenceHash)")
 
-    # Don't change; automatically removes deleted assets from other tables
-    cursor.execute("DELETE FROM ImageAsset WHERE NOT EXISTS (SELECT * FROM Asset WHERE ImageAsset.ReferenceHash = Asset.ReferenceHash)")
-    cursor.execute("DELETE FROM AudioAsset WHERE NOT EXISTS (SELECT * FROM Asset WHERE AudioAsset.ReferenceHash = Asset.ReferenceHash)")
-    cursor.execute("DELETE FROM VideoAsset WHERE NOT EXISTS (SELECT * FROM Asset WHERE VideoAsset.ReferenceHash = Asset.ReferenceHash)")
-    cursor.execute("DELETE FROM Tags WHERE NOT EXISTS (SELECT * FROM Asset WHERE Tags.ReferenceHash = Asset.ReferenceHash)")
+        conn.commit()
+        return jsonify({
+            'status': 'success',
+            'message': 'Cleanup completed successfully'
+        })
+
+    except Exception as e:
+        conn.rollback()
+        return jsonify({
+            'status': 'error',
+            'message': f'An error occurred: {str(e)}'
+        })
+
+    finally:
+        cursor.close()
+        conn.close()
 
 if __name__ == '__main__':
     app.run(host='localhost', port=5000)
