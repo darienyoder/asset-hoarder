@@ -152,25 +152,29 @@
 </body>
 <script>
     const output = document.querySelector('#output');
-    const pathname = window.location.pathname;
+        const pathname = window.location.pathname;
 
-    const anchors = document.querySelectorAll('a');
-    anchors.forEach(anchor => {
-        anchorPath = anchor.href.replace(window.location.href, '');
-        anchor.innerText += '"' + anchorPath + '"' + pathname;
-        anchor.href = anchorPath + pathname;
-        // I think the pathname just is everything after the domain name
+        const anchors = document.querySelectorAll('a');
+        anchors.forEach(anchor => {
+            const anchorUrl = new URL(anchor.href);
+            const anchorPath = anchorUrl.pathname;
 
-        anchor.addEventListener('click', async function (event) {
-            event.preventDefault();
-            const response = await fetch(anchor.href, {
-                method: 'get',
+            const newHref = `${window.location.protocol}//${window.location.hostname}${pathname}${anchorPath}`;
+
+            anchor.innerText += ' ' + pathname + anchorPath;
+            anchor.href = newHref;
+
+            anchor.addEventListener('click', async function (event) {
+                event.preventDefault();
+                const response = await fetch(anchor.href, {
+                    method: 'get',
+                });
+                let responseData = await response.json();
+                output.innerText = JSON.stringify(responseData, null, 2);
+                output.scrollIntoView();
             });
-            let responseData = await response.json();
-            output.innerText = JSON.stringify(responseData, null, 2);
-            output.scrollIntoView();
         });
-    });
+
 
     const forms = document.querySelectorAll('form');
     forms.forEach(form => {
