@@ -74,19 +74,16 @@ def get_assets():
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
 
-    # Helper function to fetch assets without tags
     def fetch_assets(query, tag):
         if tag:
             query += " AND t.Tag = %(tag)s"
         cursor.execute(query, {'tag': tag})
         return cursor.fetchall()
 
-    # Helper function to fetch tags for assets
     def fetch_tags_for_assets(asset_ids):
         if not asset_ids:
             return []
         
-        # Query to get tags for the list of asset ids
         query = """
         SELECT
             t.ReferenceHash,
@@ -98,7 +95,6 @@ def get_assets():
         cursor.execute(query, asset_ids)
         return cursor.fetchall()
 
-    # Queries for different asset types (without tags)
     image_query = """
     SELECT
         a.Id, a.Name, a.StorageLocation, ia.ReferenceHash, ia.Width, ia.Height
