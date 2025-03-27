@@ -157,8 +157,8 @@
     const anchors = document.querySelectorAll('a');
     anchors.forEach(anchor => {
         anchorPath = anchor.href.replace(window.location.href, '');
-        anchor.innerText += ' ' + anchorPath;
-        anchor.href = anchorPath;
+        anchor.innerText += ' ' + anchorPath + pathname;
+        anchor.href = anchorPath + pathname;
         // I think the pathname just is everything after the domain name
 
         anchor.addEventListener('click', async function (event) {
