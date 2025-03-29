@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<!-- This is a comment to test something, again, again, again (add agaom every edit)-->
+<html lang="en" dir="ltr">
+    <head>
+        <meta charset="utf-8">
+        <title>AssetHoarder</title>
+        <!-- Style -->
+        <link rel="stylesheet" href="style.css">
+        <link rel="stylesheet" href="betterNavBar.css">
+        <link rel="stylesheet" href="signupLogin.css">
+        <!-- Scripts -->
+        <script defer src="search.js"></script>
+        <script defer src="signupLogin.js"></script>
+        <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+        <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+        <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    </head>
+    <body>
+        
+        <!-- Navigation Bars -->
+        <div class="topnav">
+            <!-- <div class="logo"> -->
+                <!--<img src="assets/logo.png">-->
+                <!-- <a href="index.html">AssetHoarder</a> -->
+            <!-- </div> -->
+            <!--This can be updated later to look nicer. See navBar.css-->
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                    <!-- href is for a test link here. Change it to the homepage link later-->
+                <li><button class="logSignButton" data-modal-target="#signup-modal">Signup</button></li>
+                <li><button class="logSignButton" data-modal-target="#login-modal">Login</button></li>
+                <li><a href="index.html">Profile</a></li>
+                    <!-- Profile should go to another page
+                     or prompt them to log in if they haven't already -->            
+            </ul>
+
+            <!-- Signup form -->
+            <form class="signup" id="signup-modal">
+                <div class="signup-modal-header">
+                    <div class ="title">Signup</div>
+                    <button data-close-button class="close-button">&times;</button>
+                </div>
+                <div class="signup-modal-body">
+                    <div><label for="email"><b>Email</b></label></div>
+                    <div><input type="text" placeholder="Enter Email" name="email" required></div>
+
+                    <div><label for="username"><b>Username</b></label></div>
+                    <div><input type="text" placeholder="Enter your username" name="username" required></div>
+
+                    <div><label for="psw"><b>Password</b></label></div>
+                    <div><input type="password" placeholder="Enter Password" name="psw" required></div>
+
+                    <div><label for="psw-repeat"><b>Repeat Password</b></label></div>
+                    <div><input type="password" placeholder="Repeat Password" name="psw-repeat" required></div>
+                    
+                    <button type="submit" class="signup">Sign Up</button>
+
+                </div>            
+            </form>
+            
+            <!-- Login form -->
+            <form class="login" id="login-modal">
+                <div class="login-modal-header">
+                    <div class ="title">Login</div>
+                    <button data-close-button class="close-button">&times;</button>
+                </div>
+                <div class="login-modal-body">
+                    <div><label for="email"><b>Username or Email</b></label></div>
+                    <div><input type="text" placeholder="Username or Email" name="email" required></div>
+
+                    <div><label for="psw"><b>Password</b></label></div>
+                    <div><input type="password" placeholder="Enter Password" name="psw" required></div>
+                    
+                    <button type="submit" class="login">Log In</button>
+
+                </div>            
+            </form>
+            
+            <!-- Overlay to dim background -->
+            <div id="overlay"></div>
+        </div> <!-- End navbar code -->
+        
+
+        <div id="search-page">
+            <!-- <div id="search-bg"></div> -->
+            <div id="search-interface">
+                <div>
+                    <div id="search-logo"><img src="img/logo.png" /></div>
+                    <input id="main-searchbar" placeholder="Search the hoard" autofocus oninput="document.getElementById('explore-button').innerHTML='Search'">
+                </div>
+                <div id="content-filters">
+                    <div>
+                        <img src="img/images.png" class="filter-toggle-button" onclick="toggleFilter(this.parentElement);" />
+                        <div class="filter-menu">
+                            <div class="filter-menu-margin">
+                                <h2>Type</h2>
+                                <div id="img-type-filters">
+                                    <button value="photos" class="toggle-button" onclick="toggleButton(this);">Photos</button>
+                                    <button value="icons" class="toggle-button" onclick="toggleButton(this);">Icons</button>
+                                    <button value="textures" class="toggle-button" onclick="toggleButton(this);">Textures</button>
+                                    <button value="sprites" class="toggle-button" onclick="toggleButton(this);">Sprites</button>
+                                </div>
+                                <hr>
+                                <h2>Size</h2>
+                                <div id="img-size-filters">
+                                    <button value="square" class="toggle-button" onclick="toggleButton(this);">Square</button>
+                                    <button value="wide" class="toggle-button" onclick="toggleButton(this);">Wide</button>
+                                    <button value="tall" class="toggle-button" onclick="toggleButton(this);">Tall</button>
+                                    <button value="16:9" class="toggle-button" onclick="toggleButton(this);">16:9</button>
+                                    <button value="4:3" class="toggle-button" onclick="toggleButton(this);">4:3</button>
+                                </div>
+                                <hr>
+                                <h2>Color</h2>
+                                <div id="img-color-filters" style="display:flex; justify-content:space-around;">
+                                    <button value="red" class="color-button" onclick="toggleButton(this);" style="background-color:red;"></button>
+                                    <button value="orange" class="color-button" onclick="toggleButton(this);" style="background-color:orange;"></button>
+                                    <button value="yellow" class="color-button" onclick="toggleButton(this);" style="background-color:yellow;"></button>
+                                    <button value="green" class="color-button" onclick="toggleButton(this);" style="background-color:green;"></button>
+                                    <button value="blue" class="color-button" onclick="toggleButton(this);" style="background-color:blue;"></button>
+                                    <button value="purple" class="color-button" onclick="toggleButton(this);" style="background-color:purple;"></button>
+                                </div>
+                                <hr>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <img src="img/audio.png" class="filter-toggle-button" onclick="toggleFilter(this.parentElement);" />
+                        <div class="filter-menu">
+                            <div class="filter-menu-margin">
+                                <h2>Type</h2>
+                                <div id="audio-type-filters">
+                                    <button value="music" class="toggle-button" onclick="toggleButton(this);">Music</button>
+                                    <button value="effect" class="toggle-button" onclick="toggleButton(this);">Sound Effects</button>
+                                    <button value="ambient" class="toggle-button" onclick="toggleButton(this);">Ambient</button>
+                                    <button value="voice" class="toggle-button" onclick="toggleButton(this);">Voice</button>
+                                </div>
+                                <hr>
+                                <h2>Duration</h2>
+                                <input name="duration" type="text">
+                                <hr>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <img src="https://edusasha.com/wp-content/uploads/2017/05/video.png" class="filter-toggle-button" onclick="toggleFilter(this.parentElement);" />
+                        <div class="filter-menu">
+                            <div class="filter-menu-margin">
+                                <div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <img src="https://cdn-icons-png.flaticon.com/128/1724/1724090.png" class="filter-toggle-button" onclick="toggleFilter(this.parentElement);" />
+                        <div class="filter-menu">
+                            <div class="filter-menu-margin">
+                                <div>
+                                    <button class="toggle-button" onclick="toggleButton(this);">Characters</button>
+                                    <button class="toggle-button" onclick="toggleButton(this);">Objects</button>
+                                    <button class="toggle-button" onclick="toggleButton(this);">Environments</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="explore-button" onclick="search();">
+                Explore
+            </div> 
+        </div>
+
+        <div id="browse-page" style="display:none;">
+            <div id="browse-anchor" style="height:50px;"></div> <!-- Buffer -->
+            <div id="browse-content">
+                <script>
+
+                document.getElementById("search-logo").style.height = Math.min((document.getElementById("main-searchbar").getBoundingClientRect().top - document.getElementById("search-interface").getBoundingClientRect().top - 20), 150 ) + "px";
+                document.getElementById("search-logo").style.top = "-" + (document.getElementById("search-logo").getBoundingClientRect().bottom - document.getElementById("search-logo").getBoundingClientRect().top + 20) + "px";
+
+                function toggleFilter(filterElement)
+                {
+                    filterElement.classList.toggle("selected");
+                    if (filterElement.classList.contains("selected"))
+                    {
+                        document.getElementById("content-filters").classList.add("selected");
+
+                        setTimeout(() => {
+                            filterElement.children[1].children[0].style.display = "block";
+                        }, 100);
+                    }
+                    else
+                    {
+                        filterElement.children[1].children[0].style.display = "none";
+                        filterElement.classList.add("selected");
+                        setTimeout(() => {
+                            filterElement.classList.remove("selected");
+                            let found = false;
+                            for (var child of document.getElementById("content-filters").children)
+                            {
+                                found = found || child.classList.contains("selected");
+                            }
+                            if (!found)
+                                document.getElementById("content-filters").classList.remove("selected");
+                        }, 0o0);
+                    }
+                }
+
+                function toggleButton(button)
+                {
+                    button.classList.toggle("selected");
+                }
+
+                </script>
+                <script type="text/babel">
+
+                    const test_assets = [
+                        {
+                            "type": "image",
+                            "file": "https://wallpapers.com/images/featured/cat-pictures-zc3gu0636kmldm04.jpg",
+                            "title": "The Orange",
+                            "width": 900,
+                            "height": 563,
+                        },
+                        {
+                            "type": "image",
+                            "file": "https://wallpaper-house.com/data/out/6/wallpaper2you_103955.jpg",
+                            "title": "Dinnertime",
+                            "width": 1920,
+                            "height": 1080,
+                        },
+                        {
+                            "type": "image",
+                            "file": "https://www.itl.cat/pngfile/big/47-478337_kitten-wallpapers-hd.jpg",
+                            "title": "Leo the Magnificent",
+                            "width": 1920,
+                            "height": 1200,
+                        },
+                        {
+                            "type": "image",
+                            "file": "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.kittyloaf.com%2Fwp-content%2Fuploads%2F2017%2F06%2FValentine_KittyLoaf_071417-375x375.png",
+                            "title": "Pancake",
+                            "width": 375,
+                            "height": 375,
+                        },
+
+
+                        {
+                            "type": "audio",
+                            "file": "https://static.wikia.nocookie.net/undertale/images/6/63/Another_Medium_music.ogg",
+                            "title": "Another Medium",
+                            "duration": 2*60+22,
+                        },
+                        {
+                            "type": "audio",
+                            "file": "https://static.wikia.nocookie.net/undertale/images/1/12/It%27s_Raining_Somewhere_Else_music.ogg",
+                            "title": "It's Raining Somewhere Else",
+                            "duration": 2*60+50,
+                        },
+                        {
+                            "type": "audio",
+                            "file": "https://static.wikia.nocookie.net/undertale/images/9/93/Waterfall_%28Soundtrack%29_music.ogg",
+                            "title": "Waterfall",
+                            "duration": 2*60+6,
+                        },
+                        {
+                            "type": "audio",
+                            "file": "https://ia902902.us.archive.org/31/items/01.smellsliketeenspirit/01.Smells%20Like%20Teen%20Spirit.mp3",
+                            "title": "Smells Like Teen Spirit",
+                            "duration": 5*60+1,
+                        },
+                    ]
+
+                    var current_audio = -1;
+                    var setting_time = false;
+                    var hover_time_counter = 0;
+
+                    function toggle_audio(new_audio)
+                    {
+                        if (new_audio == current_audio)
+                        {
+                            document.getElementById("audio-player-" + current_audio).pause();
+                            // document.getElementById("play-button-" + new_audio).style = "";
+                            current_audio = -1;
+                        }
+                        else
+                        {
+                            if (current_audio != -1)
+                            {
+                                document.getElementById("audio-player-" + current_audio).pause();
+                                // document.getElementById("play-button-" + current_audio).style = "";
+                            }
+                            document.getElementById("audio-player-" + new_audio).play();
+                            // document.getElementById("play-button-" + new_audio).style.backgroundImage = "url(https://icon-library.com/images/pause-icon-transparent/pause-icon-transparent-8.jpg)";
+                            current_audio = new_audio;
+                        }
+                    }
+
+                    function Entry({ data })
+                    {
+                        let asset = data; //test_assets[Math.floor(Math.random() * test_assets.length)]
+                        let asset_ID = asset.id //Math.floor(Math.random() * 2147483000);
+                        // if (Math.random() < 0.3)
+                        // {
+                        //     asset = test_assets[4 + Math.floor(Math.random() * 4)]
+                        //     asset_ID = Math.floor(Math.random() * 2147483000);
+                        // }
+
+                        if (asset.type == "image")
+                        {
+                            let style_content = ".entry-" + asset_ID + `:hover > .image-preview {
+                                z-index: 10; ` + (asset.width > asset.height ? `
+                                width: calc(100% * ` + (asset.width / asset.height)  + `);
+                                ` : `width: 100%;
+                                height: calc(100% * ` + (asset.height / asset.width)  + `);`) + `
+                                transform: scale(1.1);
+                            }`;
+
+                            if (asset.height > asset.width)
+                            {
+                                style_content += ".entry-" + asset_ID + ` .download-button {
+                                    aspect-ratio: 1;
+                                    width: 30%;
+                                    height: auto;
+                                }`;
+                            }
+
+                            return (
+                                <div className={"entry image-entry entry-" + asset_ID}>
+                                    <div className="image-preview"
+                                        style={{ backgroundImage: `url(${asset.file})` }}
+                                        loading="lazy">
+                                        <div className="entry-title">{asset.title}</div>
+                                        <a className="download-button" href={`/db/download/${asset.id}`} download></a>
+                                    </div>
+
+                                    {/* Preload the image to ensure it's fetched as soon as possible */}
+                                    <link rel="preload" href={asset.file} as="image" />
+
+                                    {/* Critical CSS for the image-entry styles */}
+                                    <style>{style_content}</style>
+                                </div>
+
+                            );
+                        }
+                        else if (asset.type == "audio")
+                        {
+                            return (
+                                <div id={"entry-" + asset_ID} className="entry audio-entry" onMouseOver={(event) => toggle_audio(asset_ID)} onMouseOut={(event) => toggle_audio(asset_ID)}>
+                                    <a id={"play-button-" + asset_ID} className={"audio-play-button"} href={asset.file} download></a>
+                                    <audio id={"audio-player-" + asset_ID}>
+                                        <source src={asset.file} type="audio/ogg" />
+                                    </audio>
+
+                                    <div className="entry-title" onMouseOver={(event) => setting_time = true} onMouseOut={(event) => setting_time = false}>
+                                        <div id={"media-progress-" + asset_ID} className="media-progress-bar">
+                                            <div className="media-progress-bar-tip"></div>
+                                        </div>
+                                        {asset.title}
+                                    </div>
+                                </div>
+                            );
+                        }
+                    }
+
+                    function timer()
+                    {
+                        if (current_audio != -1)
+                        {
+                            document.getElementById("media-progress-" + current_audio).style.width = (document.getElementById("audio-player-" + current_audio).currentTime / document.getElementById("audio-player-" + current_audio).duration * 100) + "%";
+                        }
+                    }
+
+                    var mouseX = 0.0;
+                    var mouseY = 0.0;
+
+                    window.addEventListener("mousemove", event => {
+
+                        if (mouseX == event.clientX && mouseY == event.clientY)
+                            hover_time_counter = -10;
+
+                        mouseX = event.clientX;
+                        mouseY = event.clientY;
+
+                        if (setting_time)
+                        {
+                            hover_time_counter += 1;
+
+                            if (hover_time_counter >= 5)
+                                document.getElementById("audio-player-" + current_audio).currentTime = (
+                                    document.getElementById("audio-player-" + current_audio).duration
+                                    * (event.clientX - document.getElementById("entry-" + current_audio).getBoundingClientRect().left)
+                                    / (document.getElementById("entry-" + current_audio).getBoundingClientRect().right - document.getElementById("entry-" + current_audio).getBoundingClientRect().left)
+                                );
+                        }
+                        else
+                            hover_time_counter = 0;
+                    });
+
+                    async function update_results()
+                    {
+                        try
+                        {
+                            var entry_list = [];
+                            for (var i = 0; i < 15; i++)
+                            {
+                                let entry = {
+                                    "type": "image",
+                                    "id": results[i].Id,
+                                    "file": results[i].StorageLocation,
+                                    "title": results[i].Name,
+                                    "width": results[i].Width,
+                                    "height": results[i].Height,
+                                };
+                                entry_list.push(<Entry data={entry} />)
+                            }
+
+                            const container = document.getElementById('browse-content');
+                            const root = ReactDOM.createRoot(container);
+                            root.render(entry_list);
+                        }
+                        catch (error)
+                        {
+                            console.error(error.message);
+                        }
+                    }
+
+                    setInterval(timer, 33);
+
+                </script>
+            </div>
+        </div>
+
+    </body>
+</html>
