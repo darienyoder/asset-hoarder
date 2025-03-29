@@ -1,5 +1,5 @@
 #The Purpose of this file is to define the available actions that the API (this) can perform on the SQL Database
-from flask import Flask, jsonify, request, render_template, session, send_file, after_this_request
+from flask import Flask, jsonify, request, render_template, session, send_file, after_this_request, Response
 from flask_cors import CORS
 import requests
 import mysql.connector
@@ -10,6 +10,10 @@ from dotenv import load_dotenv
 import socket
 import base64
 import subprocess
+from sentence_transformers import SentenceTransformer
+from sklearn.metrics.pairwise import cosine_similarity
+import pickle
+import json
 
 app = Flask(__name__)
 load_dotenv()
@@ -17,6 +21,9 @@ app.secret_key = os.getenv('SECRET_KEY', 'devsecretkey').encode()
 
 # Enables CORS to allow the frontend pages to access the backend data
 CORS(app)
+
+# Load the pre-trained model
+model = SentenceTransformer('all-MiniLM-L6-v2')
 
 # Database configuration
 db_config = {
@@ -64,6 +71,56 @@ def get_db_connection():
 @app.route('/')
 def index():
     return render_template('main.html')
+
+@app.route('/image_assets', methods=['GET'])
+def get_image_assets():
+   input_tag = '' if request.args.get('tag') == None else request.args.get('tag')
+
+   def chunked_image_assets(input_tag):
+       conn = get_db_connection()
+       cursor = conn.cursor(dictionary=True)
+
+       query = """
+       SELECT
+           a.Id
+           ,a.Name
+           ,a.StorageLocation
+           ,ia.ReferenceHash
+           ,ia.Width
+           ,ia.Height
+           ,t.Tag
+           ,t.TagVector
+       FROM ImageAsset AS ia
+       JOIN Asset AS a
+           ON a.ReferenceHash = ia.ReferenceHash
+       JOIN Tags AS t
+           ON t.ReferenceHash = ia.ReferenceHash
+       WHERE 0=0
+       ORDER BY ia.ReferenceHash
+       """
+       cursor.execute(query)
+       image_assets = cursor.fetchmany(1000)
+
+
+       last_used_ref_hash = ''
+       input_encoding = model.encode(input_tag)
+       while len(image_assets) != 0:
+           added_asset = False
+           for image_asset in image_assets:
+               if added_asset and image_asset['ReferenceHash'] == last_used_ref_hash:
+                   break
+               if (last_used_ref_hash != image_asset['ReferenceHash']):
+                   added_asset = False
+               score = cosine_similarity([input_encoding], [pickle.loads(image_asset['TagVector'])])[0][0]
+               if (score > 0.5 and not added_asset):
+                   added_asset = True
+                   return_asset = {'Id': image_asset['Id'], 'Name': image_asset['Name'], 'StorageLocation': image_asset['StorageLocation'], 'ReferenceHash': image_asset['ReferenceHash'], 'Width': image_asset['Width'], 'Height': image_asset['Height'], 'Tag': image_asset['Tag'], 'Score': str(score)}
+                   yield json.dumps(return_asset) + '\n'
+               last_used_ref_hash = image_asset['ReferenceHash']
+           image_assets = cursor.fetchmany(1000)
+
+
+   return Response(chunked_image_assets(input_tag), content_type='application/json;charset=utf-8')
 
 # get by each by type but use Asset.Id to have common reference id for user saving
 # got rid of by asset types, use this to filter maybe, can revert if needed
