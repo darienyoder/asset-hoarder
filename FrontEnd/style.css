@@ -96,6 +96,15 @@ html, body {
     border: solid 2px black;
 }
 
+#search-interface #profile-searchbar {
+    width: 50vw;
+    font-size: 40px;
+    padding: 10px;
+    text-align: center;
+    border-radius: 60px;
+    border: solid 2px black;
+}
+
 #search-interface input:focus {
     /* outline: none; */
 }

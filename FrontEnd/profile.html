@@ -3,7 +3,7 @@
 <html lang="en" dir="ltr">
     <head>
         <meta charset="utf-8">
-        <title>AssetHoarder</title>
+        <title>Profile</title>
         <!-- Style -->
         <link rel="stylesheet" href="style.css">
         <link rel="stylesheet" href="betterNavBar.css">
@@ -86,7 +86,7 @@
             <div id="search-interface">
                 <div>
                     <div id="search-logo"><img src="img/logo.png" /></div>
-                    <input id="main-searchbar" placeholder="Search the hoard" autofocus oninput="document.getElementById('explore-button').innerHTML='Search'">
+                    <input id="profile-searchbar" placeholder="Search YOUR hoard" autofocus oninput="document.getElementById('explore-button').innerHTML='Search'">
                 </div>
                 <div id="content-filters">
                     <div>
@@ -176,7 +176,7 @@
             <div id="browse-content">
                 <script>
 
-                document.getElementById("search-logo").style.height = Math.min((document.getElementById("main-searchbar").getBoundingClientRect().top - document.getElementById("search-interface").getBoundingClientRect().top - 20), 150 ) + "px";
+                document.getElementById("search-logo").style.height = Math.min((document.getElementById("profile-searchbar").getBoundingClientRect().top - document.getElementById("search-interface").getBoundingClientRect().top - 20), 150 ) + "px";
                 document.getElementById("search-logo").style.top = "-" + (document.getElementById("search-logo").getBoundingClientRect().bottom - document.getElementById("search-logo").getBoundingClientRect().top + 20) + "px";
 
                 function toggleFilter(filterElement)
