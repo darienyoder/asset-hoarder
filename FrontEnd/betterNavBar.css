@@ -25,6 +25,6 @@
 }
 
 .topnav li a:hover, .topnav li button:hover {
-    background-color: palevioletred;
+    background-color: #fdf0e0;
     color: black;
 }
