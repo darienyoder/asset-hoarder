@@ -1,4 +1,4 @@
-#The Purpose of this file is to define the available actions that the API (this) can perform on the SQL Database
+# The Purpose of this file is to define the available actions that the API (this) can perform on the SQL Database
 from flask import Flask, jsonify, request, render_template, session, send_file, after_this_request
 from flask_cors import CORS
 import requests
