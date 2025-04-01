@@ -245,53 +245,55 @@ def fetch_freesound():
         return
 
     page = 1
-    search_url = f"https://freesound.org/apiv2/search/text/?query=&format=json&page={page}&page_size=10&token={api_key}"
+    while True:
+        search_url = f"https://freesound.org/apiv2/search/text/?query=&format=json&page={page}&page_size=10&token={api_key}"
 
-    response = requests.get(search_url)
+        response = requests.get(search_url)
 
-    if response.status_code != 200:
-        print(f"Failed to fetch data from Freesound, status code {response.status_code}")
-        return
+        if response.status_code != 200:
+            print(f"Failed to fetch data from Freesound, status code {response.status_code}")
+            return
 
-    data = response.json()
-    sounds = data.get('results', [])
+        data = response.json()
+        sounds = data.get('results', [])
 
-    if not sounds:
-        print("No sounds found.")
-        return
+        if not sounds:
+            print("No sounds found.")
+            return
 
-    for sound in sounds:
-        sound_id = sound['id']
-        sound_details_url = f"https://freesound.org/apiv2/sounds/{sound_id}/?token={api_key}"
+        for sound in sounds:
+            sound_id = sound['id']
+            sound_details_url = f"https://freesound.org/apiv2/sounds/{sound_id}/?token={api_key}"
 
-        # Fetch sound details
-        details_response = requests.get(sound_details_url)
-        if details_response.status_code != 200:
-            print(f"Failed to fetch sound details for ID {sound_id}")
-            continue
+            # Fetch sound details
+            details_response = requests.get(sound_details_url)
+            if details_response.status_code != 200:
+                print(f"Failed to fetch sound details for ID {sound_id}")
+                continue
 
-        sound_details = details_response.json()
+            sound_details = details_response.json()
 
-        sound_url = sound_details['url']
-        reference_hash = generate_unique_hash(sound_url)
+            sound_url = sound_details['url']
+            reference_hash = generate_unique_hash(sound_url)
 
-        if reference_hash and not asset_exists(reference_hash):
-            name = sound_details.get('name', 0)
-            type_ = 'audio'
-            storage_location = sound_url
-            duration = sound_details.get('duration', 0)
-            bitrate = sound_details.get('bitrate', 0)  # Might be None
-            sample_rate = sound_details.get('samplerate', 0)
-            
-            insert_asset(reference_hash, name, type_, storage_location)
-            insert_audio_asset(reference_hash, duration)
+            if reference_hash and not asset_exists(reference_hash):
+                name = sound_details.get('name', 0)
+                type_ = 'audio'
+                storage_location = sound_url
+                duration = sound_details.get('duration', 0)
+                bitrate = sound_details.get('bitrate', 0)  # Might be None
+                sample_rate = sound_details.get('samplerate', 0)
+                
+                insert_asset(reference_hash, name, type_, storage_location)
+                insert_audio_asset(reference_hash, duration)
 
-            tags = sound_details.get('tags', [])
+                tags = sound_details.get('tags', [])
 
-            for tag in tags:
-                insert_asset_tag(reference_hash, tag)
+                for tag in tags:
+                    insert_asset_tag(reference_hash, tag)
 
-            print(f"Saved Audio: ID={sound_id}, Duration={duration}s, Bitrate={bitrate}bps, SampleRate={sample_rate}Hz")
+                print(f"Saved Audio: ID={sound_id}, Duration={duration}s, Bitrate={bitrate}bps, SampleRate={sample_rate}Hz")
+        page += 1
 
 if __name__ == '__main__':
     # Create the parser
