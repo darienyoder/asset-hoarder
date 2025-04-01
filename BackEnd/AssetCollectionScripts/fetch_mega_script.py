@@ -273,8 +273,14 @@ def fetch_freesound():
 
             sound_details = details_response.json()
 
-            sound_url = sound_details['url']
-            reference_hash = generate_unique_hash(sound_url)
+            sound_urls = sound_details.get('previews', {})
+            if not sound_urls:
+                print(f"No previews available for sound ID {sound_id}")
+                continue
+
+            preview_url = sound_urls.get('preview-hq-mp3')
+    
+            reference_hash = generate_unique_hash(preview_url)
 
             if reference_hash and not asset_exists(reference_hash):
                 name = sound_details.get('name', 0)
