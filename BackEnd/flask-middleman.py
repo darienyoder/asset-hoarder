@@ -605,16 +605,18 @@ def fetch_all():
 @app.route('/fetch-api/<string:api>', methods=['GET'])
 def fetch_specific(api):
     # Validate if the api argument is valid
-    valid_apis = ['picsum', 'unsplash', 'pixabay', 'pexels', 'freesound']
+    # valid_apis = ['picsum', 'unsplash', 'pixabay', 'pexels', 'freesound']
     
-    if api.lower() not in valid_apis:
-        return jsonify({'error': 'API not found'}), 404
+    # if api.lower() not in valid_apis:
+    #     return jsonify({'error': 'API not found'}), 404
 
-    result = subprocess.run(['python3', 'AssetCollectionScripts/fetch_mega_script.py', f'--{api.lower()}'])
-    if result.returncode == 0:
-        return jsonify({'status': 'success'}), 200
-    else:
-        return jsonify({'error': 'Failed to start subprocess'}), 500
+    # result = subprocess.run(['python3', 'AssetCollectionScripts/fetch_mega_script.py', f'--{api.lower()}'])
+    # if result.returncode == 0:
+    #     return jsonify({'status': 'success'}), 200
+    # else:
+    #     return jsonify({'error': 'Failed to start subprocess'}), 500
+    return jsonify({'error': 'This has been disabled'}), 405
+
 
 @app.route('/cleanup', methods=['GET'])
 def cleanup():
