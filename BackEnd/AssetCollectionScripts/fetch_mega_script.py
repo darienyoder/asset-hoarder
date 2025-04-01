@@ -285,7 +285,7 @@ def fetch_freesound():
             if reference_hash and not asset_exists(reference_hash):
                 name = sound_details.get('name', 0)
                 type_ = 'audio'
-                storage_location = sound_url
+                storage_location = sound_details.get('url', 0)
                 duration = sound_details.get('duration', 0)
                 bitrate = sound_details.get('bitrate', 0)  # Might be None
                 sample_rate = sound_details.get('samplerate', 0)
