@@ -45,12 +45,12 @@ def insert_asset(reference_hash, name, type_, storage_location):
     cursor.close()
     conn.close()
 
-def insert_audio_asset(reference_hash, duration, bitrate, sample_rate):
+def insert_audio_asset(reference_hash, duration):
     """Inserts audio metadata into the AudioAsset table."""
     conn = get_db_connection()
     cursor = conn.cursor()
-    query = "INSERT INTO AudioAsset (ReferenceHash, Duration, Bitrate, SampleRate) VALUES (%s, %s, %s, %s)"
-    cursor.execute(query, (reference_hash, duration, bitrate, sample_rate))
+    query = "INSERT INTO AudioAsset (ReferenceHash, Duration) VALUES (%s, %s)"
+    cursor.execute(query, (reference_hash, duration))
     conn.commit()
     cursor.close()
     conn.close()
@@ -234,10 +234,10 @@ def fetch_freesound():
         print("Error: Freesound API key not found in the database.")
         return
 
-    headers = {"Authorization": f"Token {api_key}"}
-    search_url = f"https://freesound.org/apiv2/search/text/?query=ambient&format=json&page_size=10"
+    page = 1
+    search_url = f"https://freesound.org/apiv2/search/text/?query=&format=json&page={page}&page_size=10&token={api_key}"
 
-    response = requests.get(search_url, headers=headers)
+    response = requests.get(search_url)
 
     if response.status_code != 200:
         print(f"Failed to fetch data from Freesound, status code {response.status_code}")
@@ -255,14 +255,14 @@ def fetch_freesound():
         sound_details_url = f"https://freesound.org/apiv2/sounds/{sound_id}/?token={api_key}"
 
         # Fetch sound details
-        details_response = requests.get(sound_details_url, headers=headers)
+        details_response = requests.get(sound_details_url)
         if details_response.status_code != 200:
             print(f"Failed to fetch sound details for ID {sound_id}")
             continue
 
         sound_details = details_response.json()
 
-        sound_url = f"https://freesound.org/apiv2/sounds/{sound_id}/download/?token={api_key}"
+        sound_url = sound_details['url']
         reference_hash = generate_unique_hash(sound_url)
 
         if reference_hash and not asset_exists(reference_hash):
@@ -274,7 +274,7 @@ def fetch_freesound():
             sample_rate = sound_details.get('samplerate', 0)
 
             insert_asset(reference_hash, name, type_, storage_location)
-            insert_audio_asset(reference_hash, duration, bitrate, sample_rate)
+            insert_audio_asset(reference_hash, duration)
 
             print(f"Saved Audio: ID={sound_id}, Duration={duration}s, Bitrate={bitrate}bps, SampleRate={sample_rate}Hz")
 

@@ -1,4 +1,3 @@
-#The Purpose of this file is to define the available actions that the API (this) can perform on the SQL Database
 from flask import Flask, jsonify, request, render_template, session, send_file, after_this_request, Response
 from flask_cors import CORS
 import requests
@@ -161,14 +160,14 @@ def get_assets():
     """
     audio_query = """
     SELECT
-        a.Id, a.StorageLocation, aa.ReferenceHash, aa.Duration
+        a.Id, a.Name, a.StorageLocation, aa.ReferenceHash, aa.Duration
     FROM AudioAsset AS aa
     JOIN Asset AS a ON a.ReferenceHash = aa.ReferenceHash
     WHERE 0=0
     """
     video_query = """
     SELECT
-        a.Id, a.StorageLocation, va.ReferenceHash, va.Width, va.Height, va.Duration
+        a.Id, a.Name, a.StorageLocation, va.ReferenceHash, va.Width, va.Height, va.Duration
     FROM VideoAsset AS va
     JOIN Asset AS a ON a.ReferenceHash = va.ReferenceHash
     WHERE 0=0
