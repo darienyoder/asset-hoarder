@@ -234,8 +234,9 @@ def fetch_freesound():
         print("Error: Freesound API key not found in the database.")
         return
 
-    headers = {"Authorization": f"Token {api_key}"}
-    search_url = f"https://freesound.org/apiv2/search/text/?query=ambient&format=json&page_size=10"
+    page = 1
+
+    search_url = f"https://freesound.org/apiv2/search/text/?query=&format=json&page={page}&page_size=10&token={api_key}"
 
     response = requests.get(search_url, headers=headers)
 
@@ -262,7 +263,7 @@ def fetch_freesound():
 
         sound_details = details_response.json()
 
-        sound_url = f"https://freesound.org/apiv2/sounds/{sound_id}/download/?token={api_key}"
+        sound_url = sound_details['url']
         reference_hash = generate_unique_hash(sound_url)
 
         if reference_hash and not asset_exists(reference_hash):
