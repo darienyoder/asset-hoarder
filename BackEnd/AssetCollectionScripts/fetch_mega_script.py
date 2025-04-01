@@ -266,12 +266,12 @@ def fetch_freesound():
         reference_hash = generate_unique_hash(sound_url)
 
         if reference_hash and not asset_exists(reference_hash):
-            name = sound_details.['name']
+            name = sound_details.get('name', 0)
             type_ = 'audio'
             storage_location = sound_url
-            duration = sound_details['duration']
-            bitrate = sound_details['bitrate']  # Might be None
-            sample_rate = sound_details['samplerate']
+            duration = sound_details.get('duration', 0)
+            bitrate = sound_details.get('bitrate', 0)  # Might be None
+            sample_rate = sound_details.get('samplerate', 0)
 
             insert_asset(reference_hash, name, type_, storage_location)
             insert_audio_asset(reference_hash, duration)
