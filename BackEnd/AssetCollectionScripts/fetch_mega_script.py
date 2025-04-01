@@ -235,7 +235,7 @@ def fetch_freesound():
         return
 
     page = 1
-
+    headers = {"Authorization": api_key}
     search_url = f"https://freesound.org/apiv2/search/text/?query=&format=json&page={page}&page_size=10&token={api_key}"
 
     response = requests.get(search_url, headers=headers)
