@@ -593,11 +593,13 @@ def download_asset(asset_id):
 
 @app.route('/fetch-api', methods=['GET'])
 def fetch_all():
-    result = subprocess.run(['python3', 'AssetCollectionScripts/fetch_mega_script.py', '--all'])
-    if result.returncode == 0:
-        return jsonify({'status': 'success'}), 200
-    else:
-        return jsonify({'error': 'Failed to start subprocess'}), 500
+    # result = subprocess.run(['python3', 'AssetCollectionScripts/fetch_mega_script.py', '--all'])
+    # This has been disabled for now until we work out admin accounts, we dont want every user to be able to run this
+    # if result.returncode == 0:
+    #     return jsonify({'status': 'success'}), 200
+    # else:
+    #     return jsonify({'error': 'Failed to start subprocess'}), 500
+    return jsonify({'error': 'This has been disabled'}), 405
 
 
 @app.route('/fetch-api/<string:api>', methods=['GET'])
