@@ -45,12 +45,12 @@ def insert_asset(reference_hash, name, type_, storage_location):
     cursor.close()
     conn.close()
 
-def insert_audio_asset(reference_hash, duration, bitrate, sample_rate):
+def insert_audio_asset(reference_hash, duration):
     """Inserts audio metadata into the AudioAsset table."""
     conn = get_db_connection()
     cursor = conn.cursor()
-    query = "INSERT INTO AudioAsset (ReferenceHash, Duration, Bitrate, SampleRate) VALUES (%s, %s, %s, %s)"
-    cursor.execute(query, (reference_hash, duration, bitrate, sample_rate))
+    query = "INSERT INTO AudioAsset (ReferenceHash, Duration) VALUES (%s, %s)"
+    cursor.execute(query, (reference_hash, duration))
     conn.commit()
     cursor.close()
     conn.close()
