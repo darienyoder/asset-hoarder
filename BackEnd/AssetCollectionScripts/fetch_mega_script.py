@@ -235,10 +235,9 @@ def fetch_freesound():
         return
 
     page = 1
-    headers = {"Authorization": api_key}
     search_url = f"https://freesound.org/apiv2/search/text/?query=&format=json&page={page}&page_size=10&token={api_key}"
 
-    response = requests.get(search_url, headers=headers)
+    response = requests.get(search_url)
 
     if response.status_code != 200:
         print(f"Failed to fetch data from Freesound, status code {response.status_code}")
@@ -256,7 +255,7 @@ def fetch_freesound():
         sound_details_url = f"https://freesound.org/apiv2/sounds/{sound_id}/?token={api_key}"
 
         # Fetch sound details
-        details_response = requests.get(sound_details_url, headers=headers)
+        details_response = requests.get(sound_details_url)
         if details_response.status_code != 200:
             print(f"Failed to fetch sound details for ID {sound_id}")
             continue
