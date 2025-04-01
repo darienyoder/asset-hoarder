@@ -65,6 +65,16 @@ def insert_image_asset(reference_hash, width, height):
     cursor.close()
     conn.close()
 
+def insert_asset_tag(reference_hash, tag):
+    """Inserts a tag into the Tag table."""
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    query = "INSERT INTO Tags (ReferenceHash, Tag) VALUES (%s, %s)"
+    cursor.execute(query, (reference_hash, tag))
+    conn.commit()
+    cursor.close()
+    conn.close()
+
 def get_api_key(api_name):
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
@@ -272,9 +282,14 @@ def fetch_freesound():
             duration = sound_details.get('duration', 0)
             bitrate = sound_details.get('bitrate', 0)  # Might be None
             sample_rate = sound_details.get('samplerate', 0)
-
+            
             insert_asset(reference_hash, name, type_, storage_location)
             insert_audio_asset(reference_hash, duration)
+
+            tags = sound_details.get('tags', [])
+
+            for tag in tags:
+                insert_asset_tag(reference_hash, tag)
 
             print(f"Saved Audio: ID={sound_id}, Duration={duration}s, Bitrate={bitrate}bps, SampleRate={sample_rate}Hz")
 
