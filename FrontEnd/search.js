@@ -11,10 +11,15 @@ var results = [];
 // 1. Creates a link with GET attributes based on the selected filters
 // 2. Fetches assets from that link and puts them in the results section
 // 3. Scrolls to the top of the results section
-async function search()
+async function search(random = false)
 {
-    let query = "https://assethoarder.net/db/assets"
-    + "?query=" + document.getElementById("main-searchbar").value
+    let query = ""
+    if (random) {
+        query = "https://capstone1.cs.kent.edu/db/random_assets"
+    } else {
+        query = "https://assethoarder.net/db/assets"
+            + "?query=" + document.getElementById("main-searchbar").value
+    }
     
     // IMAGES
     if (document.getElementById("content-filters").children[0].classList.contains("selected"))
