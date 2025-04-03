@@ -118,7 +118,9 @@ async function search(random = false)
 
     // Temporary shuffling for testing purposes.
     // Delete this once the search filters work on the backend.
-    results.sort((a, b) => Math.random() - 0.5 && (a.StorageLocation.includes("picsum") || a.Name.includes("Pexels") || a.Name.includes("Pixabay")));
+    if (!random) {
+        results.sort((a, b) => Math.random() - 0.5 && (a.StorageLocation.includes("picsum") || a.Name.includes("Pexels") || a.Name.includes("Pixabay")));
+    }
 
     // Update React app with results.
     update_results();
