@@ -10,7 +10,7 @@
     border-radius: 10px;
     z-index: 10; /* This is what makes it appear in front! */
         /*Higher makes it appear above things*/
-    background-color:seagreen;
+    background-color:#fdf0e0;
     width: 500px;
     max-width: 80%;
 }
@@ -59,7 +59,7 @@
     border-radius: 10px;
     z-index: 10; /* This is what makes it appear in front! */
         /*Higher makes it appear above things*/
-    background-color:seagreen;
+    background-color:#fdf0e0;
     width: 500px;
     max-width: 80%;
 }

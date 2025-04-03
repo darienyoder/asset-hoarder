@@ -29,7 +29,7 @@
                     <!-- href is for a test link here. Change it to the homepage link later-->
                 <li><button class="logSignButton" data-modal-target="#signup-modal">Signup</button></li>
                 <li><button class="logSignButton" data-modal-target="#login-modal">Login</button></li>
-                <li><a href="index.html">Profile</a></li>
+                <li><a href="profile.html">Profile</a></li>
                     <!-- Profile should go to another page
                      or prompt them to log in if they haven't already -->            
             </ul>
@@ -80,11 +80,23 @@
             <div id="overlay"></div>
         </div> <!-- End navbar code -->
 
+        
+        <!--Using signup css to try making thing that sits on side-->
+        <div class="profile-sidebar" id="profile-sidebar">
+            <div class="profile-modal-header">
+                <div class ="title">Profile</div>
+            </div>
+            <div><label for="psw"><b>Username</b></label></div>
+            <div class="textwrap">placeholderUsername</div>
+            <div><label for="email"><b>Email</b></label></div>
+            <div class="textwrap">
+                PlaceholderEmail@AssetHoarder.net
+            </div>
+            <div><label for="psw"><b>Assets Hoarded</b></label></div>
+            <div class="textwrap">12345</div>
+        </div>
+
         <div id="search-page">
-            <!-- <div class="profile info">
-                hello, world!
-            </div> -->
-            <!-- <div id="search-bg"></div> -->
             <div id="search-interface">
                 <div>
                     <div id="profile-header">Profile</div>

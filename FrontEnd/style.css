@@ -348,6 +348,7 @@ html, body {
     cursor: ew-resize;
 }
 
+/* Profile */
 #profile-header {
     display: flex;
     justify-content: center;
@@ -363,4 +364,22 @@ html, body {
     background-color: white;
 
     font-size: 40px;
+}
+
+.profile-sidebar{
+    position:fixed;
+    top:50%;
+    left:0%;
+    transform: translate(25%, -50%);
+    transition: 200ms ease-in-out;
+    border: 1px solid black;
+    border-radius: 10px;
+    z-index: 10;
+    background-color:#fdf0e0;
+    width: 20%;
+    max-width: 80%;
+}
+
+.textwrap{
+    overflow-wrap: break-word;
 }
