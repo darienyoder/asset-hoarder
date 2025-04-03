@@ -65,7 +65,6 @@ html, body {
     align-items: center;
     flex-direction: column;
     gap: 20px;
-    background-color: aqua; /* come back and fix this */
 }
 
 #search-logo {
@@ -362,22 +361,22 @@ html, body {
 
     border: solid 1px black;
     background-color: white;
+    border-radius: 10px;
 
     font-size: 40px;
 }
 
 .profile-sidebar{
-    position:fixed;
+    position:absolute;
     top:50%;
-    left:0%;
-    transform: translate(25%, -50%);
-    transition: 200ms ease-in-out;
+    transform: translate(10%, -150%);
     border: 1px solid black;
     border-radius: 10px;
     z-index: 10;
-    background-color:#fdf0e0;
+    background-color: #fff;
     width: 20%;
     max-width: 80%;
+    padding:10px;
 }
 
 .textwrap{
