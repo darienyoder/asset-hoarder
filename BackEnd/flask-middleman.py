@@ -116,7 +116,7 @@ def get_image_assets():
                if (score > 0.5 and not added_asset):
                    added_asset = True
                    return_asset = {'Id': image_asset['Id'], 'Name': image_asset['Name'], 'StorageLocation': image_asset['StorageLocation'], 'ReferenceHash': image_asset['ReferenceHash'], 'Width': image_asset['Width'], 'Height': image_asset['Height'], 'Tag': image_asset['Tag'], 'Score': str(score)}
-                   if not is_first_asset:
+                   if not is_first_result:
                        yield ","
                    yield "\n" + json.dumps(return_asset)
                    is_first_result = False
