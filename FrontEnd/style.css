@@ -11,7 +11,7 @@ html, body {
     justify-content: center;
     align-items: flex-start;
     padding-top: 20px;
-    background-color: #832;
+    background-color: #31130C;
 }
 
 #search-bg {
@@ -94,6 +94,7 @@ html, body {
     text-align: center;
     border-radius: 60px;
     border: solid 2px black;
+    background-color: #fdf0e0;
 }
 
 #search-interface #profile-searchbar {
@@ -103,6 +104,7 @@ html, body {
     text-align: center;
     border-radius: 60px;
     border: solid 2px black;
+    background-color: #fdf0e0;
 }
 
 #search-interface input:focus {
@@ -137,7 +139,7 @@ html, body {
     width: 90px;
     padding: 5px;
     aspect-ratio: 1/1;
-    background-color: #eee;
+    background-color: #fdf0e0;
     border-radius: 10px;
     border-width: 0px;
     cursor: pointer;
@@ -145,11 +147,11 @@ html, body {
 }
 
 .filter-toggle-button:hover {
-    background-color: #eee;
+    background-color: #fdf0e0;
 }
 
 .filter-menu {
-    background-color: #eee;
+    background-color: #fdf0e0;
     flex: 0;
     width: 100%;
     border-radius: 10px;
@@ -187,7 +189,7 @@ html, body {
 }
 
 .selected > .filter-toggle-button {
-    background-color: #eee;
+    background-color: #fdf0e0;
     border-radius: 10px 10px 0px 0px;
 }
 
@@ -246,7 +248,7 @@ html, body {
     left: 0px;
     right: 0px;
     background-color: #333;
-    color: white;
+    color: #fdf0e0;
     text-align: center;
     opacity: 80%;
 }
@@ -360,7 +362,7 @@ html, body {
     top: -120px;
 
     border: solid 1px black;
-    background-color: white;
+    background-color: #fdf0e0;
     border-radius: 10px;
 
     font-size: 40px;
@@ -369,11 +371,11 @@ html, body {
 .profile-sidebar{
     position:absolute;
     top:50%;
-    transform: translate(10%, -150%);
+    transform: translate(10%, -115%);
     border: 1px solid black;
     border-radius: 10px;
     z-index: 10;
-    background-color: #fff;
+    background-color: #fdf0e0;
     width: 20%;
     max-width: 80%;
     padding:10px;
@@ -381,4 +383,10 @@ html, body {
 
 .textwrap{
     overflow-wrap: break-word;
+    padding-bottom: 7px;
+}
+
+.profile-sidebar .title{
+    font-size: 1.25rem;
+    font-weight: bold;
 }
