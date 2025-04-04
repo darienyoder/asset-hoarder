@@ -100,6 +100,7 @@ def get_image_assets():
        cursor.execute(query)
        image_assets = cursor.fetchmany(1000)
 
+       yield "["
 
        last_used_ref_hash = ''
        input_encoding = model.encode(input_tag)
@@ -117,9 +118,12 @@ def get_image_assets():
                    yield json.dumps(return_asset) + ',\n'   
                last_used_ref_hash = image_asset['ReferenceHash']
            image_assets = cursor.fetchmany(1000)
+        
+       yield "]"
+       
 
 
-   return "[" + Response(chunked_image_assets(input_tag), content_type='application/json;charset=utf-8') + "]"
+   return Response(chunked_image_assets(input_tag), content_type='application/json;charset=utf-8')
 
 # get by each by type but use Asset.Id to have common reference id for user saving
 # got rid of by asset types, use this to filter maybe, can revert if needed
