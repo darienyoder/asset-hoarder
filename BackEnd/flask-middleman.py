@@ -120,8 +120,8 @@ def get_image_assets():
            image_assets = cursor.fetchmany(1000)
            if len(image_assets) != 0:
                yield ",\n"
-
-       yield "]"
+           else:
+               yield "\n]"
        
 
 
