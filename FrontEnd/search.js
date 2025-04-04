@@ -113,7 +113,7 @@ async function search(random = false)
     }
 
     let json = await response.json();
-    results = json.imageAssets;
+    results = json;
 
     // Temporary shuffling for testing purposes.
     // Delete this once the search filters work on the backend.
