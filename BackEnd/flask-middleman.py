@@ -104,6 +104,7 @@ def get_image_assets():
 
        last_used_ref_hash = ''
        input_encoding = model.encode(input_tag)
+       is_first_result = True
        while len(image_assets) != 0:
            added_asset = False
            for image_asset in image_assets:
@@ -115,12 +116,12 @@ def get_image_assets():
                if (score > 0.5 and not added_asset):
                    added_asset = True
                    return_asset = {'Id': image_asset['Id'], 'Name': image_asset['Name'], 'StorageLocation': image_asset['StorageLocation'], 'ReferenceHash': image_asset['ReferenceHash'], 'Width': image_asset['Width'], 'Height': image_asset['Height'], 'Tag': image_asset['Tag'], 'Score': str(score)}
-                   yield json.dumps(return_asset)   
+                   if not is_first_asset:
+                       yield ","
+                   yield "\n" + json.dumps(return_asset)
+                   is_first_result = False
                last_used_ref_hash = image_asset['ReferenceHash']
            image_assets = cursor.fetchmany(1000)
-           
-           if added_asset and len(image_assets) != 0:
-               yield ",\n"
        yield "\n]"
        
 
