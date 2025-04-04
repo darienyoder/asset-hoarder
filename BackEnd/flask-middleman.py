@@ -118,10 +118,10 @@ def get_image_assets():
                    yield json.dumps(return_asset)   
                last_used_ref_hash = image_asset['ReferenceHash']
            image_assets = cursor.fetchmany(1000)
-           if len(image_assets) != 0:
+           
+           if added_asset and len(image_assets) != 0:
                yield ",\n"
-           else:
-               yield "\n]"
+       yield "\n]"
        
 
 
