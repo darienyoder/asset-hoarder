@@ -115,10 +115,12 @@ def get_image_assets():
                if (score > 0.5 and not added_asset):
                    added_asset = True
                    return_asset = {'Id': image_asset['Id'], 'Name': image_asset['Name'], 'StorageLocation': image_asset['StorageLocation'], 'ReferenceHash': image_asset['ReferenceHash'], 'Width': image_asset['Width'], 'Height': image_asset['Height'], 'Tag': image_asset['Tag'], 'Score': str(score)}
-                   yield json.dumps(return_asset) + ',\n'   
+                   yield json.dumps(return_asset)   
                last_used_ref_hash = image_asset['ReferenceHash']
            image_assets = cursor.fetchmany(1000)
-        
+           if len(image_assets) != 0:
+               yield ",\n"
+
        yield "]"
        
 
