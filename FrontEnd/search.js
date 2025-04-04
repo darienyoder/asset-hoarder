@@ -13,12 +13,11 @@ var results = [];
 // 3. Scrolls to the top of the results section
 async function search(random = false)
 {
-    let query = ""
-    if (random) {
-        query = "https://capstone1.cs.kent.edu/db/random_assets"
+    let query = "";
+    if (random && false) {
+        query = "https://capstone1.cs.kent.edu/db/random_assets" + "?query=" + document.getElementById("main-searchbar").value
     } else {
-        query = "https://assethoarder.net/db/assets"
-            + "?query=" + document.getElementById("main-searchbar").value
+        query = "https://capstone1.cs.kent.edu/db/image_assets" + "?tag=" + document.getElementById("main-searchbar").value
     }
     
     // IMAGES
