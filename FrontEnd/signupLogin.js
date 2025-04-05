@@ -23,7 +23,6 @@ overlay.addEventListener('click', () => {
 closeModalButtons.forEach(button => {
     button.addEventListener('click', () => {
         const modal = button.closest('.signup')
-            // may need to fix above line a little
         closeModal(modal)
     })
 })

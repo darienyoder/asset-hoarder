@@ -374,7 +374,7 @@ html, body {
     transform: translate(10%, -115%);
     border: 1px solid black;
     border-radius: 10px;
-    z-index: 10;
+    z-index: 1;
     background-color: #fdf0e0;
     width: 20%;
     max-width: 80%;
