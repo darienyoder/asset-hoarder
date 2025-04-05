@@ -42,16 +42,16 @@
                 </div>
                 <div class="signup-modal-body">
                     <div><label for="email"><b>Email</b></label></div>
-                    <div><input type="text" placeholder="Enter Email" name="email" pattern="[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-z]{2,}$" maxlength="256" required></div>
+                    <div><input type="text" placeholder="Enter Email" name="email" pattern="[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-z]{2,}$" maxlength="256" required /></div>
 
                     <div><label for="username"><b>Username</b></label></div>
-                    <div><input type="text" placeholder="Enter your username" name="username" maxlength="16" minlength="3" pattern="^[a-zA-Z0-9_]+$" required></div>
+                    <div><input type="text" placeholder="Enter your username" name="username" maxlength="16" minlength="3" pattern="^[a-zA-Z0-9_]+$" required /></div>
 
                     <div><label for="psw"><b>Password</b></label></div>
-                    <div><input type="password" placeholder="Enter Password" name="psw" minlength="8" maxlength="32" pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,32}$" required></div>
+                    <div><input type="password" placeholder="Enter Password" name="psw" minlength="8" maxlength="32" pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,32}$" required /></div>
 
                     <div><label for="psw-repeat"><b>Repeat Password</b></label></div>
-                    <div><input type="password" placeholder="Repeat Password" name="psw-repeat" minlength="8" maxlength="32" pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,32}$" required></div>
+                    <div><input type="password" placeholder="Repeat Password" name="psw-repeat" minlength="8" maxlength="32" pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,32}$" required /></div>
                     
                     <div><button type="submit" class="signup-button">Sign Up!</button></div>
                 </div>            
@@ -65,10 +65,10 @@
                 </div>
                 <div class="login-modal-body">
                     <div><label for="login"><b>Username or Email</b></label></div>
-                    <div><input type="text" placeholder="Username or Email" name="email" pattern="[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-z]{2,}|[a-zA-Z0-9_]+$" minlength="3" maxlength="256" required></div>
+                    <div><input type="text" placeholder="Username or Email" name="email" pattern="[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-z]{2,}|[a-zA-Z0-9_]+$" minlength="3" maxlength="256" required /></div>
 
                     <div><label for="psw"><b>Password</b></label></div>
-                    <div><input type="password" placeholder="Enter Password" name="psw" minlength="8" maxlength="32" pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,32}$" required></div>
+                    <div><input type="password" placeholder="Enter Password" name="psw" maxlength="32" required /></div>
                     
                     <!-- Add actions. Post db/login and db/create_account-->
                     <button type="submit" class="login-button">Log In!</button>
@@ -78,7 +78,7 @@
             
             <!-- Overlay to dim background -->
             <div id="overlay"></div>
-        </div> <!-- End navbar code -->        
+        </div> <!-- End navbar code -->       
 
         <div id="search-page">
             <!-- <div id="search-bg"></div> -->
