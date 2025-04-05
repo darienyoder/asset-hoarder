@@ -45,6 +45,16 @@
     padding: 10px 15px;
 }
 
+.passwordNotes{
+    font-size: 13px;
+    width: 90%;
+    color: darkred; /* Gets changed to darkgreen when correct */
+}
+
+.signup-modal-body input{
+    width: 90%;
+}
+
 /* *** Login *** */
 /* It's possible there's a more efficient way to do this
     but I'd need to do some research first */
