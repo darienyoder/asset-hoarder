@@ -10,7 +10,7 @@
     border-radius: 10px;
     z-index: 10; /* This is what makes it appear in front! */
         /*Higher makes it appear above things*/
-    background-color:seagreen;
+    background-color:#fdf0e0;
     width: 500px;
     max-width: 80%;
 }
@@ -45,6 +45,21 @@
     padding: 10px 15px;
 }
 
+.passwordNotes{
+    font-size: 13px;
+    width: 90%;
+    color:#943824;
+}
+
+.usernameNotes{
+    font-size: 13px;
+    width: 90%;
+}
+
+.signup-modal-body input{
+    width: 90%;
+}
+
 /* *** Login *** */
 /* It's possible there's a more efficient way to do this
     but I'd need to do some research first */
@@ -59,7 +74,7 @@
     border-radius: 10px;
     z-index: 10; /* This is what makes it appear in front! */
         /*Higher makes it appear above things*/
-    background-color:seagreen;
+    background-color:#fdf0e0;
     width: 500px;
     max-width: 80%;
 }

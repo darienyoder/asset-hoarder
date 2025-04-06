@@ -3,7 +3,7 @@
 <html lang="en" dir="ltr">
     <head>
         <meta charset="utf-8">
-        <title>AssetHoarder</title>
+        <title>Profile</title>
         <!-- Style -->
         <link rel="stylesheet" href="style.css">
         <link rel="stylesheet" href="betterNavBar.css">
@@ -83,14 +83,32 @@
             
             <!-- Overlay to dim background -->
             <div id="overlay"></div>
-        </div> <!-- End navbar code -->       
+        </div> <!-- End navbar code -->  
+
+        
+        <!--Sidebar with profile info-->
+        <div class="profile-sidebar" id="profile-sidebar">
+            <div class="profile-modal-header">
+                <div class ="title">Profile</div>
+            </div>
+            <hr>
+            <div><label for="psw"><b>Username</b></label></div>
+            <div class="textwrap">placeholderUsername</div>
+            <div><label for="email"><b>Email</b></label></div>
+            <div class="textwrap">
+                PlaceholderEmail@AssetHoarder.net
+            </div>
+            <div><label for="psw"><b>Assets Hoarded</b></label></div>
+            <div class="textwrap">12345</div>
+        </div>
+
 
         <div id="search-page">
             <!-- <div id="search-bg"></div> -->
             <div id="search-interface">
                 <div>
-                    <div id="search-logo"><img src="img/logo.png" /></div>
-                    <input id="main-searchbar" placeholder="Search the hoard" maxlength="256" autofocus oninput="document.getElementById('explore-button').innerHTML='Search'">
+                    <div id="profile-header">Profile</div>
+                    <input id="profile-searchbar" maxlength="256" placeholder="Search YOUR hoard" autofocus oninput="document.getElementById('explore-button').innerHTML='Search'">
                 </div>
                 <div id="content-filters">
                     <div>
@@ -170,7 +188,7 @@
                     </div>
                 </div>
             </div>
-            <div id="explore-button" onclick="search(random=true);">
+            <div id="explore-button" onclick="search();">
                 Explore
             </div> 
         </div>
@@ -180,7 +198,7 @@
             <div id="browse-content">
                 <script>
 
-                document.getElementById("search-logo").style.height = Math.min((document.getElementById("main-searchbar").getBoundingClientRect().top - document.getElementById("search-interface").getBoundingClientRect().top - 20), 150 ) + "px";
+                document.getElementById("search-logo").style.height = Math.min((document.getElementById("profile-searchbar").getBoundingClientRect().top - document.getElementById("search-interface").getBoundingClientRect().top - 20), 150 ) + "px";
                 document.getElementById("search-logo").style.top = "-" + (document.getElementById("search-logo").getBoundingClientRect().bottom - document.getElementById("search-logo").getBoundingClientRect().top + 20) + "px";
 
                 function toggleFilter(filterElement)

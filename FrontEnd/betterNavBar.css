@@ -6,7 +6,7 @@
     background-color: #333;
     height: 46px;
     position: relative;
-    z-index: 1;
+    z-index: 2;
 }
 
 .topnav li{
@@ -25,6 +25,10 @@
 }
 
 .topnav li a:hover, .topnav li button:hover {
-    background-color: palevioletred;
+    background-color: #fdf0e0;
     color: black;
+}
+
+.vert-pad {
+    padding-bottom: 10px;
 }
