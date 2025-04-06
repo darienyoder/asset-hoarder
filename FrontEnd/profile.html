@@ -42,16 +42,21 @@
                 </div>
                 <div class="signup-modal-body">
                     <div><label for="email"><b>Email</b></label></div>
-                    <div><input type="text" placeholder="Enter Email" name="email" pattern="[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-z]{2,}$" maxlength="256" required /></div>
-
+                    <div class="vert-pad"><input type="text" placeholder="Enter Email" name="email" pattern="[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-z]{2,}$" maxlength="256" required /></div>
+                    
                     <div><label for="username"><b>Username</b></label></div>
-                    <div><input type="text" placeholder="Enter your username" name="username" maxlength="16" minlength="3" pattern="^[a-zA-Z0-9_]+$" required /></div>
+                    <div><input type="text" id="new-user" placeholder="Enter your username" name="username" maxlength="16" minlength="3" pattern="^[a-zA-Z0-9_]+$" onkeyup='properUser();' required /></div>
+                    <div class="usernameNotes vert-pad" id="usernameNotes">Your username can only include letters, numbers, and underscores.</div>
 
                     <div><label for="psw"><b>Password</b></label></div>
-                    <div><input type="password" placeholder="Enter Password" name="psw" minlength="8" maxlength="32" pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,32}$" required /></div>
+                    <div><input type="password" id="new-pass" placeholder="Enter Password" name="psw" minlength="8" maxlength="32" onkeyup='properPass(); passConfirm();' pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,32}$" required /></div>
+                    <div class="passwordNotes vert-pad" id="passwordNotes">
+                        Your password must be between 8 and 32 characters, contain a lowercase letter, uppercase letter, and a special character (@, $, !, %, *, ?, or &).
+                    </div>
 
                     <div><label for="psw-repeat"><b>Repeat Password</b></label></div>
-                    <div><input type="password" placeholder="Repeat Password" name="psw-repeat" minlength="8" maxlength="32" pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,32}$" required /></div>
+                    <div><input type="password" id="new-pass-rep" placeholder="Repeat Password" name="psw-repeat" minlength="8" maxlength="32" pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,32}$" onkeyup='passConfirm();' required /></div>
+                    <div class="passwordNotes vert-pad" id="pass-match-output">&#x2716; Passwords do NOT match!</div>
                     
                     <div><button type="submit" class="signup-button">Sign Up!</button></div>
                 </div>            
@@ -78,7 +83,7 @@
             
             <!-- Overlay to dim background -->
             <div id="overlay"></div>
-        </div> <!-- End navbar code -->
+        </div> <!-- End navbar code -->  
 
         
         <!--Sidebar with profile info-->

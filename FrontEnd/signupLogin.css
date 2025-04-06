@@ -48,7 +48,12 @@
 .passwordNotes{
     font-size: 13px;
     width: 90%;
-    color: darkred; /* Gets changed to darkgreen when correct */
+    color:#943824;
+}
+
+.usernameNotes{
+    font-size: 13px;
+    width: 90%;
 }
 
 .signup-modal-body input{
