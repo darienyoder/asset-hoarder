@@ -87,7 +87,7 @@ var properPass = function() {
     else {
         document.getElementById("passwordNotes").style.color = "#943824";
         document.getElementById("passwordNotes").innerHTML = 
-        "Your password must be between 8 and 32 characters, contain a lowercase letter, uppercase letter, and a special character (@, $, !, %, *, ?, or &)."
+        "Your password must be between 8 and 32 characters and contain at least one lowercase letter, one uppercase letter, a number, and a special character (@, $, !, %, *, ?, or &)."
     }
 }
 
