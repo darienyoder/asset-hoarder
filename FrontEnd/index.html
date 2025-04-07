@@ -46,12 +46,12 @@
                     
                     <div><label for="username"><b>Username</b></label></div>
                     <div><input type="text" id="new-user" placeholder="Enter your username" name="username" maxlength="16" minlength="3" pattern="^[a-zA-Z0-9_]+$" onkeyup='properUser();' required /></div>
-                    <div class="usernameNotes vert-pad" id="usernameNotes">Your username can only include letters, numbers, and underscores.</div>
+                    <div class="usernameNotes vert-pad" id="usernameNotes">Your username must be at least 3 chararacters and only include letters, numbers, and underscores.</div>
 
                     <div><label for="psw"><b>Password</b></label></div>
                     <div><input type="password" id="new-pass" placeholder="Enter Password" name="psw" minlength="8" maxlength="32" onkeyup='properPass(); passConfirm();' pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,32}$" required /></div>
                     <div class="passwordNotes vert-pad" id="passwordNotes">
-                        Your password must be between 8 and 32 characters, contain a lowercase letter, uppercase letter, and a special character (@, $, !, %, *, ?, or &).
+                        Your password must be between 8 and 32 characters and contain at least one lowercase letter, one uppercase letter, a number, and a special character (@, $, !, %, *, ?, or &).
                     </div>
 
                     <div><label for="psw-repeat"><b>Repeat Password</b></label></div>
