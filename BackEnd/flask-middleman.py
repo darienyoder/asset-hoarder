@@ -675,17 +675,15 @@ def update_freesound():
         return "Cannot connect to DB: " + str(e)
 
     try:
-        cursor.execute('SELECT StorageLocation FROM Assets WHERE Type = "audio" AND StorageLocation NOT LIKE "%.mp3" AND StorageLocation NOT LIKE "%.wav"')
+        cursor.execute('SELECT StorageLocation FROM Asset WHERE Type = "audio" AND StorageLocation NOT LIKE "%.mp3" AND StorageLocation NOT LIKE "%.wav"')
         assets = cursor.fetchall()
     except Exception as e:
         return "Error fetching assets: " + str(e)
 
-    return "Fetched assets"
-
     for asset in assets:
         try:
             new_link = get_audio_link( asset['StorageLocation'] )
-            cursor.execute('UPDATE Customers \
+            cursor.execute('UPDATE Asset \
                 SET StorageLocation = ' + new_link + ' \
                 WHERE StorageLocation = ' + asset['StorageLocation'] + ';')
         except Exception as e:
