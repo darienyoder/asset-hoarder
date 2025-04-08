@@ -679,6 +679,8 @@ def update_freesound():
     cursor.execute('SELECT StorageLocation FROM Assets WHERE Type = "audio" AND StorageLocation NOT LIKE "%.mp3" AND StorageLocation NOT LIKE "%.wav"')
     assets = cursor.fetchall()
 
+    return "Fetched assets"
+
     for asset in assets:
         try:
             new_link = get_audio_link( asset['StorageLocation'] )
