@@ -667,8 +667,6 @@ def get_audio_link( url ):
 
 @app.route('/update_freesound_assets', methods=['GET'])
 def update_freesound():
-    if request.args.get('confirm') != "true":
-        return "Please confirm"
     
     try:
         conn = get_db_connection()
@@ -676,8 +674,11 @@ def update_freesound():
     except Exception as e:
         return "Cannot connect to DB: " + str(e)
 
-    cursor.execute('SELECT StorageLocation FROM Assets WHERE Type = "audio" AND StorageLocation NOT LIKE "%.mp3" AND StorageLocation NOT LIKE "%.wav"')
-    assets = cursor.fetchall()
+    try:
+        cursor.execute('SELECT StorageLocation FROM Assets WHERE Type = "audio" AND StorageLocation NOT LIKE "%.mp3" AND StorageLocation NOT LIKE "%.wav"')
+        assets = cursor.fetchall()
+    except Exception as e:
+        return "Error fetching assets: " + str(e)
 
     return "Fetched assets"
 
