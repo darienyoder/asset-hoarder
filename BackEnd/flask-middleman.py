@@ -659,7 +659,7 @@ def cleanup():
 
 def get_audio_link( url ):
     page = requests.get(url).text
-    pattern = r'"https://cdn.freesound.org(.*?\.(?:mp3|wav))"'
+    pattern = r'https://cdn.freesound.org(.*?\.(?:mp3|wav))'
     link = re.search(pattern, page)
     if link is None:
         return url
@@ -684,8 +684,8 @@ def update_freesound():
         try:
             new_link = get_audio_link( asset['StorageLocation'] )
             cursor.execute('UPDATE Asset \
-                SET StorageLocation = ' + new_link + ' \
-                WHERE StorageLocation = ' + asset['StorageLocation'] + ';')
+                SET StorageLocation = "' + new_link + '" \
+                WHERE StorageLocation = "' + asset['StorageLocation'] + '";')
         except Exception as e:
             return "Error updating asset: " + str(e)
     
