@@ -686,10 +686,10 @@ def update_freesound():
             cursor.execute('UPDATE Asset \
                 SET StorageLocation = "' + new_link + '" \
                 WHERE StorageLocation = "' + asset['StorageLocation'] + '";')
+            conn.commit()
         except Exception as e:
             return "Error updating asset: " + str(e)
     
-    conn.commit()
     cursor.close()
     conn.close()
 
