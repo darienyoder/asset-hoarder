@@ -13,6 +13,7 @@ from sentence_transformers import SentenceTransformer
 from sklearn.metrics.pairwise import cosine_similarity
 import pickle
 import json
+import re
 
 app = Flask(__name__)
 load_dotenv()
