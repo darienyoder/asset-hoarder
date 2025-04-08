@@ -656,5 +656,33 @@ def cleanup():
         cursor.close()
         conn.close()
 
+@app.route('/update_freesound_assets', methods=['GET'])
+def update_freesound():
+    if request.args.get('confirm') != "true":
+        return "Please confirm"
+    
+    def get_audio_link( url ):
+        page = requests.get(url).text
+        pattern = r'"https://cdn.freesound.org(.*?\.(?:mp3|wav))"'
+        link = re.search(pattern, page)
+        return link.group(0)
+    
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    cursor.execute('SELECT StorageLocation FROM Assets WHERE Type = "audio" AND StorageLocation NOT LIKE "%.mp3" AND StorageLocation NOT LIKE "%.wav"')
+    assets = cursor.fetchall()
+
+    for asset in assets:
+        new_link = get_audio_link( asset.StorageLocation )
+        cursor.execute('UPDATE Customers \
+            SET StorageLocation = ' + new_link + ' \
+            WHERE StorageLocation = ' + asset.StorageLocation + ';')
+    
+    cursor.close()
+    conn.close()
+
+    return "<h1>Finished updating assets</h1>"
+
 if __name__ == '__main__':
     app.run(host='localhost', port=5000)
