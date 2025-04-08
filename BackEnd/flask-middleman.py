@@ -661,6 +661,8 @@ def get_audio_link( url ):
     page = requests.get(url).text
     pattern = r'"https://cdn.freesound.org(.*?\.(?:mp3|wav))"'
     link = re.search(pattern, page)
+    if link is None:
+        return url
     return link.group(0)
 
 @app.route('/update_freesound_assets', methods=['GET'])
@@ -672,19 +674,19 @@ def update_freesound():
         conn = get_db_connection()
         cursor = conn.cursor(dictionary=True)
     except Exception as e:
-        return "Cannot connect to DB"
+        return "Cannot connect to DB: " + str(e)
 
     cursor.execute('SELECT StorageLocation FROM Assets WHERE Type = "audio" AND StorageLocation NOT LIKE "%.mp3" AND StorageLocation NOT LIKE "%.wav"')
     assets = cursor.fetchall()
 
     for asset in assets:
         try:
-            new_link = get_audio_link( asset.StorageLocation )
+            new_link = get_audio_link( asset['StorageLocation'] )
             cursor.execute('UPDATE Customers \
                 SET StorageLocation = ' + new_link + ' \
-                WHERE StorageLocation = ' + asset.StorageLocation + ';')
+                WHERE StorageLocation = ' + asset['StorageLocation'] + ';')
         except Exception as e:
-            return "Error updating asset"
+            return "Error updating asset: " + str(e)
     
     conn.commit()
     cursor.close()
