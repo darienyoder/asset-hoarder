@@ -64,6 +64,14 @@ def insert_audio_asset(reference_hash, duration, bitrate, sample_rate):
     cursor.close()
     conn.close()
 
+def get_audio_link( url ):
+    page = requests.get(url).text
+    pattern = r'https://cdn.freesound.org(.*?\.(?:mp3|wav))'
+    link = re.search(pattern, page)
+    if link is None:
+        return url
+    return link.group(0)
+
 def fetch_and_store_sounds():
     """Fetches sounds from Freesound API and stores them in the database."""
     api_key = get_freesound_api_key()
@@ -105,7 +113,7 @@ def fetch_and_store_sounds():
         if reference_hash and not asset_exists(reference_hash):
             name = sound_details.get('name', 0)
             type_ = 'audio'
-            storage_location = sound_url
+            storage_location = get_audio_link(sound_url)
             duration = sound_details.get('duration', 0)
             bitrate = sound_details.get('bitrate', 0)  # Might be None
             sample_rate = sound_details.get('samplerate', 0)
