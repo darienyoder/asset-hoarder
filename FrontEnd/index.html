@@ -410,13 +410,16 @@
                             for (var i = 0; i < Math.min(100, results.length); i++)
                             {
                                 let entry = {
-                                    "type": "image",
+                                    "type": results[i].Type,
                                     "id": results[i].Id,
                                     "file": results[i].StorageLocation,
                                     "title": results[i].Name,
-                                    "width": results[i].Width,
-                                    "height": results[i].Height,
                                 };
+                                if (entry.type == "image")
+                                {
+                                    entry.width = results[i].Width;
+                                    entry.height = results[i].Height;
+                                }
                                 entry_list.push(<Entry data={entry} />)
                             }
 

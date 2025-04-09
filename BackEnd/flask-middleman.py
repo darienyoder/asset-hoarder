@@ -93,6 +93,7 @@ def get_image_assets():
            a.Id
            ,a.Name
            ,a.StorageLocation
+           ,a.Type
            ,ia.ReferenceHash
            ,ia.Width
            ,ia.Height
@@ -124,7 +125,7 @@ def get_image_assets():
                score = cosine_similarity([input_encoding], [pickle.loads(image_asset['TagVector'])])[0][0]
                if (score > 0.5 and not added_asset):
                    added_asset = True
-                   return_asset = {'Id': image_asset['Id'], 'Name': image_asset['Name'], 'StorageLocation': image_asset['StorageLocation'], 'ReferenceHash': image_asset['ReferenceHash'], 'Width': image_asset['Width'], 'Height': image_asset['Height'], 'Tag': image_asset['Tag'], 'Score': str(score)}
+                   return_asset = {'Id': image_asset['Id'], 'Name': image_asset['Name'], 'Type': image_asset['Type'], 'StorageLocation': image_asset['StorageLocation'], 'ReferenceHash': image_asset['ReferenceHash'], 'Width': image_asset['Width'], 'Height': image_asset['Height'], 'Tag': image_asset['Tag'], 'Score': str(score)}
                    if not is_first_result:
                        yield ","
                    yield "\n" + json.dumps(return_asset)
@@ -150,6 +151,7 @@ def get_audio_assets():
            a.Id
            ,a.Name
            ,a.StorageLocation
+           ,a.Type
            ,ia.ReferenceHash
            ,t.Tag
            ,t.TagVector
@@ -179,7 +181,7 @@ def get_audio_assets():
                score = cosine_similarity([input_encoding], [pickle.loads(image_asset['TagVector'])])[0][0]
                if (score > 0.5 and not added_asset):
                    added_asset = True
-                   return_asset = {'Id': image_asset['Id'], 'Name': image_asset['Name'], 'StorageLocation': image_asset['StorageLocation'], 'ReferenceHash': image_asset['ReferenceHash'], 'Tag': image_asset['Tag'], 'Score': str(score)}
+                   return_asset = {'Id': image_asset['Id'], 'Name': image_asset['Name'], 'Type': image_asset['Type'], 'StorageLocation': image_asset['StorageLocation'], 'ReferenceHash': image_asset['ReferenceHash'], 'Tag': image_asset['Tag'], 'Score': str(score)}
                    if not is_first_result:
                        yield ","
                    yield "\n" + json.dumps(return_asset)
