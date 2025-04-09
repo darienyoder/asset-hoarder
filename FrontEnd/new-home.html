@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AssetHoarder</title>
+    <style>
+
+        :root {
+            --red: darkred;
+            --brown: #994c00;
+            --white: #fdf0e0;
+            --black: black;
+        }
+
+        html, body {
+            margin: 0px;
+            font-family: sans-serif;
+        }
+
+        .full-viewport {
+            width: 100%;
+            height: 100vh;
+            overflow-x: none;
+        }
+
+        .center-flex {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .column-flex {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .row-flex {
+            display: flex;
+            flex-direction: row;
+        }
+
+        .parent-size {
+            position: absolute;
+            left: 0px;
+            top: 0px;
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="full-viewport column-flex" style="background-color: var(--red);">
+        <div class="column-flex" style="flex: 1; justify-content: flex-end; align-items: center;">
+            <div class="column-flex" style="align-items: center;">
+                <img src="img/logo.png" width="450px">
+                <div class="row-flex" style="width:800px; margin: 20px; font-size: 30px;">
+                    <div style="padding: 15px; background-color: white; border-radius: 10px 0px 0px 10px;">
+                        Images
+                    </div>
+                    <input placeholder="Search the hoard" style="flex: 1; padding: 10px; margin:5px 0px; font-size: 30px; border-radius: 0px 10px 10px 0px;">
+                </div>
+            </div>
+        </div>
+        <div style="flex: 1; display: flex; flex-direction: column; justify-content: flex-start; align-content: center;">
+            <div style="margin: 20px; padding: 20px; display:flex; justify-content: center;">
+                <div style="background-color: var(--white); width:1000px; height: 100px;">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
