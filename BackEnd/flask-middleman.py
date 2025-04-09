@@ -78,6 +78,7 @@ def search():
         return get_image_assets()
     elif request.args.get('isAudio') == "true":
         return get_audio_assets()
+    return "[]"
 
 @app.route('/image_assets', methods=['GET'])
 def get_image_assets():
