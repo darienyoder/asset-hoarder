@@ -72,6 +72,13 @@ def get_db_connection():
 def index():
     return render_template('main.html')
 
+@app.route('/search', methods=['GET'])
+def search():
+    if request.args.get('isImage') == "true":
+        return get_image_assets()
+    elif request.args.get('isAudio') == "true":
+        return get_audio_assets()
+
 @app.route('/image_assets', methods=['GET'])
 def get_image_assets():
    input_tag = '' if request.args.get('tag') == None else request.args.get('tag')
@@ -117,6 +124,61 @@ def get_image_assets():
                if (score > 0.5 and not added_asset):
                    added_asset = True
                    return_asset = {'Id': image_asset['Id'], 'Name': image_asset['Name'], 'StorageLocation': image_asset['StorageLocation'], 'ReferenceHash': image_asset['ReferenceHash'], 'Width': image_asset['Width'], 'Height': image_asset['Height'], 'Tag': image_asset['Tag'], 'Score': str(score)}
+                   if not is_first_result:
+                       yield ","
+                   yield "\n" + json.dumps(return_asset)
+                   is_first_result = False
+               last_used_ref_hash = image_asset['ReferenceHash']
+           image_assets = cursor.fetchmany(1000)
+       yield "\n]"
+       
+
+
+   return Response(chunked_image_assets(input_tag), content_type='application/json;charset=utf-8')
+
+@app.route('/audio_assets', methods=['GET'])
+def get_image_assets():
+   input_tag = '' if request.args.get('tag') == None else request.args.get('tag')
+
+   def chunked_image_assets(input_tag):
+       conn = get_db_connection()
+       cursor = conn.cursor(dictionary=True)
+
+       query = """
+       SELECT
+           a.Id
+           ,a.Name
+           ,a.StorageLocation
+           ,ia.ReferenceHash
+           ,t.Tag
+           ,t.TagVector
+       FROM AudioAsset AS ia
+       JOIN Asset AS a
+           ON a.ReferenceHash = ia.ReferenceHash
+       JOIN Tags AS t
+           ON t.ReferenceHash = ia.ReferenceHash
+       WHERE 0=0
+       ORDER BY ia.ReferenceHash
+       """
+       cursor.execute(query)
+       image_assets = cursor.fetchmany(1000)
+
+       yield "["
+
+       last_used_ref_hash = ''
+       input_encoding = model.encode(input_tag)
+       is_first_result = True
+       while len(image_assets) != 0:
+           added_asset = False
+           for image_asset in image_assets:
+               if added_asset and image_asset['ReferenceHash'] == last_used_ref_hash:
+                   break
+               if (last_used_ref_hash != image_asset['ReferenceHash']):
+                   added_asset = False
+               score = cosine_similarity([input_encoding], [pickle.loads(image_asset['TagVector'])])[0][0]
+               if (score > 0.5 and not added_asset):
+                   added_asset = True
+                   return_asset = {'Id': image_asset['Id'], 'Name': image_asset['Name'], 'StorageLocation': image_asset['StorageLocation'], 'ReferenceHash': image_asset['ReferenceHash'], 'Tag': image_asset['Tag'], 'Score': str(score)}
                    if not is_first_result:
                        yield ","
                    yield "\n" + json.dumps(return_asset)
@@ -656,44 +718,6 @@ def cleanup():
     finally:
         cursor.close()
         conn.close()
-
-def get_audio_link( url ):
-    page = requests.get(url).text
-    pattern = r'https://cdn.freesound.org(.*?\.(?:mp3|wav))'
-    link = re.search(pattern, page)
-    if link is None:
-        return url
-    return link.group(0)
-
-@app.route('/update_freesound_assets', methods=['GET'])
-def update_freesound():
-    
-    try:
-        conn = get_db_connection()
-        cursor = conn.cursor(dictionary=True)
-    except Exception as e:
-        return "Cannot connect to DB: " + str(e)
-
-    try:
-        cursor.execute('SELECT StorageLocation FROM Asset WHERE Type = "audio" AND StorageLocation NOT LIKE "%.mp3" AND StorageLocation NOT LIKE "%.wav"')
-        assets = cursor.fetchall()
-    except Exception as e:
-        return "Error fetching assets: " + str(e)
-
-    for asset in assets:
-        try:
-            new_link = get_audio_link( asset['StorageLocation'] )
-            cursor.execute('UPDATE Asset \
-                SET StorageLocation = "' + new_link + '" \
-                WHERE StorageLocation = "' + asset['StorageLocation'] + '";')
-            conn.commit()
-        except Exception as e:
-            return "Error updating asset: " + str(e)
-    
-    cursor.close()
-    conn.close()
-
-    return "<h1>Finished updating assets</h1>"
 
 if __name__ == '__main__':
     app.run(host='localhost', port=5000)
