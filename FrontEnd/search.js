@@ -17,7 +17,7 @@ async function search(random = false)
     if (random && false) {
         query = "https://capstone1.cs.kent.edu/db/random_assets" + "?query=" + document.getElementById("main-searchbar").value
     } else {
-        query = "https://capstone1.cs.kent.edu/db/image_assets" + "?tag=" + document.getElementById("main-searchbar").value
+        query = "https://capstone1.cs.kent.edu/db/search" + "?tag=" + document.getElementById("main-searchbar").value
     }
     
     // IMAGES
