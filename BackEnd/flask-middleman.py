@@ -137,10 +137,10 @@ def get_image_assets():
    return Response(chunked_image_assets(input_tag), content_type='application/json;charset=utf-8')
 
 @app.route('/audio_assets', methods=['GET'])
-def get_image_assets():
+def get_audio_assets():
    input_tag = '' if request.args.get('tag') == None else request.args.get('tag')
 
-   def chunked_image_assets(input_tag):
+   def chunked_audio_assets(input_tag):
        conn = get_db_connection()
        cursor = conn.cursor(dictionary=True)
 
@@ -189,7 +189,7 @@ def get_image_assets():
        
 
 
-   return Response(chunked_image_assets(input_tag), content_type='application/json;charset=utf-8')
+   return Response(chunked_audio_assets(input_tag), content_type='application/json;charset=utf-8')
 
 # get by each by type but use Asset.Id to have common reference id for user saving
 # got rid of by asset types, use this to filter maybe, can revert if needed
