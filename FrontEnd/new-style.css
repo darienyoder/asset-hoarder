@@ -370,6 +370,13 @@ html, body {
     height: 60px;
     cursor: pointer;
     z-index: 10;
+
+    filter: brightness(100%);
+    transition: filter 0.4s;
+}
+
+#profile-icon.selected {
+    filter: brightness(0%);
 }
 
 #profile-pane {
@@ -378,10 +385,38 @@ html, body {
     height: 100%;
     right: -50vw;
     width: 50vw;
-    background-color: #333;
+    background-color: #ddd;
     transition: right 1s;
 }
 
 #profile-pane.selected {
     right: 0vw;
+}
+
+#profile-pane > div {
+    margin: 20px;
+    height: calc(100% - 40px);
+    width: calc(100% - 40px);
+}
+
+#profile-wrapper > div {
+    display: none;
+}
+
+#profile-wrapper > div.selected {
+    display: flex;
+}
+
+#profile-wrapper * {
+    font-size: 24px;
+    margin: 10px;
+}
+
+#profile-wrapper h1 {
+    font-size: 48px;
+}
+
+#profile-wrapper input {
+    font-size: 24px;
+    padding: 10px;
 }

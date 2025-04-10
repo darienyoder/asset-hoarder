@@ -102,10 +102,45 @@
         </div>
     </div>
 
-    <!-- Profile -->
+    <!-- Profile Pane -->
     <svg id="profile-icon" onclick="toggle_profile_pane();" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="white" d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512l388.6 0c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304l-91.4 0z"/></svg>
-    <div id="profile-pane">
-        
+    <div id="profile-pane" class="center-flex">
+        <div id="profile-wrapper" class="expand flex-column">
+            
+            <!-- Login -->
+            <div class="expand center-flex selected">
+                <div class="flex-column">
+                    <h1>Log in to save assets</h1>
+                    <input placeholder="Username" type="text">
+                    <input placeholder="Password" type="text">
+                    <div class="flex-row">
+                        <button onclick="set_profile_tab(1);">Create Account</button>
+                        <button onclick="set_profile_tab(2);">Log in</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Create Account -->
+            <div class="expand center-flex">
+                <div class="flex-column">
+                    <h1>Create Account</h1>
+                    <input placeholder="Username" type="text">
+                    <input placeholder="Password" type="text">
+                    <div class="flex-row">
+                        <button onclick="set_profile_tab(0);">Log In</button>
+                        <button onclick="set_profile_tab(2);">Create</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Profile -->
+            <div class="expand center-flex">
+                <div class="parent-size">
+                    <h1>Profile</h1>
+                </div>
+            </div>
+
+        </div>
     </div>
 
 </body>

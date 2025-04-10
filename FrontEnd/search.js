@@ -17,6 +17,8 @@ window.addEventListener("keydown", function(event) {
                 show_results();
         }
     }
+    if (event.key == "Tab")
+        toggle_profile_pane()
 });
 
 function show_results()
