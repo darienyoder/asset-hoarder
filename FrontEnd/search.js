@@ -33,8 +33,7 @@ async function search(random = false)
                 query += filter.value + "+";
         if (query[query.length - 1] == "=")
         {
-            for (const filter of document.getElementById("img-type-filters").children)
-                query += filter.value + "+";
+            query += "all";
         }
         if (query[query.length - 1] == "+")
         {
@@ -49,8 +48,7 @@ async function search(random = false)
                 query += filter.value + "+";
         if (query[query.length - 1] == "=")
         {
-            for (const filter of document.getElementById("img-size-filters").children)
-                query += filter.value + "+";
+            query += "all";
         }
         if (query[query.length - 1] == "+")
         {
@@ -65,8 +63,7 @@ async function search(random = false)
                 query += filter.value + "+";
         if (query[query.length - 1] == "=")
         {
-            for (const filter of document.getElementById("img-color-filters").children)
-                query += filter.value + "+";
+            query += "all";
         }
         if (query[query.length - 1] == "+")
         {
@@ -91,8 +88,7 @@ async function search(random = false)
                     query += filter.value + "+";
             if (query[query.length - 1] == "=")
             {
-                for (const filter of document.getElementById("audio-type-filters").children)
-                    query += filter.value + "+";
+                query += "all";
             }
             if (query[query.length - 1] == "+")
             {
