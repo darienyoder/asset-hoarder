@@ -53,12 +53,12 @@
                         <button value="4:3" class="toggle-button" onclick="toggleButton(this);">4:3</button>
                     </div>
                     <div id="img-color-filters" class="row-flex center-flex">
-                        <button value="red" class="color-button" onclick="toggleButton(this);" style="background-color:red;">R</button>
-                        <button value="orange" class="color-button" onclick="toggleButton(this);" style="background-color:orange;">O</button>
-                        <button value="yellow" class="color-button" onclick="toggleButton(this);" style="background-color:yellow;">Y</button>
-                        <button value="green" class="color-button" onclick="toggleButton(this);" style="background-color:green;">G</button>
-                        <button value="blue" class="color-button" onclick="toggleButton(this);" style="background-color:blue;">B</button>
-                        <button value="purple" class="color-button" onclick="toggleButton(this);" style="background-color:purple;">V</button>
+                        <button value="red" class="color-button" onclick="toggleButton(this);" style="background-color:red; color: white;">R</button>
+                        <button value="orange" class="color-button" onclick="toggleButton(this);" style="background-color:orange; color: black;">O</button>
+                        <button value="yellow" class="color-button" onclick="toggleButton(this);" style="background-color:yellow; color: black;">Y</button>
+                        <button value="green" class="color-button" onclick="toggleButton(this);" style="background-color:green; color: white;">G</button>
+                        <button value="blue" class="color-button" onclick="toggleButton(this);" style="background-color:blue; color: white;">B</button>
+                        <button value="purple" class="color-button" onclick="toggleButton(this);" style="background-color:purple; color: white;">V</button>
                     </div>
                 </div>
 
@@ -112,9 +112,10 @@
                 <div class="flex-column">
                     <h1>Log in to save assets</h1>
                     <input placeholder="Username" type="text">
-                    <input placeholder="Password" type="text">
+                    <input placeholder="Password" type="password">
                     <div class="flex-row">
                         <button onclick="set_profile_tab(1);">Create Account</button>
+                        <div class="expand"></div>
                         <button onclick="set_profile_tab(2);">Log in</button>
                     </div>
                 </div>
@@ -125,9 +126,10 @@
                 <div class="flex-column">
                     <h1>Create Account</h1>
                     <input placeholder="Username" type="text">
-                    <input placeholder="Password" type="text">
+                    <input placeholder="Password" type="password">
                     <div class="flex-row">
                         <button onclick="set_profile_tab(0);">Log In</button>
+                        <div class="expand"></div>
                         <button onclick="set_profile_tab(2);">Create</button>
                     </div>
                 </div>

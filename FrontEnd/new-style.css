@@ -126,11 +126,13 @@ html, body {
 }
 
 .filter-menu .color-button {
-    height: 32px;
-    width: 32px;
+    height: 40px;
+    width: 40px;
+    aspect-ratio: 1;
+    font-size: 24px;
     border-radius: 100%;
     margin: 8px 8px;
-    border: none;
+    border: 4px solid transparent;
 }
 
 .filter-menu .color-button.selected {
@@ -388,7 +390,7 @@ html, body {
     right: -50vw;
     width: 50vw;
     background-color: #ddd;
-    transition: right 1s;
+    transition: right 0.4s;
 }
 
 #profile-pane.selected {
