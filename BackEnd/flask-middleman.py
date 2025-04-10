@@ -82,61 +82,67 @@ def search():
 
 @app.route('/image_assets', methods=['GET'])
 def get_image_assets():
-   input_tag = '' if request.args.get('tag') == None else request.args.get('tag')
+    input_tag = '' if request.args.get('tag') == None else request.args.get('tag')
 
-   def chunked_image_assets(input_tag):
-       conn = get_db_connection()
-       cursor = conn.cursor(dictionary=True)
+    def chunked_image_assets(input_tag):
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True)
 
-       query = """
-       SELECT
-           a.Id
-           ,a.Name
-           ,a.StorageLocation
-           ,a.Type
-           ,ia.ReferenceHash
-           ,ia.Width
-           ,ia.Height
-           ,t.Tag
-           ,t.TagVector
-       FROM ImageAsset AS ia
-       JOIN Asset AS a
-           ON a.ReferenceHash = ia.ReferenceHash
-       JOIN Tags AS t
-           ON t.ReferenceHash = ia.ReferenceHash
-       WHERE 0=0
-       ORDER BY ia.ReferenceHash
-       """
-       cursor.execute(query)
-       image_assets = cursor.fetchmany(1000)
+        size_filter = "0=0"
+        if "wide" in request.args.get('size'):
+            size_filter += " AND ia.Height < ia.Width"
+        if "tall" in request.args.get('size'):
+            size_filter += " AND ia.Height > ia.Width"
 
-       yield "["
+        query = """
+        SELECT
+            a.Id
+            ,a.Name
+            ,a.StorageLocation
+            ,a.Type
+            ,ia.ReferenceHash
+            ,ia.Width
+            ,ia.Height
+            ,t.Tag
+            ,t.TagVector
+        FROM ImageAsset AS ia
+        JOIN Asset AS a
+            ON a.ReferenceHash = ia.ReferenceHash
+        JOIN Tags AS t
+            ON t.ReferenceHash = ia.ReferenceHash
+        WHERE """ + size_filter + """
+        ORDER BY ia.ReferenceHash
+        """
+        cursor.execute(query)
+        image_assets = cursor.fetchmany(1000)
 
-       last_used_ref_hash = ''
-       input_encoding = model.encode(input_tag)
-       is_first_result = True
-       while len(image_assets) != 0:
-           added_asset = False
-           for image_asset in image_assets:
-               if added_asset and image_asset['ReferenceHash'] == last_used_ref_hash:
-                   break
-               if (last_used_ref_hash != image_asset['ReferenceHash']):
-                   added_asset = False
-               score = cosine_similarity([input_encoding], [pickle.loads(image_asset['TagVector'])])[0][0]
-               if ((score > 0.5 or input_tag in image_asset['Name']) and not added_asset):
-                   added_asset = True
-                   return_asset = {'Id': image_asset['Id'], 'Name': image_asset['Name'], 'Type': image_asset['Type'], 'StorageLocation': image_asset['StorageLocation'], 'ReferenceHash': image_asset['ReferenceHash'], 'Width': image_asset['Width'], 'Height': image_asset['Height'], 'Tag': image_asset['Tag'], 'Score': str(score)}
-                   if not is_first_result:
-                       yield ","
-                   yield "\n" + json.dumps(return_asset)
-                   is_first_result = False
-               last_used_ref_hash = image_asset['ReferenceHash']
-           image_assets = cursor.fetchmany(1000)
-       yield "\n]"
+        yield "["
+
+        last_used_ref_hash = ''
+        input_encoding = model.encode(input_tag)
+        is_first_result = True
+        while len(image_assets) != 0:
+            added_asset = False
+            for image_asset in image_assets:
+                if added_asset and image_asset['ReferenceHash'] == last_used_ref_hash:
+                    break
+                if (last_used_ref_hash != image_asset['ReferenceHash']):
+                    added_asset = False
+                score = cosine_similarity([input_encoding], [pickle.loads(image_asset['TagVector'])])[0][0]
+                if ((score > 0.5 or input_tag in image_asset['Name']) and not added_asset):
+                    added_asset = True
+                    return_asset = {'Id': image_asset['Id'], 'Name': image_asset['Name'], 'Type': image_asset['Type'], 'StorageLocation': image_asset['StorageLocation'], 'ReferenceHash': image_asset['ReferenceHash'], 'Width': image_asset['Width'], 'Height': image_asset['Height'], 'Tag': image_asset['Tag'], 'Score': str(score)}
+                    if not is_first_result:
+                        yield ","
+                    yield "\n" + json.dumps(return_asset)
+                    is_first_result = False
+                last_used_ref_hash = image_asset['ReferenceHash']
+            image_assets = cursor.fetchmany(1000)
+        yield "\n]"
        
 
 
-   return Response(chunked_image_assets(input_tag), content_type='application/json;charset=utf-8')
+    return Response(chunked_image_assets(input_tag), content_type='application/json;charset=utf-8')
 
 @app.route('/audio_assets', methods=['GET'])
 def get_audio_assets():
