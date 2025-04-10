@@ -142,6 +142,8 @@ async function search(random = false)
         query += "&isAudio=false"
     }
 
+    alert(query);
+
     // Get results from API
     const response = await fetch(query);
     if (!response.ok)
