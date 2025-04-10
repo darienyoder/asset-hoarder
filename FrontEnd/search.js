@@ -2,17 +2,25 @@
 // Pressing enter will search regardless
 // of what is currently selected
 window.addEventListener("keydown", function(event) {
-    if (event.key == "Enter")
+    if (event.key == "Enter" && !gallery_open)
         search();
 });
 
 var results = [];
+var gallery_open = false;
 
 // 1. Creates a link with GET attributes based on the selected filters
 // 2. Fetches assets from that link and puts them in the results section
 // 3. Scrolls to the top of the results section
 async function search(random = false)
 {
+
+    document.getElementById("gallery").innerHTML = "";
+    
+    document.getElementById("loading-menu").style.display = "";
+    show_results();
+
+    /*
     let query = "";
     if (random && false) {
         query = "https://capstone1.cs.kent.edu/db/random_assets" + "?query=" + document.getElementById("main-searchbar").value
@@ -105,6 +113,9 @@ async function search(random = false)
             query += "&isAudio=false"
         }
 
+    */
+    let query = "https://capstone1.cs.kent.edu/db/search?isImage=true&tag=" + document.getElementById("searchbar").value;
+
     // Get results from API
     const response = await fetch(query);
     if (!response.ok)
@@ -124,10 +135,6 @@ async function search(random = false)
     // Update React app with results.
     update_results();
 
-    // Wait a frame to let the content load, then scroll down to results.
-    // If the content isn't loaded, the page can't scroll all the way.
-    await new Promise(res => setTimeout(res, 10));
+    document.getElementById("loading-menu").style.display = "none";
 
-    document.getElementById('browse-page').style.display = 'block';
-    document.getElementById('browse-anchor').scrollIntoView({ behavior: 'smooth'});
 }

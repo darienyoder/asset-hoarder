@@ -1,0 +1,361 @@
+
+/*************/
+/* VARIABLES */
+/*************/
+
+:root {
+    --red: darkred;
+    --brown: #994c00;
+    --gold: #ebcd17;
+    --white: #fdf0e0;
+    --black: black;
+
+    --interface-width: 1000px;
+}
+
+/***************/
+/* GENERAL USE */
+/***************/
+
+.full-viewport {
+    width: 100%;
+    height: 100vh;
+    overflow-x: none;
+}
+
+.center-flex, .flex-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.column-flex, .flex-column {
+    display: flex;
+    flex-direction: column;
+}
+
+.row-flex, .flex-row {
+    display: flex;
+    flex-direction: row;
+}
+
+.expand {
+    flex: 1;
+}
+
+.parent-size {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+}
+
+/*********/
+/* STYLE */
+/*********/
+
+html, body {
+    margin: 0px;
+    font-family: sans-serif;
+    overflow-y: hidden;
+}
+
+/* Search Page */
+
+#filter-content > * {
+    flex: 1;
+}
+
+#searchbar {
+    width: 100%;
+    font-size: 30px;
+    padding: 10px 15px;
+    border-radius: 0px 10px 10px 0px;
+    border: 3px solid var(--red);
+}
+
+#searchbar:focus {
+    outline: none;
+    /* border: 4px solid var(--red); */
+}
+
+#filter-wrapper {
+    margin: 0px 20px;
+    padding: 10px;
+    border-radius: 0px 0px 10px 10px;
+    position: relative;
+}
+
+.filter-menu {
+    /* position: absolute;
+    top: 10px;
+    left: 10px;
+    width: calc(100% - 20px); */
+    display: none;
+}
+
+.filter-menu.selected {
+    display: block;
+}
+
+.filter-menu h2 {
+    margin-top: 0px;
+}
+
+.filter-menu button {
+    cursor: pointer;
+}
+
+.filter-menu .toggle-button {
+    font-size: 24px;
+    background-color: black;
+    color: white;
+    border: 2px solid white;
+    border-radius: 100px;
+    padding: 4px 16px;
+    margin: 8px 8px;
+}
+
+.filter-menu .toggle-button.selected {
+    background-color: var(--gold);
+    border: 2px solid var(--gold);
+    /* aspect-ratio: 1; */
+    color: black;
+}
+
+.filter-menu .color-button {
+    height: 32px;
+    width: 32px;
+    border-radius: 100%;
+    margin: 8px 8px;
+    border: none;
+}
+
+.filter-menu .color-button.selected {
+    border: 4px solid white;
+}
+
+/* Loading wheel */
+.lds-ring {
+    /* change color here */
+    color: var(--red);
+  }
+.lds-ring,
+.lds-ring div {
+  box-sizing: border-box;
+}
+.lds-ring {
+  display: inline-block;
+  position: relative;
+  width: 80px;
+  height: 80px;
+}
+.lds-ring div {
+  box-sizing: border-box;
+  display: block;
+  position: absolute;
+  width: 64px;
+  height: 64px;
+  margin: 8px;
+  border: 8px solid currentColor;
+  border-radius: 50%;
+  animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+  border-color: currentColor transparent transparent transparent;
+}
+.lds-ring div:nth-child(1) {
+  animation-delay: -0.45s;
+}
+.lds-ring div:nth-child(2) {
+  animation-delay: -0.3s;
+}
+.lds-ring div:nth-child(3) {
+  animation-delay: -0.15s;
+}
+@keyframes lds-ring {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Results Page */
+
+#results-page {
+    position: absolute;
+    height: calc(100% - 100px);
+    bottom: -100%;
+    transition: bottom 1s;
+    background-color: var(--white);
+    overflow-y: auto;
+}
+
+#gallery {
+    display: grid;
+    grid-template-columns: auto auto auto auto auto;
+    gap: 10px;
+    margin-left: 100px;
+    margin-right: 100px;
+    margin-top: 50px;
+    margin-bottom: 50px;
+}
+
+.entry {
+    position: relative;
+    background-color: #ddd;
+    aspect-ratio: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.entry-title {
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    background-color: #333;
+    color: #fdf0e0;
+    text-align: center;
+    opacity: 80%;
+}
+
+.audio-entry .entry-title {
+    cursor: ew-resize;
+}
+
+.image-entry > .image-preview {
+
+    width: 100%;
+    position: absolute;
+    z-index: 0;
+    transform: scale(1.0);
+
+    flex: 1;
+    height: 100%;
+    background-position: center;
+    background-size: cover;
+    transition: width 0.4s, height 0.4s, transform 0.4s, z-index 0.4s, box-shadow 0.4s;
+}
+
+.image-entry:hover > .image-preview {
+    z-index: 10;
+    width: calc(100% * 16/9);
+    transform: scale(1.2);
+    /* box-shadow: 5px 5px 50px, #00000088, -5px 5px 50px #0008, 5px -5px 50px #0008, -5px -5px 50px #0008; */
+}
+
+.audio-entry {
+    background-color: gray;
+    border-radius: 50% 50% 0% 0%;
+}
+
+.audio-play-button {
+    width: 70%;
+    aspect-ratio: 1;
+    /* background-color: #bbb; */
+    border-radius: 100%;
+
+    background-image: url(https://icon-library.com/images/play-button-icon-vector/play-button-icon-vector-4.jpg);
+    background-size: cover;
+    background-position: center;
+
+    cursor: pointer;
+
+    /* transition: transform 0.2s; */
+}
+
+/* .audio-play-button:hover {
+    transform: scale(1.1);
+} */
+
+.download-button, .audio-entry:hover .audio-play-button {
+    background-color: #ddd;
+    border-radius: 100%;
+    position: absolute;
+    aspect-ratio: 1;
+    height: 30%;
+    width: auto;
+    opacity: 90%;
+    transition: opacity 0.4s;
+    cursor: pointer;
+    background-image: url(https://cdn4.iconfinder.com/data/icons/arrows-245/24/download_1-1024.png);
+    background-position: center;
+    background-size: cover;
+}
+
+.download-button {
+    opacity: 0%;
+    right: 10px;
+    bottom: 10px;
+}
+
+.entry:hover .download-button {
+    opacity: 90%;
+}
+
+.media-progress-bar {
+    position: absolute;
+    left: 0px;
+    top: -5px;
+    height: 5px;
+    background-color: red;
+}
+
+.media-progress-bar-tip {
+    --radius: 5px;
+    position: absolute;
+    right: calc(var(--radius) * -1);
+    top: calc(var(--radius) * -1 - 0px);
+    height: calc(var(--radius) * 2);
+    width: calc(var(--radius) * 2);
+    background-color: #888;
+    border-radius: 100%;
+    border: 2px solid #ddd;
+
+    cursor: ew-resize;
+}
+
+/* Top Bar */
+
+#top-bar {
+    opacity: 0%;
+    pointer-events: none;
+    transition: opacity 1s;
+
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    height: 100px;
+    width: 100%;
+
+    display: flex;
+    flex-direction: row;
+
+    background-color: var(--red);
+    cursor: pointer;
+}
+
+#top-bar.selected {
+    opacity: 100%;
+    pointer-events: all;
+}
+
+#top-bar > * {
+    margin: 10px;
+    pointer-events: none;
+}
+
+#top-bar * {
+    pointer-events: none;
+}
+
+#top-bar input {
+    height: 50px;
+    font-size: 40px;
+    padding: 5px 10px;
+    border-radius: 10px 10px 10px 10px;
+    border: 3px solid var(--red);
+}
