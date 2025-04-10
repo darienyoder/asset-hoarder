@@ -1,4 +1,3 @@
-
 // Pressing enter will search regardless
 // of what is currently selected
 window.addEventListener("keydown", function(event) {
@@ -20,6 +19,25 @@ window.addEventListener("keydown", function(event) {
     }
 });
 
+function show_results()
+{
+    document.getElementById("top-bar").classList.add("selected");
+    document.getElementById("results-page").style.bottom = "0%";
+    document.getElementById("top-bar-search").value = document.getElementById("searchbar").value
+    gallery_open = true;
+
+    document.getElementById("searchbar").blur();
+}
+
+function hide_results()
+{
+    document.getElementById("top-bar").classList.remove("selected");
+    document.getElementById("results-page").style.bottom = "";
+    gallery_open = false;
+
+    document.getElementById("searchbar").focus();
+}
+
 var results = [];
 var gallery_open = false;
 
@@ -34,16 +52,15 @@ async function search(random = false)
     document.getElementById("loading-menu").style.display = "";
     show_results();
 
-    /*
     let query = "";
     if (random && false) {
         query = "https://capstone1.cs.kent.edu/db/random_assets" + "?query=" + document.getElementById("main-searchbar").value
     } else {
-        query = "https://capstone1.cs.kent.edu/db/search" + "?tag=" + document.getElementById("main-searchbar").value
+        query = "https://capstone1.cs.kent.edu/db/search" + "?tag=" + document.getElementById("searchbar").value
     }
     
     // IMAGES
-    if (document.getElementById("content-filters").children[0].classList.contains("selected"))
+    if (document.getElementById("filter-wrapper").children[0].classList.contains("selected"))
     {
         query += "&isImage=true";
         
@@ -101,34 +118,31 @@ async function search(random = false)
     }
 
     // AUDIO
-    if (document.getElementById("content-filters").children[1].classList.contains("selected"))
+    if (document.getElementById("filter-wrapper").children[1].classList.contains("selected"))
+    {
+        query += "&isAudio=true";
+        
+        // Type Filters
+        // Ex. "type=photos+icons+textures"
+        query += "&audioType=";
+        for (const filter of document.getElementById("audio-type-filters").children)
+            if (filter.classList.contains("selected"))
+                query += filter.value + "+";
+        if (query[query.length - 1] == "=")
         {
-            query += "&isAudio=true";
-            
-            // Type Filters
-            // Ex. "type=photos+icons+textures"
-            query += "&audioType=";
             for (const filter of document.getElementById("audio-type-filters").children)
-                if (filter.classList.contains("selected"))
-                    query += filter.value + "+";
-            if (query[query.length - 1] == "=")
-            {
-                for (const filter of document.getElementById("audio-type-filters").children)
-                    query += filter.value + "+";
-            }
-            if (query[query.length - 1] == "+")
-            {
-                query = query.substring(0, query.length - 1);
-            }
-    
+                query += filter.value + "+";
         }
-        else
+        if (query[query.length - 1] == "+")
         {
-            query += "&isAudio=false"
+            query = query.substring(0, query.length - 1);
         }
 
-    */
-    let query = "https://capstone1.cs.kent.edu/db/search?isImage=true&tag=" + document.getElementById("searchbar").value;
+    }
+    else
+    {
+        query += "&isAudio=false"
+    }
 
     // Get results from API
     const response = await fetch(query);
