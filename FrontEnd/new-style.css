@@ -10,7 +10,7 @@
     --white: #fdf0e0;
     --black: black;
 
-    --interface-width: 1000px;
+    --interface-width: min(1000px, 100vw - 100px);
 }
 
 /***************/
@@ -58,7 +58,7 @@
 html, body {
     margin: 0px;
     font-family: sans-serif;
-    overflow-y: hidden;
+    overflow: hidden;
 }
 
 /* Search Page */
@@ -358,4 +358,30 @@ html, body {
     padding: 5px 10px;
     border-radius: 10px 10px 10px 10px;
     border: 3px solid var(--red);
+}
+
+/* Profile */
+
+#profile-icon {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 60px;
+    height: 60px;
+    cursor: pointer;
+    z-index: 10;
+}
+
+#profile-pane {
+    position: absolute;
+    top: 0px;
+    height: 100%;
+    right: -50vw;
+    width: 50vw;
+    background-color: #333;
+    transition: right 1s;
+}
+
+#profile-pane.selected {
+    right: 0vw;
 }

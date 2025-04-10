@@ -2,8 +2,22 @@
 // Pressing enter will search regardless
 // of what is currently selected
 window.addEventListener("keydown", function(event) {
-    if (event.key == "Enter" && !gallery_open)
+    if (event.key == "Enter" && !(gallery_open || document.getElementById("profile-pane").classList.contains("selected")))
         search();
+    if (event.key == "Escape")
+    {
+        if (document.getElementById("profile-pane").classList.contains("selected"))
+        {
+            hide_profile();
+        }
+        else
+        {
+            if (gallery_open)
+                hide_results();
+            else if (document.getElementById("gallery").innerText != "")
+                show_results();
+        }
+    }
 });
 
 var results = [];
