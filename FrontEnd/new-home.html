@@ -28,7 +28,7 @@
 
             <!-- Search Bar -->
             <div class="row-flex" style="width:var(--interface-width); font-size: 30px;">
-                <div style="padding: 15px; background-color: var(--red); color: white; border-radius: 10px 0px 0px 10px;" onclick="for (i of document.getElementsByClassName('filter-menu')) {i.classList.toggle('selected');}">
+                <div style="cursor: pointer; user-select: none; padding: 15px; background-color: var(--red); color: white; border-radius: 10px 0px 0px 10px;" onclick="for (i of document.getElementsByClassName('filter-menu')) {i.classList.toggle('selected');} if (this.innerText == 'Images') {this.innerText = 'Audio';} else {this.innerText = 'Images';}">
                     Images
                 </div>
                 <input placeholder="Search" id="searchbar">
