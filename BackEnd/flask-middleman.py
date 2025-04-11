@@ -110,7 +110,7 @@ def get_image_assets():
             ON a.ReferenceHash = ia.ReferenceHash
         JOIN Tags AS t
             ON t.ReferenceHash = ia.ReferenceHash
-        WHERE """ + size_filter + """
+        WHERE 0=0
         ORDER BY ia.ReferenceHash
         """
         cursor.execute(query)
