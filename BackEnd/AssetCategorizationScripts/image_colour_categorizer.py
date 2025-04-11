@@ -26,11 +26,15 @@ PREDEFINED_COLORS = {
 def get_db_connection():
     return mysql.connector.connect(**db_config)
 
-def insert_asset_tag(reference_hash, tag):
+def insert_colors(reference_hash, cc, ac):
     conn = get_db_connection()
     cursor = conn.cursor()
-    query = "INSERT INTO Tags (ReferenceHash, Tag) VALUES (%s, %s)"
-    cursor.execute(query, (reference_hash, tag))
+    query = """
+        UPDATE ImageAsset
+        SET CommonColor = %s, AverageColor = %s
+        WHERE ReferenceHash = %s
+    """
+    cursor.execute(query, (cc, ac, reference_hash))
     conn.commit()
     cursor.close()
     conn.close()
@@ -78,24 +82,37 @@ def closest_color(avg_hex, color_dict):
 ### --- MAIN FLOW --- ###
 def tag_images_with_colors():
     assets = get_image_assets()
+    failed_assets = []
+
     for asset in assets:
         try:
+            # Skip assets that already have both CommonColor and AverageColor
+            if asset.get('CommonColor') and asset.get('AverageColor'):
+                print(f"Skipping {asset['ReferenceHash']}, already tagged.")
+                continue
+
             img = download_image(asset['StorageLocation'])
             avg_rgb = get_average_rgb(img)
             avg_hex = rgb_to_hex(avg_rgb)
 
             common_hex = closest_color(avg_hex, PREDEFINED_COLORS)
 
-            # Format the tags as per your requirement
-            ac_tag = f"AC={avg_hex}"
-            cc_tag = f"CC={common_hex}"
+            # Save directly to the ImageAsset table
+            insert_colors(asset['ReferenceHash'], common_hex, avg_hex)
 
-            insert_asset_tag(asset['ReferenceHash'], ac_tag)
-            insert_asset_tag(asset['ReferenceHash'], cc_tag)
-
-            print(f"Tagged {asset['ReferenceHash']} as {ac_tag} and {cc_tag}")
+            print(f"Updated {asset['ReferenceHash']} with CommonColor={common_hex} and AverageColor={avg_hex}")
         except Exception as e:
             print(f"Failed to process {asset['StorageLocation']}: {e}")
+            failed_assets.append({
+                "ReferenceHash": asset['ReferenceHash'],
+                "StorageLocation": asset['StorageLocation'],
+                "Error": str(e)
+            })
+
+    if failed_assets:
+        print("\n--- Failed Assets ---")
+        for fail in failed_assets:
+            print(f"{fail['ReferenceHash']} ({fail['StorageLocation']}): {fail['Error']}")
 
 if __name__ == '__main__':
     tag_images_with_colors()
