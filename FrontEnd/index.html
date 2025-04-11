@@ -14,7 +14,6 @@
         <!-- Local -->
             <script src="search.js"></script>
             <script src="profile.js"></script>
-            <script src="signupLogin.js"></script>
             <script src="results.js" type="text/babel"></script>
 </head>
 <body>
@@ -130,13 +129,13 @@
                     <input placeholder="Username" type="text" minlength="3" maxlength="16" pattern="^[a-zA-Z0-9_]+$" required>
                     Your username must be at least 3 characters.
                     <input id="new-pass" placeholder="Password" type="password" minlength="8" maxlength="32" minlength="8" maxlength="32" pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,32}$" onkeyup='passConfirm();' required>
-                    Your password must be at least 8 characters and contain a capital letter, a lowercase letter, a number, and a special character ().
+                    Your password must be at least 8 characters and contain a capital letter, a lowercase letter, a number, and a special character (@$!%*?&).
                     <input id="new-pass-rep" placeholder="Repeat Password" type="password" minlength="8" maxlength="32" minlength="8" maxlength="32" pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,32}$" onkeyup='passConfirm();' required>
                     <div id="pass-match-output">&#x2716; Passwords do NOT match!</div>
                     <div class="flex-row">
                         <button onclick="set_profile_tab(0);">Back to Log In</button>
                         <div class="expand"></div>
-                        <button onclick="set_profile_tab(2);">Create</button>
+                        <button onclick="set_profile_tab(2);">Create Account!</button>
                     </div>
                 </div>
             </div>
