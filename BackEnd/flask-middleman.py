@@ -88,12 +88,6 @@ def get_image_assets():
         conn = get_db_connection()
         cursor = conn.cursor(dictionary=True)
 
-        size_filter = "0=0"
-        if "wide" in request.args.get('size'):
-            size_filter += " AND ia.Height < ia.Width"
-        if "tall" in request.args.get('size'):
-            size_filter += " AND ia.Height > ia.Width"
-
         query = """
         SELECT
             a.Id
