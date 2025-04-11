@@ -42,7 +42,7 @@ def insert_colors(reference_hash, cc, ac):
 def get_image_assets():
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
-    query = "SELECT ReferenceHash, StorageLocation FROM Asset"
+    query = "SELECT ReferenceHash, StorageLocation FROM ImageAsset"
     cursor.execute(query)
     assets = cursor.fetchall()
     cursor.close()
