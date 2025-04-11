@@ -89,8 +89,6 @@ def get_image_assets():
         cursor = conn.cursor(dictionary=True)
 
         size_filter = "0=0"
-        if "wide" in request.args.get('tag'):
-            return "wide"
 
         query = """
         SELECT
