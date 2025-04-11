@@ -108,10 +108,10 @@ def get_image_assets():
             ON a.ReferenceHash = ia.ReferenceHash
         JOIN Tags AS t
             ON t.ReferenceHash = ia.ReferenceHash
-        WHERE %s
+        WHERE {size_filter}
         ORDER BY ia.ReferenceHash
         """
-        cursor.execute(query, (size_filter))
+        cursor.execute(query)
         image_assets = cursor.fetchmany(1000)
 
         yield "["
