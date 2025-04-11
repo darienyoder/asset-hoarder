@@ -97,6 +97,8 @@ def get_image_assets():
             ,ia.ReferenceHash
             ,ia.Width
             ,ia.Height
+            ,ia.CommonColor
+            ,ia.AverageColor
             ,t.Tag
             ,t.TagVector
         FROM ImageAsset AS ia
@@ -226,7 +228,7 @@ def get_assets():
 
     image_query = """
     SELECT
-        a.Id, a.Name, a.StorageLocation, ia.ReferenceHash, ia.Width, ia.Height
+        a.Id, a.Name, a.StorageLocation, ia.ReferenceHash, ia.Width, ia.Height, ia.CommonColor, ia.AverageColor
     FROM ImageAsset AS ia
     JOIN Asset AS a ON a.ReferenceHash = ia.ReferenceHash
     WHERE 0=0
@@ -551,6 +553,8 @@ def get_user_saved_assets():
         ,ia.ReferenceHash
         ,ia.Width
         ,ia.Height
+        ,ia.CommonColor
+        ,ia.AverageColor
         ,t.Tag
     FROM ImageAsset AS ia
     LEFT JOIN Tags AS t
