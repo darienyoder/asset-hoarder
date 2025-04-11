@@ -366,6 +366,13 @@ html, body {
 
 /* Profile */
 
+.required-input::after {
+    content: "*";
+    color:red;
+    margin-left: 2px;
+    float:left;
+}
+
 #profile-icon {
     position: absolute;
     top: 20px;

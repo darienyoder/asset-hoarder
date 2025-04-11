@@ -14,6 +14,7 @@
         <!-- Local -->
             <script src="search.js"></script>
             <script src="profile.js"></script>
+            <script src="signupLogin.js"></script>
             <script src="results.js" type="text/babel"></script>
 </head>
 <body>
@@ -31,7 +32,7 @@
                 <div style="cursor: pointer; user-select: none; min-width: 100px; padding: 15px; background-color: var(--red); color: white; border-radius: 10px 0px 0px 10px; text-align: center;" onclick="for (i of document.getElementsByClassName('filter-menu')) {i.classList.toggle('selected');} if (this.innerText == 'Images') {this.innerText = 'Audio';} else {this.innerText = 'Images';}">
                     Images
                 </div>
-                <input placeholder="Search" id="searchbar">
+                <input placeholder="Search" id="searchbar" maxlength="256">
             </div>
 
             <!-- Filters -->
@@ -111,8 +112,8 @@
             <div class="expand center-flex selected">
                 <div class="flex-column">
                     <h1>Log in to save assets</h1>
-                    <input placeholder="Username" type="text">
-                    <input placeholder="Password" type="password">
+                    <input placeholder="Username" type="text" maxlength="256" minlength="3" pattern="[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-z]{2,}|[a-zA-Z0-9_]+$" required>
+                    <input placeholder="Password" type="password" minlength="8" maxlength="32" pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,32}$" required>
                     <div class="flex-row">
                         <button onclick="set_profile_tab(1);">Create Account</button>
                         <div class="expand"></div>
@@ -125,10 +126,15 @@
             <div class="expand center-flex">
                 <div class="flex-column">
                     <h1>Create Account</h1>
-                    <input placeholder="Username" type="text">
-                    <input placeholder="Password" type="password">
+                    <input placeholder="Email" type="text" pattern="[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-z]{2,}$" maxlength="256" required>
+                    <input placeholder="Username" type="text" minlength="3" maxlength="16" pattern="^[a-zA-Z0-9_]+$" required>
+                    Your username must be at least 3 characters.
+                    <input id="new-pass" placeholder="Password" type="password" minlength="8" maxlength="32" minlength="8" maxlength="32" pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,32}$" onkeyup='passConfirm();' required>
+                    Your password must be at least 8 characters and contain a capital letter, a lowercase letter, a number, and a special character ().
+                    <input id="new-pass-rep" placeholder="Repeat Password" type="password" minlength="8" maxlength="32" minlength="8" maxlength="32" pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,32}$" onkeyup='passConfirm();' required>
+                    <div id="pass-match-output">&#x2716; Passwords do NOT match!</div>
                     <div class="flex-row">
-                        <button onclick="set_profile_tab(0);">Log In</button>
+                        <button onclick="set_profile_tab(0);">Back to Log In</button>
                         <div class="expand"></div>
                         <button onclick="set_profile_tab(2);">Create</button>
                     </div>
