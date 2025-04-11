@@ -88,6 +88,10 @@ def get_image_assets():
         conn = get_db_connection()
         cursor = conn.cursor(dictionary=True)
 
+        size_filter = "0=0"
+        if "wide" in request.args.get('tag'):
+            return "wide"
+
         query = """
         SELECT
             a.Id
@@ -106,10 +110,10 @@ def get_image_assets():
             ON a.ReferenceHash = ia.ReferenceHash
         JOIN Tags AS t
             ON t.ReferenceHash = ia.ReferenceHash
-        WHERE 0=0
+        WHERE %s
         ORDER BY ia.ReferenceHash
         """
-        cursor.execute(query)
+        cursor.execute(query, (size_filter))
         image_assets = cursor.fetchmany(1000)
 
         yield "["
