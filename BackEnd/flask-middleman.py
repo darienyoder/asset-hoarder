@@ -96,11 +96,11 @@ def get_image_assets():
                 size_filter = "ia.Height > ia.Width"
             elif "square" in args.get('size'):
                 size_filter = "ia.Height = ia.Width"
-            
+
             if "16:9" in args.get('size'):
-                size_filter += "AND (ia.Height DIV ia.Width = 16 DIV 9 OR ia.Height DIV ia.Width = 9 DIV 16)"
+                size_filter += " AND (ia.Height DIV ia.Width = 16 DIV 9 OR ia.Height DIV ia.Width = 9 DIV 16)"
             elif "4:3" in args.get('size'):
-                size_filter += "AND (ia.Height DIV ia.Width = 4 DIV 3 OR ia.Height DIV ia.Width = 3 DIV 4)"
+                size_filter += " AND (ia.Height DIV ia.Width = 4 DIV 3 OR ia.Height DIV ia.Width = 3 DIV 4)"
 
         query = f"""
         SELECT
