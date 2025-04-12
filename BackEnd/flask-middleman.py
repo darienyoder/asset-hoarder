@@ -85,69 +85,65 @@ def get_image_assets():
     input_tag = '' if request.args.get('tag') == None else request.args.get('tag')
 
     def chunked_image_assets(input_tag):
-        try:
-            conn = get_db_connection()
-            cursor = conn.cursor(dictionary=True)
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True)
 
-            size_filter = "0=0"
-            if request.args.get('size'):
-                if "wide" in request.args.get('size'):
-                    size_filter = "ia.Width > ia.Height"
-                if "tall" in request.args.get('size'):
-                    size_filter += "ia.Height > ia.Width"
-                if "square" in request.args.get('size'):
-                    size_filter += "ia.Height = ia.Width"
+        size_filter = "0=0"
+        if request.args.get('size'):
+            if "wide" in request.args.get('size'):
+                size_filter = "ia.Width > ia.Height"
+            if "tall" in request.args.get('size'):
+                size_filter += "ia.Height > ia.Width"
+            if "square" in request.args.get('size'):
+                size_filter += "ia.Height = ia.Width"
 
-            query = f"""
-            SELECT
-                a.Id
-                ,a.Name
-                ,a.StorageLocation
-                ,a.Type
-                ,ia.ReferenceHash
-                ,ia.Width
-                ,ia.Height
-                ,ia.CommonColor
-                ,ia.AverageColor
-                ,t.Tag
-                ,t.TagVector
-            FROM ImageAsset AS ia
-            JOIN Asset AS a
-                ON a.ReferenceHash = ia.ReferenceHash
-            JOIN Tags AS t
-                ON t.ReferenceHash = ia.ReferenceHash
-            WHERE {size_filter}
-            ORDER BY ia.ReferenceHash
-            """
-            cursor.execute(query)
+        query = f"""
+        SELECT
+            a.Id
+            ,a.Name
+            ,a.StorageLocation
+            ,a.Type
+            ,ia.ReferenceHash
+            ,ia.Width
+            ,ia.Height
+            ,ia.CommonColor
+            ,ia.AverageColor
+            ,t.Tag
+            ,t.TagVector
+        FROM ImageAsset AS ia
+        JOIN Asset AS a
+            ON a.ReferenceHash = ia.ReferenceHash
+        JOIN Tags AS t
+            ON t.ReferenceHash = ia.ReferenceHash
+        WHERE {size_filter}
+        ORDER BY ia.ReferenceHash
+        """
+        cursor.execute(query)
+        image_assets = cursor.fetchmany(1000)
+
+        yield "["
+
+        last_used_ref_hash = ''
+        input_encoding = model.encode(input_tag)
+        is_first_result = True
+        while len(image_assets) != 0:
+            added_asset = False
+            for image_asset in image_assets:
+                if added_asset and image_asset['ReferenceHash'] == last_used_ref_hash:
+                    break
+                if (last_used_ref_hash != image_asset['ReferenceHash']):
+                    added_asset = False
+                score = cosine_similarity([input_encoding], [pickle.loads(image_asset['TagVector'])])[0][0]
+                if ((score > 0.5 or input_tag in image_asset['Name']) and not added_asset):
+                    added_asset = True
+                    return_asset = {'Id': image_asset['Id'], 'Name': image_asset['Name'], 'Type': image_asset['Type'], 'StorageLocation': image_asset['StorageLocation'], 'ReferenceHash': image_asset['ReferenceHash'], 'Width': image_asset['Width'], 'Height': image_asset['Height'], 'Tag': image_asset['Tag'], 'Score': str(score)}
+                    if not is_first_result:
+                        yield ","
+                    yield "\n" + json.dumps(return_asset)
+                    is_first_result = False
+                last_used_ref_hash = image_asset['ReferenceHash']
             image_assets = cursor.fetchmany(1000)
-
-            yield "["
-
-            last_used_ref_hash = ''
-            input_encoding = model.encode(input_tag)
-            is_first_result = True
-            while len(image_assets) != 0:
-                added_asset = False
-                for image_asset in image_assets:
-                    if added_asset and image_asset['ReferenceHash'] == last_used_ref_hash:
-                        break
-                    if (last_used_ref_hash != image_asset['ReferenceHash']):
-                        added_asset = False
-                    score = cosine_similarity([input_encoding], [pickle.loads(image_asset['TagVector'])])[0][0]
-                    if ((score > 0.5 or input_tag in image_asset['Name']) and not added_asset):
-                        added_asset = True
-                        return_asset = {'Id': image_asset['Id'], 'Name': image_asset['Name'], 'Type': image_asset['Type'], 'StorageLocation': image_asset['StorageLocation'], 'ReferenceHash': image_asset['ReferenceHash'], 'Width': image_asset['Width'], 'Height': image_asset['Height'], 'Tag': image_asset['Tag'], 'Score': str(score)}
-                        if not is_first_result:
-                            yield ","
-                        yield "\n" + json.dumps(return_asset)
-                        is_first_result = False
-                    last_used_ref_hash = image_asset['ReferenceHash']
-                image_assets = cursor.fetchmany(1000)
-            yield "\n]"
-
-        except Exception as e:
-            return jsonify(message=f"Error fetching images: {str(e)}"), 500
+        yield "\n]"
 
     return Response(chunked_image_assets(input_tag), content_type='application/json;charset=utf-8')
 
