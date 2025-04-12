@@ -85,65 +85,69 @@ def get_image_assets():
     input_tag = '' if request.args.get('tag') == None else request.args.get('tag')
 
     def chunked_image_assets(input_tag):
-        conn = get_db_connection()
-        cursor = conn.cursor(dictionary=True)
+        try:
+            conn = get_db_connection()
+            cursor = conn.cursor(dictionary=True)
 
-        size_filter = "0=0"
-        if request.args.get('size'):
-            if "wide" in request.args.get('size'):
-                size_filter += " AND ia.Width > ia.Height"
-            if "tall" in request.args.get('size'):
-                size_filter += " AND ia.Height > ia.Width"
-            if "square" in request.args.get('size'):
-                size_filter += " AND ia.Height = ia.Width"
+            size_filter = "0=0"
+            if request.args.get('size'):
+                if "wide" in request.args.get('size'):
+                    size_filter += " AND ia.Width > ia.Height"
+                if "tall" in request.args.get('size'):
+                    size_filter += " AND ia.Height > ia.Width"
+                if "square" in request.args.get('size'):
+                    size_filter += " AND ia.Height = ia.Width"
 
-        query = f"""
-        SELECT
-            a.Id
-            ,a.Name
-            ,a.StorageLocation
-            ,a.Type
-            ,ia.ReferenceHash
-            ,ia.Width
-            ,ia.Height
-            ,ia.CommonColor
-            ,ia.AverageColor
-            ,t.Tag
-            ,t.TagVector
-        FROM ImageAsset AS ia
-        JOIN Asset AS a
-            ON a.ReferenceHash = ia.ReferenceHash
-        JOIN Tags AS t
-            ON t.ReferenceHash = ia.ReferenceHash
-        WHERE {size_filter}
-        ORDER BY ia.ReferenceHash
-        """
-        cursor.execute(query)
-        image_assets = cursor.fetchmany(1000)
-
-        yield "["
-
-        last_used_ref_hash = ''
-        input_encoding = model.encode(input_tag)
-        is_first_result = True
-        while len(image_assets) != 0:
-            added_asset = False
-            for image_asset in image_assets:
-                if added_asset and image_asset['ReferenceHash'] == last_used_ref_hash:
-                    break
-                if (last_used_ref_hash != image_asset['ReferenceHash']):
-                    added_asset = False
-                score = cosine_similarity([input_encoding], [pickle.loads(image_asset['TagVector'])])[0][0]
-                if ((score > 0.5 or input_tag in image_asset['Name']) and not added_asset):
-                    added_asset = True
-                    return_asset = {'Id': image_asset['Id'], 'Name': image_asset['Name'], 'Type': image_asset['Type'], 'StorageLocation': image_asset['StorageLocation'], 'ReferenceHash': image_asset['ReferenceHash'], 'Width': image_asset['Width'], 'Height': image_asset['Height'], 'Tag': image_asset['Tag'], 'Score': str(score)}
-                    if not is_first_result:
-                        yield ","
-                    yield "\n" + json.dumps(return_asset)
-                    is_first_result = False
-                last_used_ref_hash = image_asset['ReferenceHash']
+            query = f"""
+            SELECT
+                a.Id
+                ,a.Name
+                ,a.StorageLocation
+                ,a.Type
+                ,ia.ReferenceHash
+                ,ia.Width
+                ,ia.Height
+                ,ia.CommonColor
+                ,ia.AverageColor
+                ,t.Tag
+                ,t.TagVector
+            FROM ImageAsset AS ia
+            JOIN Asset AS a
+                ON a.ReferenceHash = ia.ReferenceHash
+            JOIN Tags AS t
+                ON t.ReferenceHash = ia.ReferenceHash
+            WHERE {size_filter}
+            ORDER BY ia.ReferenceHash
+            """
+            cursor.execute(query)
             image_assets = cursor.fetchmany(1000)
-        yield "\n]"
+
+            yield "["
+
+            last_used_ref_hash = ''
+            input_encoding = model.encode(input_tag)
+            is_first_result = True
+            while len(image_assets) != 0:
+                added_asset = False
+                for image_asset in image_assets:
+                    if added_asset and image_asset['ReferenceHash'] == last_used_ref_hash:
+                        break
+                    if (last_used_ref_hash != image_asset['ReferenceHash']):
+                        added_asset = False
+                    score = cosine_similarity([input_encoding], [pickle.loads(image_asset['TagVector'])])[0][0]
+                    if ((score > 0.5 or input_tag in image_asset['Name']) and not added_asset):
+                        added_asset = True
+                        return_asset = {'Id': image_asset['Id'], 'Name': image_asset['Name'], 'Type': image_asset['Type'], 'StorageLocation': image_asset['StorageLocation'], 'ReferenceHash': image_asset['ReferenceHash'], 'Width': image_asset['Width'], 'Height': image_asset['Height'], 'Tag': image_asset['Tag'], 'Score': str(score)}
+                        if not is_first_result:
+                            yield ","
+                        yield "\n" + json.dumps(return_asset)
+                        is_first_result = False
+                    last_used_ref_hash = image_asset['ReferenceHash']
+                image_assets = cursor.fetchmany(1000)
+            yield "\n]"
+
+        except Exception as e:
+            return f"Error fetching images: {e}"
 
     return Response(chunked_image_assets(input_tag), content_type='application/json;charset=utf-8')
 
@@ -198,7 +202,7 @@ def get_audio_assets():
                last_used_ref_hash = image_asset['ReferenceHash']
            image_assets = cursor.fetchmany(1000)
        yield "\n]"
-       
+
 
 
    return Response(chunked_audio_assets(input_tag), content_type='application/json;charset=utf-8')
@@ -221,7 +225,7 @@ def get_assets():
     def fetch_tags_for_assets(asset_ids):
         if not asset_ids:
             return []
-        
+
         query = """
         SELECT
             t.ReferenceHash,
@@ -414,7 +418,7 @@ def get_logout():
 def post_delete_account():
     if 'userId' not in session:
         return jsonify('user not logged in'), 400
-    
+
     username = request.form['username']
     password = request.form['password']
 
@@ -437,7 +441,7 @@ def post_delete_account():
     # should not happen but just checking anyway
     if user is None:
         return jsonify('something went wrong'), 500
-    
+
     if user['Username'] != username:
         return jsonify('username does not match current user'), 400
     cursor.fetchall()
@@ -464,10 +468,10 @@ def post_delete_account():
 
     if hashed_password != user['HashedPassword']:
         return jsonify('wrong username or password'), 400
-    
-    
+
+
     query = """
-    DELETE 
+    DELETE
     FROM User
     WHERE 0=0
     AND Id = %(userId)s
@@ -482,7 +486,7 @@ def post_delete_account():
     conn.close()
     session.pop('userId')
     return jsonify('successfully deleted account and logged out'), 200
-    
+
 
 @app.route('/user_toggle_save_asset/<int:asset_id>', methods=['POST'])
 def post_user_toggle_save_asset(asset_id):
@@ -690,7 +694,7 @@ def fetch_all():
 def fetch_specific(api):
     # Validate if the api argument is valid
     # valid_apis = ['picsum', 'unsplash', 'pixabay', 'pexels', 'freesound']
-    
+
     # if api.lower() not in valid_apis:
     #     return jsonify({'error': 'API not found'}), 404
 
@@ -699,7 +703,7 @@ def fetch_specific(api):
     #     return jsonify({'status': 'success'}), 200
     # else:
     #     return jsonify({'error': 'Failed to start subprocess'}), 500
-    
+
     return jsonify({'error': 'This has been disabled'}), 405
 
 
