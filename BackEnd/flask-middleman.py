@@ -84,17 +84,18 @@ def search():
 def get_image_assets():
     input_tag = '' if request.args.get('tag') == None else request.args.get('tag')
 
-    def chunked_image_assets(input_tag):
+    def chunked_image_assets(input_tag, args):
         conn = get_db_connection()
         cursor = conn.cursor(dictionary=True)
 
         size_filter = "0=0"
-        if "wide" in request.args.get('size'):
-            size_filter = "ia.Width > ia.Height"
-        if "tall" in request.args.get('size'):
-            size_filter += "ia.Height > ia.Width"
-        if "square" in request.args.get('size'):
-            size_filter += "ia.Height = ia.Width"
+        if args.get("size"):
+            if "wide" in args.get('size'):
+                size_filter = "ia.Width > ia.Height"
+            if "tall" in args.get('size'):
+                size_filter += "ia.Height > ia.Width"
+            if "square" in args.get('size'):
+                size_filter += "ia.Height = ia.Width"
 
         query = f"""
         SELECT
@@ -144,7 +145,7 @@ def get_image_assets():
             image_assets = cursor.fetchmany(1000)
         yield "\n]"
 
-    return Response(chunked_image_assets(input_tag), content_type='application/json;charset=utf-8')
+    return Response(chunked_image_assets(input_tag, request.args), content_type='application/json;charset=utf-8')
 
 @app.route('/audio_assets', methods=['GET'])
 def get_audio_assets():
