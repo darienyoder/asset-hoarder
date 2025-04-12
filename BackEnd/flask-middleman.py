@@ -89,13 +89,12 @@ def get_image_assets():
         cursor = conn.cursor(dictionary=True)
 
         size_filter = "0=0"
-        if request.args.get('size'):
-            if "wide" in request.args.get('size'):
-                size_filter = "ia.Width > ia.Height"
-            if "tall" in request.args.get('size'):
-                size_filter += "ia.Height > ia.Width"
-            if "square" in request.args.get('size'):
-                size_filter += "ia.Height = ia.Width"
+        if "wide" in request.args.get('size'):
+            size_filter = "ia.Width > ia.Height"
+        if "tall" in request.args.get('size'):
+            size_filter += "ia.Height > ia.Width"
+        if "square" in request.args.get('size'):
+            size_filter += "ia.Height = ia.Width"
 
         query = f"""
         SELECT
