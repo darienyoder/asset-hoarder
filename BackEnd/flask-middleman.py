@@ -92,10 +92,10 @@ def get_image_assets():
         if args.get("size"):
             if "wide" in args.get('size'):
                 size_filter = "ia.Width > ia.Height"
-            if "tall" in args.get('size'):
-                size_filter += "ia.Height > ia.Width"
-            if "square" in args.get('size'):
-                size_filter += "ia.Height = ia.Width"
+            elif "tall" in args.get('size'):
+                size_filter = "ia.Height > ia.Width"
+            elif "square" in args.get('size'):
+                size_filter = "ia.Height = ia.Width"
 
         query = f"""
         SELECT
