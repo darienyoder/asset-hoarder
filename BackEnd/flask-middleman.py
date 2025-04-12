@@ -147,7 +147,7 @@ def get_image_assets():
             yield "\n]"
 
         except Exception as e:
-            return f"Error fetching images: {e}"
+            return f"{'message': 'Error fetching images: {e}'}"
 
     return Response(chunked_image_assets(input_tag), content_type='application/json;charset=utf-8')
 
