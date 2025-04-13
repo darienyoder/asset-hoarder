@@ -34,3 +34,16 @@ function set_profile_tab( tabIndex )
             document.getElementById("profile-wrapper").children[tab].classList.remove("selected");
     }
 }
+
+function passConfirm() {
+    if ((document.getElementById("new-pass").value ==
+        document.getElementById("new-pass-rep").value) && 
+        (document.getElementById("new-pass-rep").value != "") &&
+        (document.getElementById("new-pass-rep").value != null)) {
+            document.getElementById("pass-match-output").style.color = "#06402b";
+            document.getElementById("pass-match-output").innerHTML = "&#x2714; Passwords match!"
+    } else {
+        document.getElementById("pass-match-output").style.color = "#8b0000";
+        document.getElementById("pass-match-output").innerHTML = "&#x2716; Passwords do NOT match!"
+    }
+}
