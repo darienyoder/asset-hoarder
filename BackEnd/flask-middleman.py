@@ -345,9 +345,10 @@ def get_random_assets():
 def post_create_account():
     username = request.form.get('username')
     password = request.form.get('password')
+    password = request.form.get('email')
 
     if not username or not password:
-        return jsonify({'error': 'Enter username and password'}), 400
+        return jsonify({'error': 'Enter username, password, and email'}), 400
 
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
@@ -368,13 +369,14 @@ def post_create_account():
         stringified_salt = base64.b64encode(salt).decode()
 
         insert_query = """
-        INSERT INTO User (Username, HashedPassword, PasswordSalt)
-        VALUES (%(username)s, %(hashed_password)s, %(salt)s)
+        INSERT INTO User (Username, HashedPassword, PasswordSalt, Email)
+        VALUES (%(username)s, %(hashed_password)s, %(salt)s, %(email)s)
         """
         cursor.execute(insert_query, {
             'username': username,
             'hashed_password': hashed_password,
-            'salt': stringified_salt
+            'salt': stringified_salt,
+            'email': email
         })
         conn.commit()
 
