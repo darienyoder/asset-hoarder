@@ -194,6 +194,7 @@ html, body {
     transition: bottom 1s;
     background-color: var(--white);
     overflow-y: auto;
+    overflow-x: hidden;
 }
 
 #gallery {
