@@ -14,7 +14,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 import pickle
 import json
 import re
-from AssetCategorizationScripts.image_colour_categorizer import PREDEFINED_COLORS as color_values
+from AssetCategorizationScripts.image_colour_categorizer import PREDEFINED_COLORS
 
 app = Flask(__name__)
 load_dotenv()
@@ -112,7 +112,7 @@ def get_image_assets():
             if args.get("color") != "all":
                 color_filter = "(0=1"
             for clr in args.get("color").split("+"):
-                color_filter += " AND ia.CommonColor = " + color_values[clr.capitalize()]
+                color_filter += " AND ia.CommonColor = " + PREDEFINED_COLORS[clr.capitalize()]
         color_filter += ")"
 
         query = f"""
