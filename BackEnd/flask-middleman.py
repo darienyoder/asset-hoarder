@@ -345,7 +345,7 @@ def get_random_assets():
 def post_create_account():
     username = request.form.get('username')
     password = request.form.get('password')
-    password = request.form.get('email')
+    email = request.form.get('email')
 
     if not username or not password:
         return jsonify({'error': 'Enter username, password, and email'}), 400
