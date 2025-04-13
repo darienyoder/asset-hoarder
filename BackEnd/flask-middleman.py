@@ -14,6 +14,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 import pickle
 import json
 import re
+from AssetCategorizationScripts.image_colour_categorizer import PREDEFINED_COLORS as color_values
 
 app = Flask(__name__)
 load_dotenv()
@@ -88,19 +89,28 @@ def get_image_assets():
         conn = get_db_connection()
         cursor = conn.cursor(dictionary=True)
 
-        size_filter = "0=0"
+        size_filter = "(0=0"
         if args.get("size"):
             if "wide" in args.get('size'):
-                size_filter = "ia.Width > ia.Height"
+                size_filter = "(ia.Width > ia.Height"
             elif "tall" in args.get('size'):
-                size_filter = "ia.Height > ia.Width"
+                size_filter = "(ia.Height > ia.Width"
             elif "square" in args.get('size'):
-                size_filter = "ia.Height = ia.Width"
+                size_filter = "(ia.Height = ia.Width"
 
             if "16:9" in args.get('size'):
                 size_filter += " AND (ia.Height DIV ia.Width = 16 DIV 9 OR ia.Height DIV ia.Width = 9 DIV 16)"
             elif "4:3" in args.get('size'):
                 size_filter += " AND (ia.Height DIV ia.Width = 4 DIV 3 OR ia.Height DIV ia.Width = 3 DIV 4)"
+        size_filter += ")"
+
+        color_filter = "(0=0"
+        if args.get("color"):
+            if args.get("color") != "all":
+                color_filter = "(0=1"
+            for clr in args.get("color").split("+"):
+                color_filter += " AND ia.CommonColor = " + color_values[clr.capitalize()]
+        color_filter += ")"
 
         query = f"""
         SELECT
@@ -120,7 +130,7 @@ def get_image_assets():
             ON a.ReferenceHash = ia.ReferenceHash
         JOIN Tags AS t
             ON t.ReferenceHash = ia.ReferenceHash
-        WHERE {size_filter}
+        WHERE {size_filter} AND {color_filter}
         ORDER BY ia.ReferenceHash
         """
         cursor.execute(query)
