@@ -382,7 +382,7 @@ def post_create_account():
 
     except Exception as e:
         print(f"Error creating account: {e}")  # You can use logging here
-        return jsonify({'error': 'Error creating account'}), 500
+        return jsonify({'error': 'Error creating account: {e}'}), 500
 
     finally:
         cursor.close()
