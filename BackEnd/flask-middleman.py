@@ -75,11 +75,14 @@ def index():
 
 @app.route('/search', methods=['GET'])
 def search():
-    if request.args.get('isImage') == "true":
-        return get_image_assets()
-    elif request.args.get('isAudio') == "true":
-        return get_audio_assets()
-    return "[]"
+    try:
+        if request.args.get('isImage') == "true":
+            return get_image_assets()
+        elif request.args.get('isAudio') == "true":
+            return get_audio_assets()
+        return "[]"
+    except Exception as e:
+        return f"Error fetching asets: {e}"
 
 @app.route('/image_assets', methods=['GET'])
 def get_image_assets():
