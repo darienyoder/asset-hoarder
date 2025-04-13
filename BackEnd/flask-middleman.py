@@ -111,8 +111,9 @@ def get_image_assets():
         if args.get("color"):
             if args.get("color") != "all":
                 color_filter = "(0=1"
-            for clr in args.get("color").split("+"):
-                color_filter += " AND ia.CommonColor = " + PREDEFINED_COLORS[clr.capitalize()]
+                for clr in args.get("color").split("+"):
+                    if clr.capitalize() in PREDEFINED_COLORS:
+                        color_filter += " AND ia.CommonColor = " + PREDEFINED_COLORS[clr.capitalize()]
         color_filter += ")"
 
         query = f"""
