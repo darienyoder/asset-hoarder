@@ -381,8 +381,9 @@ def post_create_account():
         conn.commit()
 
     except Exception as e:
-        print(f"Error creating account: {e}")  # You can use logging here
-        return jsonify({'error': 'Error creating account: {e}'}), 500
+        print(f"Error creating account: {e}")
+        return jsonify({'error': f'Error creating account: {str(e)}'}), 500
+
 
     finally:
         cursor.close()
