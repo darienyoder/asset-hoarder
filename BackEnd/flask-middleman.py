@@ -86,10 +86,11 @@ def search():
 
 @app.route('/image_assets', methods=['GET'])
 def get_image_assets():
-    input_tag = '' if request.args.get('tag') == None else request.args.get('tag')
-    if input_tag == "" and request.args.get('color') != None and request.args.get('color') != "all":
-        input_tag = request.args.get('color').replace("+", " ")
-        request.args.set('color', "all")
+    args = request.args.to_dict()
+    input_tag = '' if args.get('tag') == None else args.get('tag')
+    if input_tag == "" and args.get('color') != None and args.get('color') != "all":
+        input_tag = args.get('color').replace("+", " ")
+        args.set("color", "all")
 
     def chunked_image_assets(input_tag, args):
         conn = get_db_connection()
@@ -169,7 +170,7 @@ def get_image_assets():
        
 
 
-    return Response(chunked_image_assets(input_tag, request.args), content_type='application/json;charset=utf-8')
+    return Response(chunked_image_assets(input_tag, args), content_type='application/json;charset=utf-8')
 
 @app.route('/audio_assets', methods=['GET'])
 def get_audio_assets():
