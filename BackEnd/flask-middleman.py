@@ -14,7 +14,6 @@ from sklearn.metrics.pairwise import cosine_similarity
 import pickle
 import json
 import re
-from AssetCategorizationScripts.image_colour_categorizer import PREDEFINED_COLORS
 
 app = Flask(__name__)
 load_dotenv()
@@ -75,48 +74,25 @@ def index():
 
 @app.route('/search', methods=['GET'])
 def search():
-    try:
-        if request.args.get('isImage') == "true":
-            return get_image_assets()
-        elif request.args.get('isAudio') == "true":
-            return get_audio_assets()
-        return "[]"
-    except Exception as e:
-        return f"Error fetching asets: {e}"
+    if request.args.get('isImage') == "true":
+        return get_image_assets()
+    elif request.args.get('isAudio') == "true":
+        return get_audio_assets()
+    return "[]"
 
 @app.route('/image_assets', methods=['GET'])
 def get_image_assets():
     input_tag = '' if request.args.get('tag') == None else request.args.get('tag')
+    if input_tag == "" and request.args.get('color') != None and request.args.get('color') != "all":
+        input_tag = request.args.get('color').replace("+", " ")
 
-    def chunked_image_assets(input_tag, args):
+    def chunked_image_assets(input_tag):
         conn = get_db_connection()
         cursor = conn.cursor(dictionary=True)
 
-        size_filter = "(0=0"
-        if args.get("size"):
-            if "wide" in args.get('size'):
-                size_filter = "(ia.Width > ia.Height"
-            elif "tall" in args.get('size'):
-                size_filter = "(ia.Height > ia.Width"
-            elif "square" in args.get('size'):
-                size_filter = "(ia.Height = ia.Width"
+        request.args.get('tag')
 
-            if "16:9" in args.get('size'):
-                size_filter += " AND (ia.Height DIV ia.Width = 16 DIV 9 OR ia.Height DIV ia.Width = 9 DIV 16)"
-            elif "4:3" in args.get('size'):
-                size_filter += " AND (ia.Height DIV ia.Width = 4 DIV 3 OR ia.Height DIV ia.Width = 3 DIV 4)"
-        size_filter += ")"
-
-        color_filter = "(0=0"
-        if args.get("color"):
-            if args.get("color") != "all":
-                color_filter = "(0=1"
-                for clr in args.get("color").split("+"):
-                    if clr.capitalize() in PREDEFINED_COLORS:
-                        color_filter += ' OR ia.CommonColor = "' + PREDEFINED_COLORS[clr.capitalize()] + '"'
-        color_filter += ")"
-
-        query = f"""
+        query = """
         SELECT
             a.Id
             ,a.Name
@@ -134,7 +110,7 @@ def get_image_assets():
             ON a.ReferenceHash = ia.ReferenceHash
         JOIN Tags AS t
             ON t.ReferenceHash = ia.ReferenceHash
-        WHERE {size_filter} AND {color_filter}
+        WHERE 0=0
         ORDER BY ia.ReferenceHash
         """
         cursor.execute(query)
@@ -153,7 +129,7 @@ def get_image_assets():
                 if (last_used_ref_hash != image_asset['ReferenceHash']):
                     added_asset = False
                 score = cosine_similarity([input_encoding], [pickle.loads(image_asset['TagVector'])])[0][0]
-                if ((score > 0.8 or input_tag in image_asset['Name']) and not added_asset):
+                if ((score > 0.5 or input_tag in image_asset['Name']) and not added_asset):
                     added_asset = True
                     return_asset = {'Id': image_asset['Id'], 'Name': image_asset['Name'], 'Type': image_asset['Type'], 'StorageLocation': image_asset['StorageLocation'], 'ReferenceHash': image_asset['ReferenceHash'], 'Width': image_asset['Width'], 'Height': image_asset['Height'], 'Tag': image_asset['Tag'], 'Score': str(score)}
                     if not is_first_result:
@@ -163,8 +139,10 @@ def get_image_assets():
                 last_used_ref_hash = image_asset['ReferenceHash']
             image_assets = cursor.fetchmany(1000)
         yield "\n]"
+       
 
-    return Response(chunked_image_assets(input_tag, request.args), content_type='application/json;charset=utf-8')
+
+    return Response(chunked_image_assets(input_tag), content_type='application/json;charset=utf-8')
 
 @app.route('/audio_assets', methods=['GET'])
 def get_audio_assets():
@@ -207,7 +185,7 @@ def get_audio_assets():
                if (last_used_ref_hash != image_asset['ReferenceHash']):
                    added_asset = False
                score = cosine_similarity([input_encoding], [pickle.loads(image_asset['TagVector'])])[0][0]
-               if ((score > 0.8 or input_tag in image_asset['Name']) and not added_asset):
+               if ((score > 0.5 or input_tag in image_asset['Name']) and not added_asset):
                    added_asset = True
                    return_asset = {'Id': image_asset['Id'], 'Name': image_asset['Name'], 'Type': image_asset['Type'], 'StorageLocation': image_asset['StorageLocation'], 'ReferenceHash': image_asset['ReferenceHash'], 'Tag': image_asset['Tag'], 'Score': str(score)}
                    if not is_first_result:
@@ -217,7 +195,7 @@ def get_audio_assets():
                last_used_ref_hash = image_asset['ReferenceHash']
            image_assets = cursor.fetchmany(1000)
        yield "\n]"
-
+       
 
 
    return Response(chunked_audio_assets(input_tag), content_type='application/json;charset=utf-8')
@@ -240,7 +218,7 @@ def get_assets():
     def fetch_tags_for_assets(asset_ids):
         if not asset_ids:
             return []
-
+        
         query = """
         SELECT
             t.ReferenceHash,
@@ -433,7 +411,7 @@ def get_logout():
 def post_delete_account():
     if 'userId' not in session:
         return jsonify('user not logged in'), 400
-
+    
     username = request.form['username']
     password = request.form['password']
 
@@ -456,7 +434,7 @@ def post_delete_account():
     # should not happen but just checking anyway
     if user is None:
         return jsonify('something went wrong'), 500
-
+    
     if user['Username'] != username:
         return jsonify('username does not match current user'), 400
     cursor.fetchall()
@@ -483,10 +461,10 @@ def post_delete_account():
 
     if hashed_password != user['HashedPassword']:
         return jsonify('wrong username or password'), 400
-
-
+    
+    
     query = """
-    DELETE
+    DELETE 
     FROM User
     WHERE 0=0
     AND Id = %(userId)s
@@ -501,7 +479,7 @@ def post_delete_account():
     conn.close()
     session.pop('userId')
     return jsonify('successfully deleted account and logged out'), 200
-
+    
 
 @app.route('/user_toggle_save_asset/<int:asset_id>', methods=['POST'])
 def post_user_toggle_save_asset(asset_id):
@@ -709,7 +687,7 @@ def fetch_all():
 def fetch_specific(api):
     # Validate if the api argument is valid
     # valid_apis = ['picsum', 'unsplash', 'pixabay', 'pexels', 'freesound']
-
+    
     # if api.lower() not in valid_apis:
     #     return jsonify({'error': 'API not found'}), 404
 
@@ -718,7 +696,7 @@ def fetch_specific(api):
     #     return jsonify({'status': 'success'}), 200
     # else:
     #     return jsonify({'error': 'Failed to start subprocess'}), 500
-
+    
     return jsonify({'error': 'This has been disabled'}), 405
 
 
