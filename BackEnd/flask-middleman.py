@@ -321,41 +321,53 @@ def get_random_assets():
 
 @app.route('/create_account', methods=['POST'])
 def post_create_account():
-    username = request.form['username']
-    password = request.form['password']
+    username = request.form.get('username')
+    password = request.form.get('password')
+    email = request.form.get('email')
 
-    if username is None or not username or password is None or not password:
-        return jsonify('enter username and password'), 400
+    if not username or not password:
+        return jsonify({'error': 'Enter username, password, and email'}), 400
 
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
-    query = """
-    SELECT
-        u.*
-    FROM User AS u
-    WHERE 0=0
-    AND u.Username = %(username)s
-    """
-    cursor.execute(query, {'username': username})
-    cursor.fetchall()
-    if cursor.rowcount > 0:
-        return jsonify('username already exists'), 400
-    salt = os.urandom(16)
-    salted_password = salt + password.encode('utf-8')
-    hashed_password = hashlib.sha256(salted_password).hexdigest()
-    stringified_salt = base64.b64encode(salt).decode()
-    query = """
-    INSERT INTO User (Username, HashedPassword, PasswordSalt)
-    VALUES (%(username)s, %(hashed_password)s, %(salt)s)
-    """
+
     try:
-        cursor.execute(query, {'username': username, 'hashed_password': hashed_password, 'salt': stringified_salt})
+        query = """
+        SELECT u.* FROM User AS u WHERE u.Username = %(username)s
+        """
+        cursor.execute(query, {'username': username})
+        existing_user = cursor.fetchone()
+
+        if existing_user:
+            return jsonify({'error': 'Username already exists'}), 400
+
+        salt = os.urandom(16)
+        salted_password = salt + password.encode('utf-8')
+        hashed_password = hashlib.sha256(salted_password).hexdigest()
+        stringified_salt = base64.b64encode(salt).decode()
+
+        insert_query = """
+        INSERT INTO User (Username, HashedPassword, PasswordSalt, Email)
+        VALUES (%(username)s, %(hashed_password)s, %(salt)s, %(email)s)
+        """
+        cursor.execute(insert_query, {
+            'username': username,
+            'hashed_password': hashed_password,
+            'salt': stringified_salt,
+            'email': email
+        })
         conn.commit()
-    except:
-        return jsonify('error creating account'), 500
-    cursor.close()
-    conn.close()
-    return jsonify('succesfully created account'), 200
+
+    except Exception as e:
+        print(f"Error creating account: {e}")
+        return jsonify({'error': f'Error creating account: {str(e)}'}), 500
+
+
+    finally:
+        cursor.close()
+        conn.close()
+
+    return jsonify({'message': 'Successfully created account'}), 200
 
 # username and password will not be passed over url, just for testing, change with form.
 @app.route('/login', methods=['POST'])
