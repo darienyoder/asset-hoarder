@@ -90,7 +90,7 @@ def get_image_assets():
     input_tag = '' if args.get('tag') == None else args.get('tag')
     if input_tag == "" and args.get('color') != None and args.get('color') != "all":
         input_tag = args.get('color').replace("+", " ")
-        args.set("color", "all")
+        args["color"] = "all"
 
     def chunked_image_assets(input_tag, args):
         conn = get_db_connection()
