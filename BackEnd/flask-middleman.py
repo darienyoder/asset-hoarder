@@ -83,8 +83,6 @@ def search():
 @app.route('/image_assets', methods=['GET'])
 def get_image_assets():
     input_tag = '' if request.args.get('tag') == None else request.args.get('tag')
-    if input_tag == "" and request.args.get('color') != None and request.args.get('color') != "all":
-        input_tag = request.args.get('color').replace("+", " ")
 
     def chunked_image_assets(input_tag):
         conn = get_db_connection()
