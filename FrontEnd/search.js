@@ -153,6 +153,12 @@ async function search(random = false)
         query += "&isAudio=false"
     }
 
+    document.getElementById("topbar-filters").innerHTML = "";
+    for (var fil of search_query)
+    {
+        document.getElementById("topbar-filters").innerHTML += "<div>" + fil.charAt(0).toUpperCase() + fil.slice(1); + "</div>";
+    }
+
     // Get results from API
     const response = await fetch(query);
     if (!response.ok)

@@ -124,12 +124,6 @@ async function update_results()
 {
     try
     {
-        document.getElementById("topbar-filters").innerHTML = "";
-        for (var fil of search_query)
-        {
-            document.getElementById("topbar-filters").innerHTML += "<div>" + fil.charAt(0).toUpperCase() + fil.slice(1); + "</div>";
-        }
-
         var entry_list = [];
         // Do NOT load more than 15 assets at a time or your browser will crash
         for (var i = 0; i < Math.min(15, results.length); i++)
