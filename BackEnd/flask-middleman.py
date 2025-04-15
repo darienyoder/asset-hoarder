@@ -14,7 +14,6 @@ from sklearn.metrics.pairwise import cosine_similarity
 import pickle
 import json
 import re
-import uuid
 from AssetCategorizationScripts.image_colour_categorizer import PREDEFINED_COLORS
 
 app = Flask(__name__)
@@ -436,20 +435,11 @@ def post_login():
     conn.close()
 
     if hashed_password == user['HashedPassword']:
-        # Generate a session token
-        session_token = str(uuid.uuid4())
-
-        # Save session info
         session['userId'] = user['Id']
-        session['sessionToken'] = session_token
-
-        return jsonify({
-            'message': 'successful login',
-            'sessionToken': session_token
-        }), 200
+        return jsonify('successful login'), 200
     else:
-        return jsonify({'error': 'wrong username or password'}), 400
-        
+        return jsonify('wrong username or password'), 400
+
 @app.route('/logout', methods=['GET'])
 def get_logout():
     if 'userId' not in session:
