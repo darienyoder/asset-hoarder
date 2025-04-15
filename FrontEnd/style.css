@@ -436,3 +436,11 @@ html, body {
 #pass-match-output {
     color: #8b0000;
 }
+
+#topbar-filters > div {
+    margin-right: 10px;
+    font-size: 25px;
+    background-color: white;
+    padding: 5px 10px;
+    border-radius: 30px;
+}

@@ -40,6 +40,7 @@ function hide_results()
     document.getElementById("searchbar").focus();
 }
 
+var search_query = [];
 var results = [];
 var gallery_open = false;
 
@@ -50,6 +51,7 @@ async function search(random = false)
 {
 
     document.getElementById("gallery").innerHTML = "";
+    search_query = [];
     
     document.getElementById("loading-menu").style.display = "";
     show_results();
@@ -71,7 +73,10 @@ async function search(random = false)
         query += "&imgType=";
         for (const filter of document.getElementById("img-type-filters").children)
             if (filter.classList.contains("selected"))
+            {
                 query += filter.value + "+";
+                search_query.push(filter.value);
+            }
         if (query[query.length - 1] == "=")
         {
             query += "all";
@@ -86,7 +91,10 @@ async function search(random = false)
         query += "&size=";
         for (const filter of document.getElementById("img-size-filters").children)
             if (filter.classList.contains("selected"))
+            {
                 query += filter.value + "+";
+                search_query.push(filter.value);
+            }
         if (query[query.length - 1] == "=")
         {
             query += "all";
@@ -101,7 +109,10 @@ async function search(random = false)
         query += "&color=";
         for (const filter of document.getElementById("img-color-filters").children)
             if (filter.classList.contains("selected"))
+            {
                 query += filter.value + "+";
+                search_query.push(filter.value);
+            }
         if (query[query.length - 1] == "=")
         {
             query += "all";
@@ -159,6 +170,7 @@ async function search(random = false)
     }
 
     // Update React app with results.
+    search_query = query;
     update_results();
 
     document.getElementById("loading-menu").style.display = "none";
