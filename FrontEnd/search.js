@@ -54,6 +54,7 @@ async function search(random = false)
     search_query = [];
     
     document.getElementById("loading-menu").style.display = "";
+    document.getElementById("no-results").style.display = "none";
     show_results();
 
     let query = "";
