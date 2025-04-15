@@ -124,27 +124,36 @@ async function update_results()
 {
     try
     {
-        var entry_list = [];
-        // Do NOT load more than 15 assets at a time or your browser will crash
-        for (var i = 0; i < Math.min(15, results.length); i++)
+        if (results.length == 0)
         {
-            let entry = {
-                "type": results[i].Type,
-                "id": results[i].Id,
-                "file": results[i].StorageLocation,
-                "title": results[i].Name,
-            };
-            if (entry.type == "image")
-            {
-                entry.width = results[i].Width;
-                entry.height = results[i].Height;
-            }
-            entry_list.push(<Entry data={entry} />)
+            document.getElementById("no-results").style.display = "";
         }
+        else
+        {
+            document.getElementById("no-results").style.display = "none";
 
-        const container = document.getElementById('gallery');
-        const root = ReactDOM.createRoot(container);
-        root.render(entry_list);
+            var entry_list = [];
+            // Do NOT load more than 15 assets at a time or your browser will crash
+            for (var i = 0; i < Math.min(15, results.length); i++)
+            {
+                let entry = {
+                    "type": results[i].Type,
+                    "id": results[i].Id,
+                    "file": results[i].StorageLocation,
+                    "title": results[i].Name,
+                };
+                if (entry.type == "image")
+                {
+                    entry.width = results[i].Width;
+                    entry.height = results[i].Height;
+                }
+                entry_list.push(<Entry data={entry} />)
+            }
+    
+            const container = document.getElementById('gallery');
+            const root = ReactDOM.createRoot(container);
+            root.render(entry_list);
+        }
     }
     catch (error)
     {
