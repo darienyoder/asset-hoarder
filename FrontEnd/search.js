@@ -170,7 +170,6 @@ async function search(random = false)
     }
 
     // Update React app with results.
-    search_query = query;
     update_results();
 
     document.getElementById("loading-menu").style.display = "none";
