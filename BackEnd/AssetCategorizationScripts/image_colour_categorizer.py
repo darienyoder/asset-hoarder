@@ -46,7 +46,9 @@ def get_image_assets():
     query = """
         SELECT
             a.StorageLocation,
-            ia.ReferenceHash
+            ia.ReferenceHash,
+            ia.CommonColor,
+            ia.ModeColor
         FROM ImageAsset AS ia
         JOIN Asset AS a
         ON ia.ReferenceHash = a.ReferenceHash;
@@ -59,9 +61,10 @@ def get_image_assets():
     return assets
 
 ### --- IMAGE PROCESSING --- ###
-def download_image(url):
+def download_image(url, max_size=(512, 512)):
     response = requests.get(url)
     image = Image.open(BytesIO(response.content)).convert('RGB')
+    image.thumbnail(max_size)
     return image
 
 # def get_average_rgb(image):
