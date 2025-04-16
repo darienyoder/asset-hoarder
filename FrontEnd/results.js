@@ -51,7 +51,7 @@ function Entry({ data })
         return (
             <div className={"entry image-entry entry-" + asset_ID}>
                 <div className="image-preview"
-                    style={{ backgroundImage: `url(${asset.file}?w=800)` }}
+                    style={{ backgroundImage: `url(${asset.file}?w=512)` }}
                     loading="lazy">
                     <div className="entry-title">{asset.title}</div>
                     <a className="download-button" href={`/db/download/${asset.id}`} download></a>
