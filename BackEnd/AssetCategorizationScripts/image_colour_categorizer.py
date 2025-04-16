@@ -32,7 +32,7 @@ def insert_colors(reference_hash, cc, ac):
     cursor = conn.cursor()
     query = """
         UPDATE ImageAsset
-        SET CommonColor = %s, AverageColor = %s
+        SET CommonColor = %s, ModeColor = %s
         WHERE ReferenceHash = %s
     """
     cursor.execute(query, (cc, ac, reference_hash))
@@ -94,7 +94,7 @@ def tag_images_with_colors():
     for asset in assets:
         try:
             # Skip assets that already have both CommonColor and AverageColor
-            if asset.get('CommonColor') and asset.get('AverageColor'):
+            if asset.get('CommonColor') and asset.get('ModeColor'):
                 print(f"Skipping {asset['ReferenceHash']}, already tagged.")
                 continue
 
@@ -109,7 +109,7 @@ def tag_images_with_colors():
             # Save directly to the ImageAsset table
             insert_colors(asset['ReferenceHash'], common_hex, avg_hex)
 
-            print(f"Updated {asset['ReferenceHash']} with CommonColor={common_hex} and AverageColor={avg_hex}")
+            print(f"Updated {asset['ReferenceHash']} with CommonColor={common_hex} and ModeColor={avg_hex}")
         except Exception as e:
             print(f"Failed to process {asset['StorageLocation']}: {e}")
             failed_assets.append({
