@@ -201,10 +201,7 @@ html, body {
     display: grid;
     grid-template-columns: auto auto auto auto auto;
     gap: 10px;
-    margin-left: 100px;
-    margin-right: 100px;
-    margin-top: 50px;
-    margin-bottom: 50px;
+    margin: 50px 100px;
 }
 
 .entry {
