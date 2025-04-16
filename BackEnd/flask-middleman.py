@@ -139,22 +139,22 @@ def get_image_assets():
         JOIN Tags AS t
             ON t.ReferenceHash = ia.ReferenceHash
         WHERE {size_filter} AND {color_filter}
-        ORDER BY ia.ReferenceHash
+        ORDER BY a.Id
         """
         cursor.execute(query)
         image_assets = cursor.fetchmany(1000)
 
         yield "["
 
-        last_used_ref_hash = ''
+        last_used_ref_id = -1
         input_encoding = model.encode(input_tag)
         is_first_result = True
         while len(image_assets) != 0:
             added_asset = False
             for image_asset in image_assets:
-                if added_asset and image_asset['ReferenceHash'] == last_used_ref_hash:
+                if added_asset and image_asset['Id'] == last_used_ref_id:
                     break
-                if (last_used_ref_hash != image_asset['ReferenceHash']):
+                if (last_used_ref_id != image_asset['Id']):
                     added_asset = False
                 score = cosine_similarity([input_encoding], [pickle.loads(image_asset['TagVector'])])[0][0]
                 if ((score > 0.6 or input_tag in image_asset['Name']) and not added_asset):
@@ -164,7 +164,7 @@ def get_image_assets():
                         yield ","
                     yield "\n" + json.dumps(return_asset)
                     is_first_result = False
-                last_used_ref_hash = image_asset['ReferenceHash']
+                last_used_ref_id = image_asset['Id']
             image_assets = cursor.fetchmany(1000)
         yield "\n]"
        
