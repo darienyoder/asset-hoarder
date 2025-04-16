@@ -20,9 +20,7 @@ PREDEFINED_COLORS = {
     "Yellow": "#FFFF00",
     "Green": "#008000",
     "Blue": "#0000FF",
-    "Violet": "#7F00FF",
-    "White": "#FFFFFF",
-    "Black": "#000000"
+    "Violet": "#7F00FF"
 }
 
 ### --- DATABASE HELPERS --- ###
