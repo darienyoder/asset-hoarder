@@ -2,6 +2,7 @@
 var current_audio = -1;
 var setting_time = false;
 var hover_time_counter = 0;
+var prev_width = 512;
 
 function toggle_audio(new_audio)
 {
@@ -51,14 +52,14 @@ function Entry({ data })
         return (
             <div className={"entry image-entry entry-" + asset_ID}>
                 <div className="image-preview"
-                    style={{ backgroundImage: `url(${asset.file}?w=512)` }}
+                    style={{ backgroundImage: `url(${asset.file}?w=${prev_width})` }}
                     loading="lazy">
                     <div className="entry-title">{asset.title}</div>
                     <a className="download-button" href={`/db/download/${asset.id}`} download></a>
                 </div>
 
                 {/* Preload the image to ensure it's fetched as soon as possible */}
-                <link rel="preload" href={asset.file} as="image" />
+                <link rel="preload" href={`${asset.file}?w=${prev_width}`} as="image" />
 
                 {/* Critical CSS for the image-entry styles */}
                 <style>{style_content}</style>
