@@ -127,6 +127,7 @@ async function update_results(index = 0)
     try
     {
         results_index = index;
+        document.getElementById("gallery-header").innerText = "";
 
         if (results.length == 0)
         {
@@ -155,6 +156,8 @@ async function update_results(index = 0)
             const container = document.getElementById('gallery');
             const root = ReactDOM.createRoot(container);
             root.render(entry_list);
+
+            document.getElementById("gallery-header").innerText = results.length + " results"
         }
     }
     catch (error)
