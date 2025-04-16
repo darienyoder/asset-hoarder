@@ -15,87 +15,7 @@
             <script src="search.js"></script>
             <script src="profile.js"></script>
             <script src="results.js" type="text/babel"></script>
-            <script>
-                async function handleLogin() {
-                    event.preventDefault();
-
-                    const username = document.getElementById("username").value;
-                    const password = document.getElementById("password").value;
-                    if (!username || !password) {
-                        alert("Both username and password are required!");
-                        return;
-                    }
-
-                    const formData = new FormData();
-                    formData.append("username", username);
-                    formData.append("password", password);
-
-                    try {
-                        const response = await fetch("/db/login", {
-                            method: "POST",
-                            body: formData,
-                        });
-
-                        // // Use this for DEV
-                        // const response = await fetch("https://capstone1.cs.kent.edu/db/login", {
-                        //     method: "POST",
-                        //     body: formData,
-                        // });
-
-                        const result = await response.json();
-
-                        if (response.ok) {
-                            alert(result);
-                            set_profile_tab(2);
-                        } else {
-                            alert(result);
-                        }
-                    } catch (error) {
-                        console.error("Login error:", error);
-                    }
-                }
-
-                async function handleCreateAccount() {
-                        event.preventDefault();
-
-                        const username = document.getElementById("c_username").value;
-                        const password = document.getElementById("new-pass").value;
-                        const email = document.getElementById("c_email").value;
-                        if (!username || !password || !email) {
-                            alert("Email, Password, and Username are all required!");
-                            return;
-                        }
-
-                        const formData = new FormData();
-                        formData.append("username", username);
-                        formData.append("password", password);
-                        formData.append("email", email);
-
-                        try {
-                            const response = await fetch("/db/create_account", {
-                                method: "POST",
-                                body: formData,
-                            });
-
-                            // // Use this for DEV
-                            // const response = await fetch("https://capstone1.cs.kent.edu/db/create_account", {
-                            //     method: "POST",
-                            //     body: formData,
-                            // });
-
-                            const result = await response.json();
-
-                            if (response.ok) {
-                                alert(result);
-                                set_profile_tab(0);
-                            } else {
-                                alert(result);
-                            }
-                        } catch (error) {
-                            console.error("Account Creation error:", error);
-                        }
-                    }
-            </script>
+            <script src="login.js"></script>
 </head>
 <body>
     <!-- Search Interface -->
@@ -166,21 +86,22 @@
     </div>
 
     <!-- Top Bar -->
-
     <div id="top-bar" onclick="hide_results();">
         <img src="img/logo.png">
         <div class="center-flex">
             <input id="top-bar-search">
         </div>
         <div id="topbar-filters" class="expand row-flex center-flex" style="justify-content: left;">
-            
+            <!-- Filters get loaded here -->
         </div>
     </div>
         
     <!-- Results Page -->
     <div id="results-page" class="full-viewport">
-        <div id="gallery">
-            <!-- Results get loaded here -->
+        <div class="parent-size center-flex">
+            <div id="gallery" class="expand" style="aspect-ratio: 5/3;">
+                <!-- Results get loaded here -->
+            </div>
         </div>
         <div id="loading-menu" class="parent-size center-flex">
             <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
@@ -230,8 +151,11 @@
 
             <!-- Profile -->
             <div class="expand center-flex">
-                <div class="parent-size">
-                    <h1>Profile</h1>
+                <div class="parent-size flex-column">
+                    <h1>Saved Assets</h1>
+                    <div id="saved-gallery" class="expand">
+                        <!-- Saved assets get loaded here -->
+                    </div>
                 </div>
             </div>
 
