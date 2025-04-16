@@ -3,6 +3,7 @@ from io import BytesIO
 from PIL import Image
 import numpy as np
 import mysql.connector
+from collections import Counter
 
 # Database config
 db_config = {
@@ -60,6 +61,12 @@ def get_average_rgb(image):
     avg_color = np_img.mean(axis=(0, 1))  # average over height & width
     return tuple(map(int, avg_color))  # (R, G, B)
 
+def get_most_common_rgb(image):
+    np_img = np.array(image)
+    pixels = np_img.reshape(-1, 3)  # flatten to list of (R, G, B) tuples
+    most_common = Counter(map(tuple, pixels)).most_common(1)[0][0]
+    return most_common  # (R, G, B)
+
 def rgb_to_hex(rgb):
     return '#{:02x}{:02x}{:02x}'.format(*rgb)
 
@@ -92,8 +99,10 @@ def tag_images_with_colors():
                 continue
 
             img = download_image(asset['StorageLocation'])
-            avg_rgb = get_average_rgb(img)
-            avg_hex = rgb_to_hex(avg_rgb)
+            # avg_rgb = get_average_rgb(img)
+            most_common_rgb = get_most_common_rgb(img)
+            avg_hex = rgb_to_hex(most_common_rgb)
+
 
             common_hex = closest_color(avg_hex, PREDEFINED_COLORS)
 
