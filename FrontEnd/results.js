@@ -170,7 +170,7 @@ function nextPage()
 
 function previousPage()
 {
-    update_results(max(results_index - 15, 0));
+    update_results(Math.max(results_index - 15, 0));
 }
 
 setInterval(timer, 33);
