@@ -120,10 +120,14 @@ window.addEventListener("mousemove", event => {
         hover_time_counter = 0;
 });
 
-async function update_results()
+var results_index = 0;
+
+async function update_results(index = 0)
 {
     try
     {
+        results_index = index;
+
         if (results.length == 0)
         {
             document.getElementById("no-results").style.display = "";
@@ -132,7 +136,7 @@ async function update_results()
         {
             var entry_list = [];
             // Do NOT load more than 15 assets at a time or your browser will crash
-            for (var i = 0; i < Math.min(15, results.length); i++)
+            for (var i = results_index; i < Math.min(results_index + 15, results.length); i++)
             {
                 let entry = {
                     "type": results[i].Type,
@@ -157,6 +161,16 @@ async function update_results()
     {
         console.error(error.message);
     }
+}
+
+function nextPage()
+{
+    update_results(results_index + 15);
+}
+
+function previousPage()
+{
+    update_results(max(results_index - 15, 0));
 }
 
 setInterval(timer, 33);
