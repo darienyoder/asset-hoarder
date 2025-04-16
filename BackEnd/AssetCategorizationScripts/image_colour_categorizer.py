@@ -13,14 +13,24 @@ db_config = {
     'database': 'ASSETHOARDER'
 }
 
-# Your specific color palette
+# # Original Colors
+# PREDEFINED_COLORS = {
+#     "Red": "#FF0000",
+#     "Orange": "#FFA500",
+#     "Yellow": "#FFFF00",
+#     "Green": "#008000",
+#     "Blue": "#0000FF",
+#     "Violet": "#7F00FF"
+# }
+
+# Original Colors Adjusted to common luminence
 PREDEFINED_COLORS = {
-    "Red": "#FF0000",
-    "Orange": "#FFA500",
-    "Yellow": "#FFFF00",
-    "Green": "#008000",
-    "Blue": "#0000FF",
-    "Violet": "#7F00FF"
+    "Red": "#9D0000",
+    "Orange": "#6B4300",
+    "Yellow": "#4E4E00",
+    "Green": "#005900",
+    "Blue": "#0000FE",
+    "Violet": "#6500CD"
 }
 
 ### --- DATABASE HELPERS --- ###
@@ -61,7 +71,7 @@ def get_image_assets():
     return assets
 
 ### --- IMAGE PROCESSING --- ###
-def download_image(url, max_size=(512, 512)):
+def download_image(url, max_size=(256, 256)):
     response = requests.get(url)
     image = Image.open(BytesIO(response.content)).convert('RGB')
     image.thumbnail(max_size)
