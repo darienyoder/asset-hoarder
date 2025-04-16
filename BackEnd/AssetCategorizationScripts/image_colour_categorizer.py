@@ -75,6 +75,29 @@ def get_most_common_rgb(image):
     most_common = Counter(map(tuple, pixels)).most_common(1)[0][0]
     return most_common  # (R, G, B)
 
+def get_colors(image, color_dict):
+    from collections import Counter
+
+    np_img = np.array(image)
+    pixels = np_img.reshape(-1, 3)
+
+    # 1. Most common RGB value
+    rgb_counter = Counter(map(tuple, pixels))
+    most_common_rgb = rgb_counter.most_common(1)[0][0]
+    avg_hex = rgb_to_hex(most_common_rgb)
+
+    # 2. Map each pixel to the closest predefined color
+    def closest_named_color(pixel_rgb):
+        def distance(c1, c2):
+            return sum((a - b) ** 2 for a, b in zip(c1, c2))
+        return min(color_dict.values(), key=lambda hex_color: distance(pixel_rgb, hex_to_rgb(hex_color)))
+
+    mapped_colors = [closest_named_color(tuple(pixel)) for pixel in pixels]
+    named_color_counter = Counter(mapped_colors)
+    common_hex = named_color_counter.most_common(1)[0][0]
+
+    return avg_hex, common_hex
+
 def rgb_to_hex(rgb):
     return '#{:02x}{:02x}{:02x}'.format(*rgb)
 
@@ -107,14 +130,7 @@ def tag_images_with_colors():
                 continue
 
             img = download_image(asset['StorageLocation'])
-            # avg_rgb = get_average_rgb(img)
-            most_common_rgb = get_most_common_rgb(img)
-            avg_hex = rgb_to_hex(most_common_rgb)
-
-
-            common_hex = closest_color(avg_hex, PREDEFINED_COLORS)
-
-            # Save directly to the ImageAsset table
+            avg_hex, common_hex = get_colors(img, PREDEFINED_COLORS)
             insert_colors(asset['ReferenceHash'], common_hex, avg_hex)
 
             print(f"Updated {asset['ReferenceHash']} with CommonColor={common_hex} and ModeColor={avg_hex}")
