@@ -138,7 +138,7 @@ async function update_results(index = 0)
         {
             var entry_list = [];
             // Do NOT load more than 15 assets at a time or your browser will crash
-            for (var i = results_index; i < Math.min(results_index + 100, results.length); i++)
+            for (var i = results_index; i < results.length; i++)
             {
                 let entry = {
                     "type": results[i].Type,
@@ -165,16 +165,6 @@ async function update_results(index = 0)
     {
         console.error(error.message);
     }
-}
-
-function nextPage()
-{
-    update_results(results_index + 15);
-}
-
-function previousPage()
-{
-    update_results(Math.max(results_index - 15, 0));
 }
 
 setInterval(timer, 33);
