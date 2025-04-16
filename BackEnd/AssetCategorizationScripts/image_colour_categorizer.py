@@ -64,16 +64,16 @@ def download_image(url):
     image = Image.open(BytesIO(response.content)).convert('RGB')
     return image
 
-def get_average_rgb(image):
-    np_img = np.array(image)
-    avg_color = np_img.mean(axis=(0, 1))  # average over height & width
-    return tuple(map(int, avg_color))  # (R, G, B)
+# def get_average_rgb(image):
+#     np_img = np.array(image)
+#     avg_color = np_img.mean(axis=(0, 1))  # average over height & width
+#     return tuple(map(int, avg_color))  # (R, G, B)
 
-def get_most_common_rgb(image):
-    np_img = np.array(image)
-    pixels = np_img.reshape(-1, 3)  # flatten to list of (R, G, B) tuples
-    most_common = Counter(map(tuple, pixels)).most_common(1)[0][0]
-    return most_common  # (R, G, B)
+# def get_most_common_rgb(image):
+#     np_img = np.array(image)
+#     pixels = np_img.reshape(-1, 3)  # flatten to list of (R, G, B) tuples
+#     most_common = Counter(map(tuple, pixels)).most_common(1)[0][0]
+#     return most_common  # (R, G, B)
 
 def get_colors(image, color_dict):
     from collections import Counter
@@ -89,12 +89,15 @@ def get_colors(image, color_dict):
     # 2. Map each pixel to the closest predefined color
     def closest_named_color(pixel_rgb):
         def distance(c1, c2):
-            return sum((a - b) ** 2 for a, b in zip(c1, c2))
+            return sum((int(a) - int(b)) ** 2 for a, b in zip(c1, c2))
         return min(color_dict.values(), key=lambda hex_color: distance(pixel_rgb, hex_to_rgb(hex_color)))
 
     mapped_colors = [closest_named_color(tuple(pixel)) for pixel in pixels]
     named_color_counter = Counter(mapped_colors)
     common_hex = named_color_counter.most_common(1)[0][0]
+
+    return avg_hex, common_hex
+
 
     return avg_hex, common_hex
 
