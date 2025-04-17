@@ -55,7 +55,13 @@ async function toggle_save_asset(id)
 {
     try
     {
-        const response = await fetch("/user_toggle_save_asset/" + id);
+        const response = await fetch(`/user_toggle_save_asset/${assetId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({})
+        })
         if (!response.ok)
         {
             throw new Error(`Response status: ${response.status}`);
