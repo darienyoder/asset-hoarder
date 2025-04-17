@@ -112,6 +112,7 @@
 
     <!-- Profile Pane -->
     <svg id="profile-icon" onclick="toggle_profile_pane();" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="white" d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512l388.6 0c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304l-91.4 0z"/></svg>
+    <div>Profile</div>
     <div id="profile-pane" class="center-flex">
         <div id="profile-wrapper" class="expand flex-column">
             
@@ -119,7 +120,7 @@
             <div class="expand center-flex selected">
                 <div class="flex-column">
                     <h1>Log in to save assets</h1>
-                    <input id="username" placeholder="Username" type="text" maxlength="256" minlength="3" pattern="[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-z]{2,}|[a-zA-Z0-9_]+$" required>
+                    <input id="username" placeholder="Email" type="text" maxlength="256" minlength="3" pattern="[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-z]{2,}$" required>
                     <input id="password" placeholder="Password" type="password" minlength="8" maxlength="32" pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,32}$" required>
                     <div class="flex-row">
                         <button onclick="set_profile_tab(1);">Create Account</button>
@@ -133,13 +134,14 @@
             <div class="expand center-flex">
                 <div class="flex-column">
                     <h1>Create Account</h1>
-                    <input id="c_email" placeholder="Email" type="text" pattern="[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-z]{2,}$" maxlength="256" required>
+                    <input id="c_email" placeholder="Email" type="text" pattern="[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-z]{2,}$" onkeyup='emailConfirm();' maxlength="256" required>
+                    <div id="checkEmail">&#x2716; Please enter a vaild email.</div>
                     <input id="c_username" placeholder="Username" type="text" minlength="3" maxlength="16" pattern="^[a-zA-Z0-9_]+$" required>
                     Your username must be at least 3 characters.
                     <input id="new-pass" placeholder="Password" type="password" minlength="8" maxlength="32" minlength="8" maxlength="32" pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,32}$" onkeyup='passConfirm();' required>
                     Your password must be at least 8 characters and contain a capital letter, a lowercase letter, a number, and a special character (@$!%*?&).
                     <input id="new-pass-rep" placeholder="Repeat Password" type="password" minlength="8" maxlength="32" minlength="8" maxlength="32" pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,32}$" onkeyup='passConfirm();' required>
-                    <div id="pass-match-output">&#x2716; Passwords do NOT match!</div>
+                    <div id="pass-match-output">&#x2716; Passwords do not match or are not valid</div>
                     <div class="flex-row">
                         <button onclick="set_profile_tab(0);">Back to Log In</button>
                         <div class="expand"></div>

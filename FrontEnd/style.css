@@ -364,7 +364,8 @@ html, body {
 
 /* Profile */
 
-.required-input::after {
+
+.required-input::after { /* I hate that this one doesn't work */
     content: "*";
     color:red;
     margin-left: 2px;
@@ -440,4 +441,12 @@ html, body {
     background-color: white;
     padding: 10px 15px;
     border-radius: 30px;
+}
+
+#c_email {
+    color: black;
+}
+
+#checkEmail{
+    color: #8b0000;
 }

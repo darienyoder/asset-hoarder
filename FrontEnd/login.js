@@ -42,9 +42,14 @@ async function handleCreateAccount() {
 
     const username = document.getElementById("c_username").value;
     const password = document.getElementById("new-pass").value;
+    const matchPass = document.getElementById("new-pass-rep").value;
     const email = document.getElementById("c_email").value;
     if (!username || !password || !email) {
         alert("Email, Password, and Username are all required!");
+        return;
+    }
+    if(password != matchPass){
+        alert ("Passwords must match!");
         return;
     }
 

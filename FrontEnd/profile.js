@@ -44,6 +44,16 @@ function passConfirm() {
             document.getElementById("pass-match-output").innerHTML = "&#x2714; Passwords match!"
     } else {
         document.getElementById("pass-match-output").style.color = "#8b0000";
-        document.getElementById("pass-match-output").innerHTML = "&#x2716; Passwords do NOT match!"
+        document.getElementById("pass-match-output").innerHTML = "&#x2716; Passwords do not match or are not valid."
+    }
+}
+
+function emailConfirm() {
+    if (/^([a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-z]{2,})$/.test(document.getElementById("c_email").value)) {
+            document.getElementById("checkEmail").style.color = "#06402b";
+            document.getElementById("checkEmail").innerHTML = "&#x2714; Valid email!"
+    } else {
+        document.getElementById("checkEmail").style.color = "#8b0000";
+        document.getElementById("checkEmail").innerHTML = "&#x2716; Please enter a valid email."
     }
 }
