@@ -55,7 +55,7 @@ function Entry({ data })
                     style={{ backgroundImage: `url(${asset.file}?w=${prev_width})` }}
                     loading="lazy">
                     <div className="entry-title">{asset.title}</div>
-                    <a className="download-button" href={`/db/download/${asset.id}`} download></a>
+                    <a className="download-button" onClick={`toggle_save_asset('${asset.id}');`} href={`/db/download/${asset.id}`} download></a>
                 </div>
 
                 {/* Preload the image to ensure it's fetched as soon as possible */}
@@ -132,7 +132,7 @@ async function update_results(index = 0)
 
         if (results.length == 0)
         {
-            document.getElementById("no-results").style.display = "";
+            // document.getElementById("no-results").style.display = "";
         }
         else
         {
@@ -168,3 +168,54 @@ async function update_results(index = 0)
 }
 
 setInterval(timer, 33);
+
+async function update_profile_results()
+{
+    try
+    {
+        // Get results from API
+        const response = await fetch("https://assethoarder.net/db/user_saved_assets");
+        if (!response.ok)
+        {
+            throw new Error(`Response status: ${response.status}`);
+        }
+
+        let json = await response.json();
+        let profile_results = json["imageAssets"].concat(json["audioAssets"]);
+
+        document.getElementById("saved-gallery").innerHTML = "";
+
+        if (profile_results.length == 0)
+        {
+            // document.getElementById("no-results").style.display = "";
+        }
+        else
+        {
+            var entry_list = [];
+            // Do NOT load more than 15 assets at a time or your browser will crash
+            for (var i = 0; i < profile_results.length; i++)
+            {
+                let entry = {
+                    "type": profile_results[i].Type,
+                    "id": profile_results[i].Id,
+                    "file": profile_results[i].StorageLocation,
+                    "title": profile_results[i].Name,
+                };
+                if (entry.type == "image")
+                {
+                    entry.width = profile_results[i].Width;
+                    entry.height = profile_results[i].Height;
+                }
+                entry_list.push(<Entry data={entry} />)
+            }
+    
+            const container = document.getElementById('saved-gallery');
+            const root = ReactDOM.createRoot(container);
+            root.render(entry_list);
+        }
+    }
+    catch (error)
+    {
+        console.error(error.message);
+    }
+}

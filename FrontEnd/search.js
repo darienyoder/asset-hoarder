@@ -49,7 +49,7 @@ var gallery_open = false;
 // 3. Scrolls to the top of the results section
 async function search(random = false)
 {
-
+    document.getElementById("gallery-header").innerText = "";
     document.getElementById("gallery").innerHTML = "";
     search_query = [];
     
