@@ -1,0 +1,30 @@
+name: Save a copy of the mySQL database to the server
+
+on:
+  schedule:
+    - cron: '0 3 * * 0'  # Runs every Sunday at 3:00 AM UTC
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Deploy to server
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y openssh-client sshpass  # Install sshpass
+
+        sshpass -p "${{ secrets.ServerPass }}" ssh -o StrictHostKeyChecking=no ${{ secrets.ServerUser }}@${{ secrets.ServerSSH }} << 'EOF'
+
+          cd /home/${{ secrets.ServerUser }}
+          source .venv/bin/activate
+          sudo mysqldump -p ASSETHOARDER | gzip > sqlbackup-$(date +%F-%H-%M-%S).sql.gz
+          ls
+
+          disown
+
+        EOF
