@@ -197,11 +197,16 @@ html, body {
     overflow-x: hidden;
 }
 
+#gallery-header {
+    margin-left: 100px;
+}
+
 #gallery {
     display: grid;
     grid-template-columns: auto auto auto auto auto;
     gap: 10px;
     margin: 50px 100px;
+    margin-top: 0px;
 }
 
 .entry {
