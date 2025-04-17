@@ -156,7 +156,7 @@ def get_image_assets():
                     break
                 if (last_used_ref_id != image_asset['Id']):
                     added_asset = False
-                score = cosine_similarity([input_encoding], [pickle.loads(image_asset['TagVector'])])[0][0]
+                score = 1.0 if input_tag == "" else cosine_similarity([input_encoding], [pickle.loads(image_asset['TagVector'])])[0][0]
                 if ((score > 0.6 or input_tag in image_asset['Name']) and not added_asset):
                     added_asset = True
                     return_asset = {'Id': image_asset['Id'], 'Name': image_asset['Name'], 'Type': image_asset['Type'], 'StorageLocation': image_asset['StorageLocation'], 'ReferenceHash': image_asset['ReferenceHash'], 'Width': image_asset['Width'], 'Height': image_asset['Height'], 'Tag': image_asset['Tag'], 'Score': str(score)}
