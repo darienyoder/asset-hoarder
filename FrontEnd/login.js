@@ -44,13 +44,31 @@ async function handleCreateAccount() {
     const password = document.getElementById("new-pass").value;
     const matchPass = document.getElementById("new-pass-rep").value;
     const email = document.getElementById("c_email").value;
-    if (!username || !password || !email) {
-        alert("Email, Password, and Username are all required!");
+    
+    // Check that all fields are filled
+    if (!username || !password || !email || !matchPass) {
+        alert("All fields are required!");
         return;
     }
+
+    // Check that password and matchPass match
     if(password != matchPass){
         alert ("Passwords must match!");
         return;
+    }
+
+    // Check for valid password
+    if(!(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,32}$/
+        .test(password))){
+            alert("Invalid password!");
+            return;
+    }
+
+    // Check for valid email
+    if(!(/^([a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-z]{2,})$/
+        .test(email))){
+            alert("Invalid email!");
+            return;
     }
 
     const formData = new FormData();

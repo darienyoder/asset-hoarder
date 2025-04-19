@@ -36,15 +36,25 @@ function set_profile_tab( tabIndex )
 }
 
 function passConfirm() {
+    // Check that they're the same then check that they're valid
     if ((document.getElementById("new-pass").value ==
         document.getElementById("new-pass-rep").value) && 
         (document.getElementById("new-pass-rep").value != "") &&
         (document.getElementById("new-pass-rep").value != null)) {
-            document.getElementById("pass-match-output").style.color = "#06402b";
-            document.getElementById("pass-match-output").innerHTML = "&#x2714; Passwords match!"
+            if(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,32}$/
+                .test(document.getElementById("new-pass").value)){
+                    // Confirmation Text
+                    document.getElementById("pass-match-output").style.color = "#06402b";
+                    document.getElementById("pass-match-output").innerHTML = "&#x2714; Passwords match!"
+                }
+            else{
+                document.getElementById("pass-match-output").style.color = "#8b0000";
+                document.getElementById("pass-match-output").innerHTML = "&#x2716; Invalid password."
+            }
+            
     } else {
         document.getElementById("pass-match-output").style.color = "#8b0000";
-        document.getElementById("pass-match-output").innerHTML = "&#x2716; Passwords do not match or are not valid."
+        document.getElementById("pass-match-output").innerHTML = "&#x2716; Passwords do not match."
     }
 }
 
@@ -57,3 +67,4 @@ function emailConfirm() {
         document.getElementById("checkEmail").innerHTML = "&#x2716; Please enter a valid email."
     }
 }
+
