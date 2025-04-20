@@ -59,7 +59,7 @@ function passConfirm() {
 }
 
 function emailConfirm() {
-    if (/^([a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-z]{2,})$/.test(document.getElementById("c_email").value)) {
+    if (/^([a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-z]{2,})$/.test(document.getElementById("c_username").value)) {
             document.getElementById("checkEmail").style.color = "#06402b";
             document.getElementById("checkEmail").innerHTML = "&#x2714; Valid email!"
     } else {
