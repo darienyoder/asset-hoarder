@@ -71,7 +71,7 @@ function Entry({ data })
     {
         return (
             <div id={"entry-" + asset_ID} className="entry audio-entry" onMouseOver={(event) => toggle_audio(asset_ID)} onMouseOut={(event) => toggle_audio(asset_ID)}>
-                <a id={"play-button-" + asset_ID} className={"audio-play-button"} href={asset.file} download></a>
+                <a id={"play-button-" + asset_ID} className={"audio-play-button"} href={`/db/download/${asset.id}`} download></a>
                 <audio id={"audio-player-" + asset_ID}>
                     <source src={asset.file} type="audio/ogg" />
                 </audio>
