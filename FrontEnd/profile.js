@@ -55,7 +55,7 @@ async function toggle_save_asset(id)
 {
     try
     {
-        const response = await fetch(`/user_toggle_save_asset/${assetId}`, {
+        const response = await fetch(`/user_toggle_save_asset/` + assetId, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
