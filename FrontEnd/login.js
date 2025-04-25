@@ -4,7 +4,7 @@ async function handleLogin() {
     const username = document.getElementById("username").value;
     const password = document.getElementById("password").value;
     if (!username || !password) {
-        alert("Both username and password are required!");
+        alert("Both email and password are required!");
         return;
     }
 
@@ -42,16 +42,39 @@ async function handleCreateAccount() {
 
     const username = document.getElementById("c_username").value;
     const password = document.getElementById("new-pass").value;
-    const email = document.getElementById("c_email").value;
-    if (!username || !password || !email) {
-        alert("Email, Password, and Username are all required!");
+    const matchPass = document.getElementById("new-pass-rep").value;
+    // const email = document.getElementById("c_email").value;
+    
+    // Check that all fields are filled
+    if (!username || !password || !matchPass) {
+        alert("All fields are required!");
         return;
+    }
+
+    // Check that password and matchPass match
+    if(password != matchPass){
+        alert ("Passwords must match!");
+        return;
+    }
+
+    // Check for valid password
+    if(!(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,32}$/
+        .test(password))){
+            alert("Invalid password!");
+            return;
+    }
+
+    // Check for valid email
+    if(!(/^([a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-z]{2,})$/
+        .test(username))){
+            alert("Invalid email!");
+            return;
     }
 
     const formData = new FormData();
     formData.append("username", username);
     formData.append("password", password);
-    formData.append("email", email);
+    // formData.append("email", email);
 
     try {
         const response = await fetch("/db/create_account", {

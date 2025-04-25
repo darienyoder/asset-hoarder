@@ -94,9 +94,9 @@
         <p>Create a new user account by providing a username and password.</p>
         <form action="/create_account" method="post">
             <label for="username1">username:</label>
-            <input type="text" name="username" id="username1">
+            <input type="text" name="username" id="username1" maxlength="256">
             <label for="password1">password:</label>
-            <input type="password" name="password" id="password1">
+            <input type="password" name="password" id="password1" maxlength="32">
             <input type="submit" value="submit">
         </form>
     </section>
@@ -106,9 +106,9 @@
         <p>Log in to the system, getting auth cookie, by providing a valid username and password.</p>
         <form action="/login" method="post">
             <label for="username2">username:</label>
-            <input type="text" name="username" id="username2">
+            <input type="text" name="username" id="username2" maxlength="256">
             <label for="password2">password:</label>
-            <input type="password" name="password" id="password2">
+            <input type="password" name="password" id="password2" maxlength="32">
             <input type="submit" value="submit">
         </form>
     </section>
@@ -136,7 +136,7 @@
         <p>Save or unsave provided asset to user if logged in.</p>
         <form action="/user_toggle_save_asset" method="post" id="saveAsset">
             <label for="assetId">asset id:</label>
-            <input type="number" name="assetId" id="assetId">
+            <input type="number" name="assetId" id="assetId" maxlength="16">
             <input type="submit" value="submit">
         </form>
     </section>
