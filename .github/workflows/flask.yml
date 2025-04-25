@@ -6,6 +6,7 @@ on:
       - main  # Trigger deployment on push to the main branch
     paths:
       - 'BackEnd/**'  # Only trigger the workflow if this folder
+  workflow_dispatch:
 
 jobs:
   deploy:

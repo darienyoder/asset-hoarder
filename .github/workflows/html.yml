@@ -6,6 +6,7 @@ on:
       - main  # Trigger deployment on push to the main branch
     paths:
       - 'FrontEnd/**'  # Only trigger the workflow if any file in the folder is changed
+  workflow_dispatch:
 
 jobs:
   deploy:

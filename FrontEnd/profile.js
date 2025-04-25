@@ -12,7 +12,10 @@ function show_profile()
     document.getElementById("profile-pane").classList.add("selected");
     document.getElementById("profile-icon").classList.add("selected");
 
-    document.getElementById("searchbar").blur()
+    document.getElementById("searchbar").blur();
+
+    if (document.getElementById("profile-wrapper").children[2].classList.contains("selected"))
+        update_profile_results();
 }
 
 function hide_profile()
@@ -68,3 +71,26 @@ function emailConfirm() {
     }
 }
 
+async function toggle_save_asset(id)
+{
+    try
+    {
+        const response = await fetch(`/user_toggle_save_asset/` + assetId, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({})
+        })
+        if (!response.ok)
+        {
+            throw new Error(`Response status: ${response.status}`);
+        }
+
+        let json = await response.json();
+    }
+    catch (error)
+    {
+        console.error(error.message);
+    }
+}
